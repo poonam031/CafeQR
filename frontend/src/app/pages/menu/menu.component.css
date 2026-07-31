@@ -1,0 +1,399 @@
+body{
+    margin:0;
+    background:#F8F5F2;
+    font-family:Poppins,sans-serif;
+}
+
+.bg-app{
+    background:#F8F5F2;
+}
+
+.menu-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.brand-title{
+    font-weight:700;
+    color:#6F4E37;
+}
+
+.table-text{
+    color:#666;
+}
+
+.cart-btn{
+
+    width:55px;
+
+    height:55px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#D4A017;
+
+    color:white;
+
+    font-size:22px;
+
+}
+
+.search-box{
+
+    display:flex;
+
+    align-items:center;
+
+    background:white;
+
+    border-radius:40px;
+
+    padding:14px 20px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+}
+
+.search-box input{
+
+    border:none;
+
+    width:100%;
+
+    margin-left:12px;
+
+    outline:none;
+
+    background:transparent;
+
+}
+
+.category-scroll{
+
+    overflow-x:auto;
+
+    white-space:nowrap;
+
+    padding-bottom:10px;
+
+}
+
+.category-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+.category-chip{
+
+    display:inline-block;
+
+    padding:10px 18px;
+
+    border:none;
+
+    margin-right:10px;
+
+    border-radius:30px;
+
+    background:white;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.05);
+
+}
+
+.category-chip.active{
+
+    background:#D4A017;
+
+    color:white;
+
+}
+
+.section-title{
+
+    color:#6F4E37;
+
+    font-weight:700;
+
+}
+
+.food-item{
+
+    display:flex;
+
+    gap:15px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:15px;
+
+    margin-bottom:18px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.food-image{
+
+    width:120px;
+
+    height:120px;
+
+    object-fit:cover;
+
+    border-radius:16px;
+
+}
+
+.food-content{
+
+    flex:1;
+
+}
+
+.food-content h5{
+
+    font-weight:700;
+
+    color:#333;
+
+}
+
+.food-content p{
+
+    color:#777;
+
+    font-size:14px;
+
+    margin:8px 0;
+
+}
+
+.rating{
+
+    color:#D4A017;
+
+    font-size:14px;
+
+}
+
+.bottom-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:10px;
+
+}
+
+.price{
+
+    font-size:22px;
+
+    color:#6F4E37;
+
+    font-weight:700;
+
+}
+
+.add-btn{
+
+    border:none;
+
+    background:#6F4E37;
+
+    color:white;
+
+    border-radius:30px;
+
+    padding:8px 18px;
+
+}
+
+.add-btn:hover{
+
+    background:#D4A017;
+
+}
+
+.add-btn {
+  transition: all 0.3s ease;
+}
+
+.add-btn.added {
+  background: #28a745;
+  transform: scale(1.1);
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+  }
+
+  60% {
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Tablet */
+
+@media (max-width:768px){
+
+.food-image{
+
+width:100px;
+
+height:100px;
+
+}
+
+}
+
+/* Mobile */
+
+@media (max-width:576px){
+
+.food-item{
+
+padding:12px;
+
+gap:12px;
+
+}
+
+.food-image{
+
+width:90px;
+
+height:90px;
+
+}
+
+.food-content h5{
+
+font-size:18px;
+
+}
+
+.food-content p{
+
+font-size:13px;
+
+}
+
+.price{
+
+font-size:18px;
+
+}
+
+.add-btn{
+
+padding:6px 15px;
+
+font-size:13px;
+
+}
+
+.brand-title{
+
+font-size:24px;
+
+}
+
+}
+
+.dropdown-menu{
+    border-radius:18px;
+    min-width:220px;
+    padding:10px;
+    border:none;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    background:#fff;
+}
+
+.dropdown-item{
+    padding:12px 16px;
+    border-radius:12px;
+    font-weight:500;
+    transition:.3s;
+    color:#555;
+}
+
+.dropdown-item:hover{
+    background:#F8F5F2;
+    color:#6F4E37;
+    transform:translateX(5px);
+}
+
+.dropdown-toggle::after{
+    margin-left:8px;
+}
+
+.dropdown-item i{
+    width:22px;
+}
+.category-scroll{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    overflow-x:auto;
+    white-space:nowrap;
+    padding-bottom:10px;
+}
+
+.category-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.category-chip{
+    background:#fff;
+    border:none;
+    border-radius:30px;
+    padding:10px 18px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+    font-weight:500;
+    transition:.3s;
+    cursor:pointer;
+}
+
+.category-chip:hover{
+    background:#6F4E37;
+    color:#fff;
+}
+
+.category-chip.active{
+    background:#D4A017;
+    color:#fff;
+}
+
+.dropdown-menu{
+    min-width:220px;
+    border:none;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.dropdown-item{
+    padding:12px 18px;
+    transition:.3s;
+}
+
+.dropdown-item:hover{
+    background:#F8F5F2;
+    color:#6F4E37;
+}

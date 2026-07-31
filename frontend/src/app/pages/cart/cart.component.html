@@ -1,0 +1,98 @@
+<div class="container py-4">
+
+    <h2 class="cart-title mb-4">
+        <i class="bi bi-cart3 me-2"></i>
+        My Cart
+    </h2>
+
+    @if(cartService.getCartItems().length === 0){
+
+    <div class="empty-cart text-center">
+
+        <i class="bi bi-cart-x empty-icon"></i>
+
+        <h4>Your cart is empty</h4>
+
+        <p>Add some delicious food to your cart.</p>
+
+    </div>
+
+    } @else {
+
+    @for(item of cartService.getCartItems(); track item.id){
+
+    <div class="cart-card">
+
+        <img
+            [src]="item.image"
+            [alt]="item.name"
+            class="cart-image">
+
+        <div class="cart-info">
+
+            <h5>{{item.name}}</h5>
+
+            <p class="price">
+                ₹{{item.price}}
+            </p>
+
+            <small>
+                Subtotal :
+                ₹{{item.price * item.quantity}}
+            </small>
+
+        </div>
+
+        <div class="cart-actions">
+
+            <div class="qty-box">
+
+                <button
+                    class="qty-btn"
+                    (click)="cartService.decrease(item)">
+                    <i class="bi bi-dash"></i>
+                </button>
+
+                <span>{{item.quantity}}</span>
+
+                <button
+                    class="qty-btn"
+                    (click)="cartService.increase(item)">
+                    <i class="bi bi-plus"></i>
+                </button>
+
+            </div>
+
+            <button
+                class="remove-btn"
+                (click)="cartService.remove(item)">
+                <i class="bi bi-trash"></i>
+                Remove
+            </button>
+
+        </div>
+
+    </div>
+
+    }
+
+    <div class="checkout-card">
+
+        <div>
+
+            <h5>Total</h5>
+
+            <h3>₹{{cartService.getTotal()}}</h3>
+
+        </div>
+
+        <button class="checkout-btn" (click)="placeOrder()">
+            <i class="bi bi-credit-card me-2"></i>
+            Place Order
+        </button>
+
+    </div>
+
+    }
+
+</div>

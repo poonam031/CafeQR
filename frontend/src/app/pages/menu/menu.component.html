@@ -1,0 +1,176 @@
+<div class="container-fluid bg-app min-vh-100 py-3 px-3">
+
+    <!-- Header -->
+    <div class="menu-header">
+
+        <div>
+            <h2 class="brand-title">
+                <i class="bi bi-cup-hot-fill text-warning"></i>
+                CafeQR
+            </h2>
+
+            <small class="table-text">
+                <i class="bi bi-geo-alt-fill text-danger"></i>
+                Table {{tableNo}}
+            </small>
+        </div>
+
+      <button
+    class="cart-btn position-relative"
+    (click)="goToCart()">
+
+    <i class="bi bi-cart3"></i>
+
+    @if(cartCount > 0){
+        <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
+            {{ cartCount }}
+        </span>
+    }
+
+</button>
+
+    </div>
+
+    <!-- Search -->
+
+    <div class="search-box mt-4">
+
+        <i class="bi bi-search"></i>
+
+        <input
+            type="text"
+            placeholder="Search food...">
+
+    </div>
+
+    <!-- Categories -->
+
+    <div class="category-scroll mt-4">
+
+        <button class="category-chip active" (click)="selectCategory('All')">All</button>
+        <button class="category-chip" (click)="selectCategory('Pizza')">
+    <i class="fa-solid fa-pizza-slice"></i>
+    Pizza
+</button>
+
+<button class="category-chip" (click)="selectCategory('Burger')">
+    <i class="fa-solid fa-burger"></i>
+    Burger
+</button>
+
+<button class="category-chip" (click)="selectCategory('Fries')">
+    <i class="fa-solid fa-utensils"></i>
+    Fries
+</button>
+
+<button class="category-chip" (click)="selectCategory('Pasta')">
+    <i class="fa-solid fa-bowl-food"></i>
+    Pasta
+</button>
+
+<button class="category-chip" (click)="selectCategory('Sandwich')">
+    <i class="fa-solid fa-bread-slice"></i>
+    Sandwich
+</button>
+
+<button class="category-chip" (click)="selectCategory('Rolls')">
+    <i class="fa-solid fa-bread-slice"></i>
+
+    Rolls
+</button>
+
+<button class="category-chip" (click)="selectCategory('Desserts')">
+    <i class="fa-solid fa-cake-candles"></i>
+    Desserts
+</button>
+
+<button class="category-chip" (click)="selectCategory('Coffee')">
+    <i class="fa-solid fa-mug-hot"></i>
+    Coffee
+</button>
+
+<button class="category-chip" (click)="selectCategory('Drinks')">
+    <i class="fa-solid fa-glass-whiskey"></i>
+    Drinks
+</button>
+
+<button class="category-chip" (click)="selectCategory('Shakes')">
+    <i class="fa-solid fa-blender"></i>
+    Shakes
+</button>
+
+<button class="category-chip" (click)="selectCategory('Combo')">
+     <i class="fa-solid fa-burger me-1 text-warning"></i>
+    <i class="fa-solid fa-utensils me-2 text-danger"></i>
+    Combo
+</button>
+
+    </div>
+
+    <!-- Menu -->
+
+    <h4 class="section-title mt-4 mb-3">
+        Best Sellers
+    </h4>
+
+    @for(item of filteredFood; track item.id){
+
+    <div class="food-item">
+
+        <img
+            [src]="item.image"
+            class="food-image"
+            [alt]="item.name">
+
+        <div class="food-content">
+
+            <h5>
+
+                {{item.name}}
+
+            </h5>
+
+            <p>
+
+                {{item.description}}
+
+            </p>
+
+            <div class="rating">
+
+                ⭐⭐⭐⭐⭐ 4.8
+
+            </div>
+
+            <div class="bottom-row">
+
+                <span class="price">
+
+                    ₹{{item.price}}
+
+                </span>
+
+               <button
+                  class="add-btn"
+                  [class.added]="item.addedToCart"
+                  (click)="addToCart(item)">
+
+                  @if(item.addedToCart){
+                      <i class="bi bi-check-circle-fill"></i>
+                      Added
+                  } @else {
+                      <i class="bi bi-plus-circle"></i>
+                      Add
+                  }
+
+              </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+  }
+
+</div>

@@ -1,0 +1,29 @@
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h2>Chef Login</h2>
+
+        <p>Welcome Back</p>
+
+        <input
+            type="email"
+            placeholder="Email"
+            [(ngModel)]="email">
+
+        <input
+            type="password"
+            placeholder="Password"
+            [(ngModel)]="password">
+
+        <button (click)="login()">
+            Login
+        </button>
+
+        <p class="error" *ngIf="error">
+            {{error}}
+        </p>
+
+    </div>
+
+</div>
