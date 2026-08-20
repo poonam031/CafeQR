@@ -35,14 +35,10 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "security": {
-              "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+           "outputMode": "static",
+"security": {
+  "allowedHosts": []
+}
           },
           "configurations": {
             "production": {
