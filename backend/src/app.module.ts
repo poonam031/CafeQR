@@ -12,9 +12,17 @@ import { QrModule } from './qr/qr.module';
 import { KitchenModule } from './kitchen/kitchen.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RemindersModule } from './reminders/reminders.module';
+import { ProductsModule } from './products/products.module';
+import { TablesModule } from './tables/tables.module';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
      TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -24,6 +32,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'QRSCAN',
       autoLoadEntities: true,
       synchronize: true,
+
+    
     }),
     AuthModule,
     UsersModule,
@@ -33,7 +43,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     PaymentsModule,
     QrModule,
     KitchenModule,
-    DashboardModule
+    DashboardModule,
+    RemindersModule,
+    ProductsModule,
+    CategoryModule,
+    TablesModule
   ],
   controllers: [AppController],
   providers: [AppService],

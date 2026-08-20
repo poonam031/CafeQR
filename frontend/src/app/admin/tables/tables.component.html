@@ -1,1 +1,466 @@
-<p>tables works!</p>
+<div class="tables-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="page-title">
+      <div class="title-icon">
+        <!-- <i class="bi bi-grid-3x3-gap-fill"></i> -->
+      </div>
+      <!-- <div>
+         <h1>Table Management</h1>
+        <p>Live table floor and order status</p>
+      </div> -->
+    </div>
+
+    <div class="header-actions">
+      <span class="live-indicator">
+        <span class="live-dot"></span>
+        Live
+      </span>
+
+      <button class="add-table-btn" type="button" (click)="openAddTable()">
+        <i class="bi bi-plus-lg"></i>
+        Add Table
+      </button>
+    </div>
+  </header>
+
+  <!-- ALERTS -->
+  <div class="alert success-alert" *ngIf="successMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ successMessage }}</span>
+    <button type="button" (click)="successMessage = ''">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div class="alert error-alert" *ngIf="errorMessage">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <span>{{ errorMessage }}</span>
+    <button type="button" (click)="errorMessage = ''">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- SUMMARY -->
+  <section class="summary-grid">
+    <button class="summary-card" [class.active]="selectedFilter === 'ALL'" (click)="setFilter('ALL')">
+      <span class="summary-icon total"><i class="bi bi-grid-3x3-gap-fill"></i></span>
+      <span class="summary-content">
+        <small>Total Tables</small>
+        <strong>{{ totalTables }}</strong>
+      </span>
+      <i class="bi bi-chevron-right summary-arrow"></i>
+    </button>
+
+    <button class="summary-card" [class.active]="selectedFilter === 'BOOKED'" (click)="setFilter('BOOKED')">
+      <span class="summary-icon booked"><i class="bi bi-person-fill"></i></span>
+      <span class="summary-content">
+        <small>Booked</small>
+        <strong>{{ bookedTables }}</strong>
+      </span>
+      <i class="bi bi-chevron-right summary-arrow"></i>
+    </button>
+
+    <button class="summary-card" [class.active]="selectedFilter === 'FREE'" (click)="setFilter('FREE')">
+      <span class="summary-icon free"><i class="bi bi-check-circle-fill"></i></span>
+      <span class="summary-content">
+        <small>Available</small>
+        <strong>{{ freeTables }}</strong>
+      </span>
+      <i class="bi bi-chevron-right summary-arrow"></i>
+    </button>
+  </section>
+
+  <!-- TOOLBAR -->
+  <section class="toolbar">
+    <div class="toolbar-left">
+      <div class="section-heading">
+        <h2>Table Floor</h2>
+        <span>{{ filteredTables.length }} tables</span>
+      </div>
+
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Search table..."
+          [(ngModel)]="searchText"
+        />
+      </div>
+    </div>
+
+    <div class="filter-buttons">
+      <button type="button" [class.active]="selectedFilter === 'ALL'" (click)="setFilter('ALL')">All</button>
+      <button type="button" [class.active]="selectedFilter === 'FREE'" (click)="setFilter('FREE')">Free</button>
+      <button type="button" [class.active]="selectedFilter === 'BOOKED'" (click)="setFilter('BOOKED')">Booked</button>
+    </div>
+  </section>
+
+  <!-- MAIN FLOOR + DETAILS -->
+  <section class="table-workspace" *ngIf="!loading">
+
+    <!-- LEFT: TABLE FLOOR -->
+    <div class="floor-panel">
+      <div class="floor-panel-header">
+        <div>
+          <span class="eyebrow">LIVE FLOOR</span>
+          <h3>Select a table</h3>
+        </div>
+        <span class="refresh-note">
+          <i class="bi bi-arrow-repeat"></i>
+          Auto sync
+        </span>
+      </div>
+
+      <div class="table-board" *ngIf="filteredTables.length > 0">
+        <button
+          type="button"
+          class="table-tile"
+          *ngFor="let table of filteredTables"
+          [class.selected]="selectedTable?.id === table.id"
+          [ngClass]="getTableStatusClass(table)"
+          (click)="selectTable(table)"
+        >
+          <div class="tile-top">
+            <span class="tile-status">
+              <span class="tile-status-dot"></span>
+              {{ getTableStatusLabel(table) }}
+            </span>
+
+            <span class="tile-actions" (click)="$event.stopPropagation()">
+              <button type="button" class="tile-icon edit" title="Edit table" (click)="openEditTable(table)">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button type="button" class="tile-icon delete" title="Delete table" (click)="removeTable(table)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </span>
+          </div>
+
+          <div class="tile-table-icon">
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+          </div>
+
+          <strong class="tile-name">Table {{ table.tableNumber }}</strong>
+          <span class="tile-seats">
+            <i class="bi bi-people-fill"></i>
+            {{ table.seats }} Seats
+          </span>
+
+          <div class="tile-bottom" *ngIf="getActiveOrder(table) as order">
+            <span class="tile-total">₹{{ formatCurrency(order.total) }}</span>
+            <span class="tile-order">Order #{{ order.id }}</span>
+          </div>
+
+          <div class="tile-bottom available" *ngIf="!getActiveOrder(table)">
+            <span><i class="bi bi-check-circle-fill"></i> Available</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="no-tables" *ngIf="filteredTables.length === 0">
+        <div class="empty-icon"><i class="bi bi-grid-3x3-gap"></i></div>
+        <h3>No tables found</h3>
+        <p>Add a table or change the current filter.</p>
+        <button type="button" class="add-empty-btn" (click)="openAddTable()">
+          <i class="bi bi-plus-lg"></i>
+          Add Table
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: DETAILS -->
+    <aside class="details-panel" *ngIf="selectedTable as table">
+
+      <div class="details-header">
+        <div>
+          <span class="eyebrow">TABLE DETAILS</span>
+          <h2>Table {{ table.tableNumber }}</h2>
+          <p>
+            <i class="bi bi-people-fill"></i>
+            {{ table.seats }} seats
+            <span class="separator">•</span>
+            {{ table.customerName || 'No customer assigned' }}
+          </p>
+        </div>
+
+        <span class="large-status" [ngClass]="getTableStatusClass(table)">
+          <span class="tile-status-dot"></span>
+          {{ getTableStatusLabel(table) }}
+        </span>
+      </div>
+
+      <!-- BOOKED DETAILS -->
+      <ng-container *ngIf="getActiveOrder(table) as order; else freeTableDetails">
+
+        <div class="order-progress">
+          <div class="progress-step" [class.current]="order.status === 'Pending'" [class.done]="isOrderStageDone(order.status, 'Pending')">
+            <span>1</span>
+            <small>Pending</small>
+          </div>
+          <div class="progress-line" [class.done]="isOrderStageDone(order.status, 'Accepted')"></div>
+
+          <div class="progress-step" [class.current]="order.status === 'Accepted' || order.status === 'Preparing'" [class.done]="isOrderStageDone(order.status, 'Accepted')">
+            <span>2</span>
+            <small>Ordered</small>
+          </div>
+          <div class="progress-line" [class.done]="isOrderStageDone(order.status, 'Served')"></div>
+
+          <div class="progress-step" [class.current]="order.status === 'Served'" [class.done]="isOrderStageDone(order.status, 'Served')">
+            <span>3</span>
+            <small>Served</small>
+          </div>
+          <div class="progress-line" [class.done]="order.status === 'Completed'"></div>
+
+          <div class="progress-step" [class.current]="order.status === 'Completed'">
+            <span>4</span>
+            <small>Paid</small>
+          </div>
+        </div>
+
+        <div class="details-stats">
+          <div class="detail-stat">
+            <span>Order Status</span>
+            <strong class="order-status" [ngClass]="getOrderStatusClass(order.status)">
+              {{ order.status }}
+            </strong>
+          </div>
+
+          <div class="detail-stat">
+            <span>Order Total</span>
+            <strong class="amount">₹{{ formatCurrency(order.total) }}</strong>
+          </div>
+
+          <div class="detail-stat">
+            <span>Payment Method</span>
+            <strong>{{ order.paymentMethod }}</strong>
+          </div>
+
+          <div class="detail-stat">
+            <span>Payment Status</span>
+            <strong class="payment-status" [class.paid]="order.paymentStatus === 'Paid'" [class.pending-payment]="order.paymentStatus === 'Pending'">
+              {{ order.paymentStatus }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="booking-meta">
+          <div>
+            <span>Customer</span>
+            <strong>{{ table.customerName || order.customerName || 'QR Customer' }}</strong>
+          </div>
+          <div>
+            <span>Booking Time</span>
+            <strong>{{ table.bookingTime ? (table.bookingTime | date:'shortTime') : '-' }}</strong>
+          </div>
+        </div>
+
+        <button type="button" class="view-details-btn" (click)="viewOrderDetails(order)">
+          <span>
+            <i class="bi bi-receipt"></i>
+            View Order Details
+          </span>
+          <i class="bi bi-arrow-right"></i>
+        </button>
+
+        <button type="button" class="free-table-large" (click)="freeTable(table)">
+          <i class="bi bi-check-circle-fill"></i>
+          Free Table
+        </button>
+
+      </ng-container>
+
+      <!-- FREE DETAILS -->
+      <ng-template #freeTableDetails>
+        <div class="free-state">
+          <div class="free-state-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <h3>Table Available</h3>
+          <p>This table is ready for the next customer.</p>
+
+          <div class="available-info">
+            <div>
+              <span>Capacity</span>
+              <strong>{{ table.seats }} Seats</strong>
+            </div>
+            <div>
+              <span>QR Status</span>
+              <strong>Ready</strong>
+            </div>
+          </div>
+
+          <button type="button" class="book-table-large" (click)="bookTable(table)">
+            <i class="bi bi-calendar-check"></i>
+            Book Table
+          </button>
+        </div>
+      </ng-template>
+
+    </aside>
+
+    <!-- EMPTY SELECTION -->
+    <aside class="details-panel empty-selection" *ngIf="!selectedTable">
+      <div class="empty-selection-icon">
+        <i class="bi bi-hand-index-thumb"></i>
+      </div>
+      <h2>Select a Table</h2>
+      <p>Choose a table from the floor to see its live booking, order and payment information.</p>
+    </aside>
+
+  </section>
+
+  <!-- INITIAL LOADING -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading table floor...</p>
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT TABLE MODAL -->
+<div class="modal-overlay" *ngIf="showTableModal" (click)="closeModal()">
+  <div class="table-modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div>
+        <span class="eyebrow">TABLE SETUP</span>
+        <h2>{{ modalMode === 'ADD' ? 'Add Table' : 'Edit Table' }}</h2>
+        <p>{{ modalMode === 'ADD' ? 'Create a new cafe table' : 'Update table capacity' }}</p>
+      </div>
+
+      <button type="button" class="close-btn" (click)="closeModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Table Number</label>
+        <input
+          type="number"
+          [(ngModel)]="tableForm.tableNumber"
+          min="1"
+          placeholder="Example: 10"
+          [readonly]="modalMode === 'EDIT'"
+        />
+        <small *ngIf="modalMode === 'EDIT'">
+          Table number cannot be changed because its QR code belongs to this table.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Number of Seats</label>
+        <input
+          type="number"
+          [(ngModel)]="tableForm.seats"
+          min="1"
+          max="50"
+          placeholder="Example: 4"
+        />
+      </div>
+
+      <div class="seat-options">
+        <span>Quick Select</span>
+        <button type="button" (click)="tableForm.seats = 2">2</button>
+        <button type="button" (click)="tableForm.seats = 4">4</button>
+        <button type="button" (click)="tableForm.seats = 6">6</button>
+        <button type="button" (click)="tableForm.seats = 8">8</button>
+        <button type="button" (click)="tableForm.seats = 10">10</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="cancel-btn" (click)="closeModal()" [disabled]="saving">
+        Cancel
+      </button>
+
+      <button type="button" class="save-btn" (click)="saveTable()" [disabled]="saving">
+        <span *ngIf="saving" class="button-spinner"></span>
+        <i *ngIf="!saving" class="bi" [class.bi-plus-lg]="modalMode === 'ADD'" [class.bi-check-lg]="modalMode === 'EDIT'"></i>
+        {{ saving ? 'Saving...' : (modalMode === 'ADD' ? 'Add Table' : 'Save Changes') }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ORDER DETAILS MODAL -->
+<div class="order-modal-overlay" *ngIf="selectedOrder" (click)="closeOrderDetails()">
+  <div class="order-modal" (click)="$event.stopPropagation()">
+
+    <div class="order-modal-header">
+      <div>
+        <span class="eyebrow">ORDER DETAILS</span>
+        <h2><i class="bi bi-receipt"></i> Order #{{ selectedOrder.id }}</h2>
+      </div>
+
+      <button type="button" class="order-modal-close" (click)="closeOrderDetails()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="order-info-grid">
+      <div>
+        <span>Table</span>
+        <strong>Table {{ selectedOrder.tableId }}</strong>
+      </div>
+      <div>
+        <span>Customer</span>
+        <strong>{{ selectedOrder.customerName || 'QR Customer' }}</strong>
+      </div>
+      <div>
+        <span>Order Status</span>
+        <strong class="order-status" [ngClass]="getOrderStatusClass(selectedOrder.status)">
+          {{ selectedOrder.status }}
+        </strong>
+      </div>
+      <div>
+        <span>Payment Status</span>
+        <strong class="payment-status" [class.paid]="selectedOrder.paymentStatus === 'Paid'" [class.pending-payment]="selectedOrder.paymentStatus === 'Pending'">
+          {{ selectedOrder.paymentStatus }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="modal-items-section">
+      <div class="modal-section-title">
+        <span>Order Items</span>
+        <span>{{ selectedOrder.items.length }} Items</span>
+      </div>
+
+      <div class="modal-item" *ngFor="let item of selectedOrder.items">
+        <div class="modal-item-info">
+          <strong>{{ item.name || item.menuItemName || 'Menu Item' }}</strong>
+          <span>× {{ item.quantity }}</span>
+        </div>
+
+        <strong class="modal-item-price">
+          ₹{{ formatCurrency(item.total || (item.price * item.quantity)) }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="modal-total">
+      <span>Total Amount</span>
+      <strong>₹{{ formatCurrency(selectedOrder.total) }}</strong>
+    </div>
+
+    <div class="modal-payment">
+      <div>
+        <span>Payment Method</span>
+        <strong>{{ selectedOrder.paymentMethod }}</strong>
+      </div>
+      <div>
+        <span>Payment Status</span>
+        <strong class="payment-status" [class.paid]="selectedOrder.paymentStatus === 'Paid'" [class.pending-payment]="selectedOrder.paymentStatus === 'Pending'">
+          {{ selectedOrder.paymentStatus }}
+        </strong>
+      </div>
+    </div>
+
+  </div>
+</div>

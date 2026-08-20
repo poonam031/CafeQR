@@ -1,34 +1,232 @@
-.container {
-    max-width: 900px;
+/* ===========================
+   Kitchen Orders
+=========================== */
+
+.container{
+    width:100%;
+    max-width:920px;
+    margin:25px auto;
+    padding:0 10px;
 }
 
-.order-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 12px rgba(0,0,0,.12);
+.order-card{
+    background:#fff;
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:20px;
+    border:1px solid #edf2f7;
+    box-shadow:0 8px 22px rgba(0,0,0,.08);
+    transition:.3s;
 }
 
-.top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.order-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(0,0,0,.12);
 }
 
-.status {
-    background: orange;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: bold;
+/* Priority */
+
+.priority{
+    padding:10px;
+    border-radius:12px;
+    background:#FFF3F2;
+    color:#D63333;
+    border:1px solid #FFD1D1;
+    font-size:15px;
+    font-weight:600;
+    text-align:center;
+    margin-bottom:18px;
 }
 
-.price {
-    float: right;
+/* Header */
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
 }
 
-button {
-    width: 100%;
-    margin-top: 15px;
+.table-name{
+    font-size:20px;
+    font-weight:700;
+    color:#1f2937;
+    margin-bottom:4px;
+}
+
+.order-id{
+    font-size:13px;
+    color:#9ca3af;
+}
+
+.order-time{
+    font-size:14px;
+    color:#6b7280;
+    margin-top:2px;
+}
+
+/* Status */
+
+.status{
+    min-width:95px;
+    text-align:center;
+    padding:8px 16px;
+    border-radius:25px;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+}
+
+.pending{
+    background:#F59E0B;
+}
+
+.accepted{
+    background:#2563EB;
+}
+
+.preparing{
+    background:#7C3AED;
+}
+
+.ready{
+    background:#10B981;
+}
+
+.completed{
+    background:#22C55E;
+}
+
+.cancelled{
+    background:#EF4444;
+}
+
+/* Divider */
+
+hr{
+    margin:18px 0;
+    border:none;
+    border-top:1px solid #ececec;
+}
+
+/* Order Item */
+
+.order-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+}
+
+.item-info h5{
+    margin:0;
+    font-size:17px;
+    font-weight:600;
+    color:#1f2937;
+}
+
+.item-info p{
+    margin:3px 0 0;
+    color:#6b7280;
+    font-size:13px;
+}
+
+.price{
+    font-size:18px;
+    font-weight:700;
+    color:#374151;
+}
+
+/* Total */
+
+.total{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+    padding-top:5px;
+}
+
+.total span:first-child{
+    font-size:20px;
+    font-weight:700;
+}
+
+.total span:last-child{
+    font-size:28px;
+    font-weight:700;
+    color:#1f2937;
+}
+
+/* Buttons */
+
+.action-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:22px;
+}
+
+.action-buttons button{
+    flex:1;
+}
+
+button.btn{
+    border-radius:10px;
+    height:48px;
+    font-size:15px;
+    font-weight:600;
+    border:none;
+    transition:.25s;
+}
+
+button.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-success{
+    background:#322504;
+}
+
+.btn-danger{
+    background:#D4A017  ;
+}
+
+.btn-primary{
+    background:#2563EB;
+}
+
+.btn-warning{
+    background:#F59E0B;
+    color:#fff;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.top{
+    flex-direction:column;
+    gap:12px;
+}
+
+.status{
+    align-self:flex-start;
+}
+
+.order-item{
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.price{
+    margin-top:8px;
+}
+
+.action-buttons{
+    flex-direction:column;
+}
+
+.total span:last-child{
+    font-size:22px;
+}
+
 }

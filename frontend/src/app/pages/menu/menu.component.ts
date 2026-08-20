@@ -1,428 +1,866 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CartService} from "../../services/cart.service";
-import {ActivatedRoute, Router} from "@angular/router";
+
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders
+} from '@angular/common/http';
+
+import { CartService } from '../../services/cart.service';
+
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
+
+
+interface MenuItem {
+
+  id: number;
+
+  category: string;
+
+  name: string;
+
+  price: number;
+
+  description: string;
+
+  image: string;
+
+  isAvailable: boolean;
+
+  isVeg: boolean;
+
+  addedToCart?: boolean;
+
+}
+
 
 @Component({
+
   selector: 'app-menu',
+
   standalone: true,
-  imports: [CommonModule],
+
+  imports: [
+    CommonModule,
+    HttpClientModule
+  ],
+
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+
+  styleUrls: ['./menu.component.css']
+
 })
+
+
 export class MenuComponent implements OnInit {
 
-  constructor(private cartService: CartService,
+
+  // =====================================================
+  // API
+  // =====================================================
+
+  private apiUrl =
+    'http://localhost:3000/menu';
+
+  private tablesApi =
+    'http://localhost:3000/tables';
+
+
+  // =====================================================
+  // NGROK HEADERS
+  // =====================================================
+
+  private apiHeaders = new HttpHeaders({
+
+    'Content-Type': 'application/json',
+
+    'ngrok-skip-browser-warning': 'true'
+
+  });
+
+
+  // =====================================================
+  // CONSTRUCTOR
+  // =====================================================
+
+  constructor(
+
+    private cartService: CartService,
+
     private router: Router,
-    private route: ActivatedRoute
-  )
 
-  {}
+    private route: ActivatedRoute,
+
+    private http: HttpClient
+
+  ) {}
 
 
-addToCart(item: any) {
-  item.tableId = this.tableNo;
-  this.cartService.addToCart(item);
-  item.addedToCart = true;
-
-  setTimeout(() => {
-    item.addedToCart = false;
-  }, 1000);
-}
-
-goToCart() {
-  this.router.navigate(['/cart']);
-}
-
-get cartCount() {
-  return this.cartService.getCartCount();
-}
+  // =====================================================
+  // TABLE
+  // =====================================================
 
   tableNo = 1;
 
 
+  // =====================================================
+  // CATEGORY
+  // =====================================================
 
   selectedCategory = 'All';
 
-  food = [
-    // Pizza
-{
-  id: 1,
-  category: 'Pizza',
-  name: 'Cheese Burst Pizza',
-  price: 180,
-  description: 'Loaded with extra cheese.',
-  image: 'assets/images/pizza/cheese-burst.jpg'
-},
-{
-  id: 2,
-  category: 'Pizza',
-  name: 'Italian Pizza',
-  price: 200,
-  description: 'Authentic Italian style pizza.',
-  image: 'assets/images/pizza/italian.jpg'
-},
-{
-  id: 3,
-  category: 'Pizza',
-  name: 'Mix Loaded Pizza',
-  price: 165,
-  description: 'Loaded with fresh vegetables and cheese.',
-  image: 'assets/images/pizza/mix-loaded.jpg'
-},
-{
-  id: 4,
-  category: 'Pizza',
-  name: 'Corn Delight Pizza',
-  price: 145,
-  description: 'Sweet corn with mozzarella cheese.',
-  image: 'assets/images/pizza/corn-delight.jpg'
-},
-{
-  id: 5,
-  category: 'Pizza',
-  name: 'Golden Corn Pizza',
-  price: 130,
-  description: 'Golden roasted corn with herbs.',
-  image: 'assets/images/pizza/golden-corn.jpg'
-},
-{
-  id: 6,
-  category: 'Pizza',
-  name: 'Mushroom Pizza',
-  price: 135,
-  description: 'Fresh mushroom and cheese pizza.',
-  image: 'assets/images/pizza/mushroom.jpg'
-},
-{
-  id: 7,
-  category: 'Pizza',
-  name: 'Paneer Tikka Pizza',
-  price: 145,
-  description: 'Paneer tikka with spicy toppings.',
-  image: 'assets/images/pizza/paneer-tikka.jpg'
-},
-{
-  id: 8,
-  category: 'Pizza',
-  name: 'Baby Corn Pizza',
-  price: 130,
-  description: 'Baby corn with capsicum and cheese.',
-  image: 'assets/images/pizza/baby-corn.jpg'
-},
-{
-  id: 9,
-  category: 'Pizza',
-  name: 'Margherita Pizza',
-  price: 105,
-  description: 'Classic cheese Margherita pizza.',
-  image: 'assets/images/pizza/margherita.jpg'
-},
-{
-  id: 10,
-  category: 'Pizza',
-  name: 'Veggie Delight Pizza',
-  price: 110,
-  description: 'Loaded with fresh garden vegetables.',
-  image: 'assets/images/pizza/veggie-delight.jpg'
-},
-{
-  id: 11,
-  category: 'Pizza',
-  name: 'Chocolate Pizza',
-  price: 110,
-  description: 'Chocolate dessert pizza.',
-  image: 'assets/images/pizza/chocolate.jpg'
-},
-{
-  id: 12,
-  category: 'Pizza',
-  name: 'Jain Pizza',
-  price: 110,
-  description: 'Prepared without onion and garlic.',
-  image: 'assets/images/pizza/jain.jpg'
-},
 
-   // Coffee
-{
-  id: 13,
-  category: 'Coffee',
-  name: 'Roasted Coffee',
-  price: 100,
-  description: 'Freshly roasted premium coffee.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 14,
-  category: 'Coffee',
-  name: 'Roasted Mocha Coffee',
-  price: 110,
-  description: 'Rich roasted coffee with mocha.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 15,
-  category: 'Coffee',
-  name: 'Classic Cold Coffee',
-  price: 60,
-  description: 'Refreshing chilled coffee.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 16,
-  category: 'Coffee',
-  name: 'Classic Mocha Cold Coffee',
-  price: 70,
-  description: 'Cold coffee blended with mocha.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 17,
-  category: 'Coffee',
-  name: 'Hot Coffee',
-  price: 35,
-  description: 'Fresh hot coffee.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 18,
-  category: 'Coffee',
-  name: 'Hot Bournvita',
-  price: 55,
-  description: 'Creamy hot Bournvita.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 19,
-  category: 'Coffee',
-  name: 'Hot Chocolate',
-  price: 55,
-  description: 'Rich hot chocolate.',
-  image: 'assets/images/coffee.jpg'
-},
-{
-  id: 20,
-  category: 'Coffee',
-  name: 'Chocolate Kad-B',
-  price: 100,
-  description: 'Special chocolate coffee.',
-  image: 'assets/images/coffee.jpg'
-},
+  // =====================================================
+  // SEARCH
+  // =====================================================
 
-// Shakes
-{
-  id: 21,
-  category: 'Shakes',
-  name: 'Blueberry Frappe',
-  price: 130,
-  description: 'Blueberry flavoured frappe shake.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 22,
-  category: 'Shakes',
-  name: 'Chocolate Frappe',
-  price: 120,
-  description: 'Chocolate frappe shake.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 23,
-  category: 'Shakes',
-  name: 'Saffron Frappe',
-  price: 120,
-  description: 'Premium saffron frappe.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 24,
-  category: 'Shakes',
-  name: 'Mango Shake',
-  price: 120,
-  description: 'Fresh mango milkshake.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 25,
-  category: 'Shakes',
-  name: 'Butterscotch Shake',
-  price: 95,
-  description: 'Creamy butterscotch shake.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 26,
-  category: 'Shakes',
-  name: 'Strawberry Shake',
-  price: 95,
-  description: 'Fresh strawberry shake.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 27,
-  category: 'Shakes',
-  name: 'Vanilla Shake',
-  price: 90,
-  description: 'Classic vanilla shake.',
-  image: 'assets/images/shake.jpg'
-},
-{
-  id: 28,
-  category: 'Shakes',
-  name: 'Bubblegum Shake',
-  price: 125,
-  description: 'Bubblegum flavoured milkshake.',
-  image: 'assets/images/shake.jpg'
-},
+  searchText = '';
 
-// Burger
-{
-  id: 29,
-  category: 'Burger',
-  name: 'Spicy Paneer Burger',
-  price: 140,
-  description: 'Spicy paneer patty with fresh veggies.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 30,
-  category: 'Burger',
-  name: 'Paneer Burger',
-  price: 130,
-  description: 'Classic paneer burger with cheese.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 31,
-  category: 'Burger',
-  name: 'Veg Burger',
-  price: 85,
-  description: 'Fresh vegetable burger.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 32,
-  category: 'Burger',
-  name: 'Crispy Veg Burger',
-  price: 85,
-  description: 'Crispy veg patty with lettuce.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 33,
-  category: 'Burger',
-  name: 'Corn Spinach Burger',
-  price: 85,
-  description: 'Corn and spinach burger.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 34,
-  category: 'Burger',
-  name: 'Mexican Aloo Tikki Burger',
-  price: 75,
-  description: 'Mexican style aloo tikki burger.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 35,
-  category: 'Burger',
-  name: 'Aloo Tikki Burger',
-  price: 65,
-  description: 'Classic aloo tikki burger.',
-  image: 'assets/images/burger.jpg'
-},
-{
-  id: 36,
-  category: 'Burger',
-  name: 'Masala Aloo Tikki Burger',
-  price: 70,
-  description: 'Spicy masala aloo tikki burger.',
-  image: 'assets/images/burger.jpg'
-},
 
-// Fries
-{
-  id: 37,
-  category: 'Fries',
-  name: "Heaven's Special Peri Peri Fries",
-  price: 145,
-  description: 'Special peri peri seasoned fries.',
-  image: 'assets/images/fries.jpg'
-},
-{
-  id: 38,
-  category: 'Fries',
-  name: "Heaven's Special Fries",
-  price: 130,
-  description: 'House special crispy fries.',
-  image: 'assets/images/fries.jpg'
-},
-{
-  id: 39,
-  category: 'Fries',
-  name: 'Sweet Mustard Peri Peri Fries',
-  price: 115,
-  description: 'Sweet mustard with peri peri seasoning.',
-  image: 'assets/images/fries.jpg'
-},
-{
-  id: 40,
-  category: 'Fries',
-  name: 'Sweet Mustard Fries',
-  price: 100,
-  description: 'Sweet mustard flavoured fries.',
-  image: 'assets/images/fries.jpg'
-},
-{
-  id: 41,
-  category: 'Fries',
-  name: 'Masala Fries',
-  price: 85,
-  description: 'Indian masala seasoned fries.',
-  image: 'assets/images/fries.jpg'
-},
-{
-  id: 42,
-  category: 'Fries',
-  name: 'Salted Fries',
-  price: 70,
-  description: 'Classic salted french fries.',
-  image: 'assets/images/fries.jpg'
-},
-{
-  id: 43,
-  category: 'Fries',
-  name: 'Peri Peri Fries',
-  price: 85,
-  description: 'Spicy peri peri fries.',
-  image: 'assets/images/fries.jpg'
-},
+  // =====================================================
+  // MENU
+  // =====================================================
 
-  ];
+  food: MenuItem[] = [];
 
-  filteredFood: any[] = [];
+  filteredFood: MenuItem[] = [];
+
+
+  // =====================================================
+  // STATES
+  // =====================================================
+
+  loading = false;
+
+  errorMessage = '';
+
+  tableConnected = false;
+
+  tableConnecting = false;
+
+
+  // =====================================================
+  // INIT
+  // =====================================================
 
   ngOnInit(): void {
 
-    this.tableNo = Number(this.route.snapshot.paramMap.get('tableId'));
-    localStorage.setItem('tableId', this.tableNo.toString());
-    this.filteredFood = this.food;
-  }
+    console.log('====================================');
+    console.log('CAFÉ QR MENU INITIALIZING');
+    console.log('====================================');
 
-  selectCategory(category: string): void {
 
-    this.selectedCategory = category;
+    const tableId =
+      this.route.snapshot.paramMap.get('tableId');
 
-    if (category === 'All') {
-      this.filteredFood = this.food;
+
+    console.log(
+      'TABLE ID FROM URL:',
+      tableId
+    );
+
+
+    if (!tableId) {
+
+      console.warn(
+        'No tableId found.'
+      );
+
+      this.tableNo = 1;
+
+      localStorage.setItem(
+        'tableId',
+        '1'
+      );
+
+      this.loadMenu();
+
       return;
+
     }
 
 
-    this.filteredFood = this.food.filter(
-      item => item.category === category
+    const parsedTableNo =
+      Number(tableId);
+
+
+    if (
+      !Number.isInteger(parsedTableNo) ||
+      parsedTableNo < 1
+    ) {
+
+      console.warn(
+        'Invalid table number:',
+        tableId
+      );
+
+      this.tableNo = 1;
+
+      localStorage.setItem(
+        'tableId',
+        '1'
+      );
+
+      this.loadMenu();
+
+      return;
+
+    }
+
+
+    this.tableNo =
+      parsedTableNo;
+
+
+    localStorage.setItem(
+      'tableId',
+      this.tableNo.toString()
     );
+
+
+    console.log(
+      'CURRENT TABLE:',
+      this.tableNo
+    );
+
+
+    this.connectTable();
+
+  }
+
+
+  // =====================================================
+  // CONNECT TABLE
+  // =====================================================
+
+  connectTable(): void {
+
+    this.tableConnecting = true;
+
+    console.log(
+      'Connecting Table:',
+      this.tableNo
+    );
+
+
+    this.http
+
+      .post(
+        `${this.tablesApi}/${this.tableNo}/scan`,
+        {},
+        {
+          headers: this.apiHeaders
+        }
+      )
+
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'TABLE QR CONNECTED:',
+            response
+          );
+
+
+          this.tableConnected = true;
+
+          this.tableConnecting = false;
+
+
+          localStorage.setItem(
+            'tableId',
+            this.tableNo.toString()
+          );
+
+
+          this.loadMenu();
+
+        },
+
+
+        error: (error) => {
+
+          console.error(
+            'TABLE QR CONNECTION ERROR:',
+            error
+          );
+
+
+          this.tableConnecting = false;
+
+          this.tableConnected = false;
+
+
+          /*
+           * Table scan failed,
+           * but menu should still load.
+           */
+
+          this.loadMenu();
+
+        }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // LOAD MENU
+  // =====================================================
+
+  loadMenu(): void {
+
+    this.loading = true;
+
+    this.errorMessage = '';
+
+
+    console.log(
+      '===================================='
+    );
+
+    console.log(
+      'LOADING MENU:',
+      this.apiUrl
+    );
+
+    console.log(
+      '===================================='
+    );
+
+
+    this.http
+
+      .get<any>(
+        this.apiUrl,
+        {
+          headers: this.apiHeaders
+        }
+      )
+
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(
+            'RAW MENU RESPONSE:',
+            response
+          );
+
+
+          let items: any[] = [];
+
+
+          // ------------------------------------------------
+          // ARRAY RESPONSE
+          // ------------------------------------------------
+
+          if (
+            Array.isArray(response)
+          ) {
+
+            items = response;
+
+          }
+
+
+          // ------------------------------------------------
+          // { data: [] }
+          // ------------------------------------------------
+
+          else if (
+            response &&
+            Array.isArray(response.data)
+          ) {
+
+            items = response.data;
+
+          }
+
+
+          // ------------------------------------------------
+          // { items: [] }
+          // ------------------------------------------------
+
+          else if (
+            response &&
+            Array.isArray(response.items)
+          ) {
+
+            items = response.items;
+
+          }
+
+
+          // ------------------------------------------------
+          // { menu: [] }
+          // ------------------------------------------------
+
+          else if (
+            response &&
+            Array.isArray(response.menu)
+          ) {
+
+            items = response.menu;
+
+          }
+
+
+          console.log(
+            'MENU ITEMS:',
+            items
+          );
+
+
+          console.log(
+            'MENU COUNT:',
+            items.length
+          );
+
+
+          // =================================================
+          // CONVERT API DATA
+          // =================================================
+
+          this.food =
+
+            items.map(
+              (item: any) => {
+
+                return {
+
+                  id:
+                    Number(item.id),
+
+                  name:
+                    item.name ||
+                    'Unnamed Item',
+
+                  category:
+                    item.category ||
+                    '',
+
+                  price:
+                    Number(item.price || 0),
+
+                  description:
+                    item.description ||
+                    '',
+
+                  image:
+                    this.getImageUrl(
+                      item.image ||
+                      ''
+                    ),
+
+                  isAvailable:
+                    this.checkAvailability(
+                      item.isAvailable
+                    ),
+
+                  isVeg:
+                    Boolean(
+                      item.isVeg
+                    )
+
+                };
+
+              }
+            );
+
+
+          // =================================================
+          // REMOVE ONLY UNAVAILABLE ITEMS
+          // =================================================
+
+          this.food =
+            this.food.filter(
+              item =>
+                item.isAvailable
+            );
+
+
+          console.log(
+            'FINAL FOOD:',
+            this.food
+          );
+
+
+          console.log(
+            'FINAL FOOD COUNT:',
+            this.food.length
+          );
+
+
+          // =================================================
+          // FILTER
+          // =================================================
+
+          this.applyFilters();
+
+
+          this.loading = false;
+
+
+          if (
+            this.food.length === 0
+          ) {
+
+            this.errorMessage =
+              'No menu items found.';
+
+          }
+
+        },
+
+
+        error: (error) => {
+
+          console.error(
+            '===================================='
+          );
+
+          console.error(
+            'MENU API ERROR:',
+            error
+          );
+
+          console.error(
+            '===================================='
+          );
+
+
+          this.loading = false;
+
+          this.food = [];
+
+          this.filteredFood = [];
+
+
+          this.errorMessage =
+            'Unable to load menu. Please try again.';
+
+        }
+
+      });
+
+  }
+
+
+  // =====================================================
+  // CHECK AVAILABILITY
+  // =====================================================
+
+  private checkAvailability(
+    value: any
+  ): boolean {
+
+    if (
+      value === undefined ||
+      value === null
+    ) {
+
+      return true;
+
+    }
+
+
+    if (
+      typeof value === 'boolean'
+    ) {
+
+      return value;
+
+    }
+
+
+    if (
+      typeof value === 'number'
+    ) {
+
+      return value === 1;
+
+    }
+
+
+    if (
+      typeof value === 'string'
+    ) {
+
+      const result =
+        value
+          .toLowerCase()
+          .trim();
+
+
+      if (
+        result === 'false' ||
+        result === '0' ||
+        result === 'no' ||
+        result === 'unavailable'
+      ) {
+
+        return false;
+
+      }
+
+
+      return true;
+
+    }
+
+
+    return true;
+
+  }
+
+
+  // =====================================================
+  // IMAGE URL
+  // =====================================================
+
+  getImageUrl(
+    image: string
+  ): string {
+
+    if (!image) {
+
+      return 'assets/images/food-placeholder.jpg';
+
+    }
+
+
+    if (
+      image.startsWith('http://') ||
+      image.startsWith('https://')
+    ) {
+
+      return image;
+
+    }
+
+
+    if (
+      image.startsWith('/')
+    ) {
+
+      return (
+        'http://localhost:3000' +
+        image
+      );
+
+    }
+
+
+    return (
+      'http://localhost:3000/' +
+      image
+    );
+
+  }
+
+
+  // =====================================================
+  // SEARCH
+  // =====================================================
+
+  searchMenu(
+    event: any
+  ): void {
+
+    this.searchText =
+      event.target.value
+        .toLowerCase()
+        .trim();
+
+
+    this.applyFilters();
+
+  }
+
+
+  // =====================================================
+  // CATEGORY
+  // =====================================================
+
+  selectCategory(
+    category: string
+  ): void {
+
+    this.selectedCategory =
+      category;
+
+
+    this.applyFilters();
+
+  }
+
+
+  // =====================================================
+  // FILTER
+  // =====================================================
+
+  private applyFilters(): void {
+
+    let result =
+      [...this.food];
+
+
+    // CATEGORY
+
+    if (
+      this.selectedCategory !== 'All'
+    ) {
+
+      result =
+        result.filter(
+          item =>
+            item.category
+              .toLowerCase() ===
+            this.selectedCategory
+              .toLowerCase()
+        );
+
+    }
+
+
+    // SEARCH
+
+    if (
+      this.searchText
+    ) {
+
+      result =
+        result.filter(
+          item => {
+
+            const name =
+              item.name
+                .toLowerCase();
+
+
+            const description =
+              item.description
+                .toLowerCase();
+
+
+            const category =
+              item.category
+                .toLowerCase();
+
+
+            return (
+
+              name.includes(
+                this.searchText
+              )
+
+              ||
+
+              description.includes(
+                this.searchText
+              )
+
+              ||
+
+              category.includes(
+                this.searchText
+              )
+
+            );
+
+          }
+        );
+
+    }
+
+
+    this.filteredFood =
+      result;
+
+
+    console.log(
+      'FILTERED FOOD:',
+      this.filteredFood
+    );
+
+  }
+
+
+  // =====================================================
+  // ADD TO CART
+  // =====================================================
+
+  addToCart(
+    item: MenuItem
+  ): void {
+
+    if (
+      !item.isAvailable
+    ) {
+
+      return;
+
+    }
+
+
+    const cartItem = {
+
+      ...item,
+
+      tableId:
+        this.tableNo
+
+    };
+
+
+    this.cartService.addToCart(
+      cartItem
+    );
+
+
+    item.addedToCart =
+      true;
+
+
+    setTimeout(() => {
+
+      item.addedToCart =
+        false;
+
+    }, 1000);
+
+  }
+
+
+  // =====================================================
+  // CART
+  // =====================================================
+
+  goToCart(): void {
+
+    this.router.navigate([
+      '/cart'
+    ]);
+
+  }
+
+
+  // =====================================================
+  // CART COUNT
+  // =====================================================
+
+  get cartCount(): number {
+
+    return this.cartService
+      .getCartCount();
+
   }
 
 }

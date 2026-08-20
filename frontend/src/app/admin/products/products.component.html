@@ -1,0 +1,548 @@
+<div class="products-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+
+            <!-- <h2>Products</h2> -->
+
+            <p>
+                Manage inventory products
+            </p>
+
+        </div>
+
+        <button
+            class="add-btn"
+            (click)="addProduct()"
+        >
+
+            <i class="bi bi-plus-circle"></i>
+
+            Add Product
+
+        </button>
+
+    </div>
+
+
+    <!-- SEARCH + FILTER -->
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            placeholder="Search Product"
+            [(ngModel)]="searchText"
+            (keyup.enter)="searchProducts()"
+        />
+
+
+        <select
+            [(ngModel)]="selectedCategory"
+            (change)="filterProducts()"
+        >
+
+            <option value="">
+                All Categories
+            </option>
+
+            <option
+                *ngFor="let category of categories"
+                [value]="category.id"
+            >
+
+                {{ category.name }}
+
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+        class="loading"
+        *ngIf="loading"
+    >
+
+        Loading products...
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div
+        class="table-card"
+        *ngIf="!loading"
+    >
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Image</th>
+
+                    <th>Product</th>
+
+                    <th>Category</th>
+
+                    <th>Stock</th>
+
+                    <th>Price</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <!-- PRODUCTS -->
+
+                <tr
+                    *ngFor="let product of products"
+                >
+
+                    <!-- IMAGE -->
+
+                    <td>
+
+                        <img
+                            [src]="getImageUrl(product.image)"
+                            [alt]="product.name"
+                        >
+
+                    </td>
+
+
+                    <!-- NAME -->
+
+                    <td>
+
+                        {{ product.name }}
+
+                    </td>
+
+
+                    <!-- CATEGORY -->
+
+                    <td>
+
+                        {{
+                            product.category?.name
+                            || 'No Category'
+                        }}
+
+                    </td>
+
+
+                    <!-- STOCK -->
+
+                    <td>
+
+                        {{ product.stock  | number:'1.0-0' }}
+                        {{ product.unit }}
+
+                    </td>
+
+
+                    <!-- PRICE -->
+
+                    <td>
+
+                        ₹{{ product.price }}
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        <span
+                            [class]="getStatusClass(product)"
+                        >
+
+                            {{ getStatus(product) }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <button
+                            class="edit"
+                            (click)="editProduct(product)"
+                        >
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            class="delete"
+                            (click)="deleteProduct(product)"
+                        >
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+
+                <!-- NO PRODUCTS -->
+
+                <tr
+                    *ngIf="products.length === 0"
+                >
+
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+
+                        No products found.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ADD / EDIT MODAL -->
+
+    <div
+        class="product-modal-overlay"
+        *ngIf="showModal"
+        (click)="closeModal()"
+    >
+
+        <div
+            class="product-modal"
+            (click)="$event.stopPropagation()"
+        >
+
+            <!-- MODAL HEADER -->
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h3>
+
+                        {{
+                            isEditMode
+                            ? 'Edit Product'
+                            : 'Add Product'
+                        }}
+
+                    </h3>
+
+                    <p>
+
+                        {{
+                            isEditMode
+                            ? 'Update product details'
+                            : 'Add a new inventory product'
+                        }}
+
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="close-btn"
+                    (click)="closeModal()"
+                >
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form
+                (ngSubmit)="saveProduct()"
+            >
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label>
+                        Product Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter product name"
+                        [(ngModel)]="product.name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CATEGORY + UNIT -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Category
+                        </label>
+
+                        <select
+                            name="categoryId"
+                            [(ngModel)]="product.categoryId"
+                            required
+                        >
+
+                            <option
+                                [ngValue]="null"
+                            >
+                                Select Category
+                            </option>
+
+                            <option
+                                *ngFor="let category of categories"
+                                [ngValue]="category.id"
+                            >
+
+                                {{ category.name }}
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Unit
+                        </label>
+
+                        <select
+                            name="unit"
+                            [(ngModel)]="product.unit"
+                        >
+
+                            <option value="Kg">
+                                Kg
+                            </option>
+
+                            <option value="Gram">
+                                Gram
+                            </option>
+
+                            <option value="Litre">
+                                Litre
+                            </option>
+
+                            <option value="Ml">
+                                Ml
+                            </option>
+
+                            <option value="Packet">
+                                Packet
+                            </option>
+
+                            <option value="Piece">
+                                Piece
+                            </option>
+
+                            <option value="Box">
+                                Box
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRICE + STOCK -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Price
+                        </label>
+
+                        <input
+                            type="number"
+                            name="price"
+                            min="0"
+                            [(ngModel)]="product.price"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Stock
+                        </label>
+
+                        <input
+                            type="number"
+                            name="stock"
+                            min="0"
+                            [(ngModel)]="product.stock"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Product Image
+                    </label>
+
+                    <div class="image-upload">
+
+                        <div
+                            class="image-preview"
+                            *ngIf="imagePreview"
+                        >
+
+                            <img
+                                [src]="imagePreview"
+                                alt="Product Preview"
+                            >
+
+                        </div>
+
+
+                        <label
+                            class="upload-box"
+                        >
+
+                            <i class="bi bi-cloud-arrow-up"></i>
+
+                            <span>
+                                Choose Product Image
+                            </span>
+
+                            <small>
+                                JPG, PNG or WEBP — Max 5MB
+                            </small>
+
+                            <input
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                (change)="onImageSelected($event)"
+                            >
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AVAILABLE -->
+
+                <div class="availability">
+
+                    <input
+                        type="checkbox"
+                        name="isAvailable"
+                        [(ngModel)]="product.isAvailable"
+                    >
+
+                    <span>
+                        Product Available
+                    </span>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        (click)="closeModal()"
+                    >
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                        [disabled]="saving"
+                    >
+
+                        {{
+                            saving
+                            ? 'Saving...'
+                            : (
+                                isEditMode
+                                ? 'Update Product'
+                                : 'Add Product'
+                            )
+                        }}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

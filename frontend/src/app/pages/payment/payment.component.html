@@ -1,1 +1,137 @@
-<p>payment works!</p>
+<div class="payment-overlay">
+
+  <div class="payment-modal">
+
+    <!-- Header -->
+
+    <div class="payment-header">
+
+      <div>
+        <h3>
+          <i class="bi bi-wallet2"></i>
+          Select Payment
+        </h3>
+
+        <p>
+          Choose how you want to pay
+        </p>
+      </div>
+
+      <button
+        class="close-btn"
+        type="button"
+        (click)="closePopup()">
+
+        <i class="bi bi-x-lg"></i>
+
+      </button>
+
+    </div>
+
+
+    <!-- Payment Options -->
+
+    <div class="payment-options">
+
+      <!-- CASH -->
+
+      <button
+        type="button"
+        class="payment-option cash-option"
+        [class.selected]="selectedMethod === 'Cash'"
+        (click)="selectPayment('Cash')">
+
+        <div class="payment-icon cash-icon">
+
+          <i class="bi bi-cash-stack"></i>
+
+        </div>
+
+        <div class="payment-info">
+
+          <h5>Cash</h5>
+
+          <p>
+            Pay at the counter
+          </p>
+
+        </div>
+
+        <div class="radio-circle">
+
+          @if(selectedMethod === 'Cash'){
+            <i class="bi bi-check-lg"></i>
+          }
+
+        </div>
+
+      </button>
+
+
+      <!-- ONLINE -->
+
+      <button
+        type="button"
+        class="payment-option online-option"
+        [class.selected]="selectedMethod === 'Online'"
+        (click)="selectPayment('Online')">
+
+        <div class="payment-icon online-icon">
+
+          <i class="bi bi-credit-card"></i>
+
+        </div>
+
+        <div class="payment-info">
+
+          <h5>Online</h5>
+
+          <p>
+            Pay using online payment
+          </p>
+
+        </div>
+
+        <div class="radio-circle">
+
+          @if(selectedMethod === 'Online'){
+            <i class="bi bi-check-lg"></i>
+          }
+
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <!-- Footer -->
+
+    <div class="payment-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closePopup()">
+
+        Cancel
+
+      </button>
+
+      <button
+        type="button"
+        class="confirm-btn"
+        [disabled]="!selectedMethod"
+        (click)="confirmPayment()">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        Confirm Payment
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

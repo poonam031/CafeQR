@@ -1,0 +1,582 @@
+/* =====================================================
+   HISTORY PAGE
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.history-container {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 20px;
+
+    background: #f5f7fb;
+
+    min-height: calc(100vh - 82px);
+
+    font-family: 'Segoe UI', sans-serif;
+
+    overflow-x: hidden;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.history-header {
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+.history-header h2 {
+    font-size: 28px;
+
+    color: #222;
+
+    margin-bottom: 5px;
+}
+
+.history-header p {
+    color: #777;
+}
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+.filter-section {
+    width: 100%;
+
+    display: flex;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 20px;
+}
+
+.filter-section input,
+.filter-section select {
+
+    padding: 10px 14px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    min-width: 180px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+.filter-section input:focus,
+.filter-section select:focus {
+
+    border-color: #ff6b35;
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.summary {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.summary-card {
+
+    min-width: 0;
+
+    background: #fff;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, .08);
+}
+
+.summary-card h3 {
+
+    color: #666;
+
+    font-size: 15px;
+
+    margin-bottom: 8px;
+}
+
+.summary-card h2 {
+
+    color: #222;
+
+    font-size: 28px;
+}
+
+
+/* =====================================================
+   TABLE CONTAINER
+===================================================== */
+
+.table-container {
+
+    width: 100%;
+
+    max-width: 100%;
+
+    background: #fff;
+
+    border-radius: 14px;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, .08);
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+table {
+
+    width: 100%;
+
+    min-width: 900px;
+
+    border-collapse: collapse;
+
+    table-layout: auto;
+}
+
+
+/* =====================================================
+   TABLE HEADER
+===================================================== */
+
+thead {
+
+    background: #ff6b35;
+
+    color: #fff;
+}
+
+th {
+
+    padding: 15px;
+
+    text-align: left;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   TABLE BODY
+===================================================== */
+
+td {
+
+    padding: 15px;
+
+    border-bottom: 1px solid #eee;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+}
+
+tbody tr:hover {
+
+    background: #fafafa;
+}
+
+tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+.cash {
+
+    display: inline-block;
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.online {
+
+    display: inline-block;
+
+    background: #dbeafe;
+
+    color: #1d4ed8;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.completed {
+
+    display: inline-block;
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.cancelled {
+
+    display: inline-block;
+
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+button {
+
+    border: none;
+
+    background: #ff6b35;
+
+    color: #fff;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+    white-space: nowrap;
+}
+
+button:hover {
+
+    background: #e85b2d;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .summary {
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    /* ================================================
+       MAIN CONTAINER
+    ================================================= */
+
+    .history-container {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        padding: 15px;
+
+        min-height: calc(100vh - 65px);
+
+        overflow-x: hidden;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ================================================
+       HEADER
+    ================================================= */
+
+    .history-header {
+
+        width: 100%;
+
+        margin-bottom: 15px;
+    }
+
+    .history-header h2 {
+
+        font-size: 24px;
+
+        line-height: 1.2;
+    }
+
+    .history-header p {
+
+        font-size: 14px;
+    }
+
+
+    /* ================================================
+       FILTER
+    ================================================= */
+
+    .filter-section {
+
+        width: 100%;
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .filter-section input,
+    .filter-section select {
+
+        width: 100%;
+
+        min-width: 0;
+
+        height: 45px;
+
+        padding: 10px 14px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ================================================
+       SUMMARY
+    ================================================= */
+
+    .summary {
+
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .summary-card {
+
+        width: 100%;
+
+        padding: 15px;
+
+        box-sizing: border-box;
+    }
+
+
+    .summary-card h3 {
+
+        font-size: 14px;
+
+        margin-bottom: 6px;
+    }
+
+
+    .summary-card h2 {
+
+        font-size: 24px;
+    }
+
+
+    /* ================================================
+       TABLE
+
+       Keep table wide and allow horizontal scrolling.
+    ================================================= */
+
+    .table-container {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    table {
+
+        width: 100%;
+
+        min-width: 900px;
+    }
+
+
+    th,
+    td {
+
+        padding: 12px;
+
+        font-size: 13px;
+    }
+
+
+    /* ================================================
+       BUTTON
+    ================================================= */
+
+    button {
+
+        padding: 7px 12px;
+
+        font-size: 13px;
+    }
+
+}
+
+
+
+/* ================================
+   EXTRA HISTORY STATES
+================================ */
+
+.pending {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.payment-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px !important;
+    color: #777;
+}
+
+.loading {
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fff7ed;
+    color: #c2410c;
+    border-radius: 10px;
+}
+
+.error-message {
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 10px;
+}

@@ -1,0 +1,283 @@
+/* =====================================================
+   KITCHEN LAYOUT
+===================================================== */
+
+.layout {
+    width: 100%;
+    min-height: 100vh;
+
+    background: #f5f7fb;
+
+    position: relative;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.main {
+    width: auto;
+
+    min-height: 100vh;
+
+    margin-left: 250px;
+
+    background: #f5f7fb;
+
+    transition: margin-left 0.3s ease;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   DESKTOP SIDEBAR
+===================================================== */
+
+app-sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    z-index: 1000;
+
+    display: block;
+
+    transition:
+        left 0.3s ease,
+        opacity 0.2s ease;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+app-header {
+    position: fixed;
+
+    top: 0;
+    left: 250px;
+    right: 0;
+
+    height: 82px;
+
+    z-index: 2000;
+
+    display: block;
+
+    transition: left 0.3s ease;
+}
+
+
+/* =====================================================
+   PAGE CONTENT
+===================================================== */
+
+.content {
+    width: 100%;
+
+    min-height: 100vh;
+
+    padding-top: 82px;
+
+    background: #f5f7fb;
+
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   DESKTOP - SIDEBAR CLOSED
+===================================================== */
+
+.layout.sidebar-closed .main {
+    margin-left: 0;
+}
+
+
+.layout.sidebar-closed app-sidebar {
+    left: -250px;
+}
+
+
+.layout.sidebar-closed app-header {
+    left: 0;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+/* =====================================================
+   MOBILE
+   VERTICAL POPUP SIDEBAR
+===================================================== */
+
+@media (max-width: 768px) {
+
+    /* =================================================
+       MAIN
+    ================================================= */
+
+    .main {
+        width: 100% !important;
+
+        min-height: 100vh;
+
+        margin-left: 0 !important;
+
+        box-sizing: border-box;
+
+        transition: none;
+    }
+
+
+    /* =================================================
+       HEADER
+    ================================================= */
+
+    app-header {
+
+        position: fixed;
+
+        top: 0;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        width: 100% !important;
+
+        height: 65px;
+
+        z-index: 2000;
+
+        transition: none;
+    }
+
+
+    /* =================================================
+       CONTENT
+       ONLY HEADER OCCUPIES SPACE
+    ================================================= */
+
+    .content {
+
+        width: 100% !important;
+
+        min-height: 100vh;
+
+        margin-left: 0 !important;
+
+        padding-top: 65px;
+
+        padding-bottom: 20px;
+
+        box-sizing: border-box;
+
+        overflow-x: hidden;
+
+        overflow-y: auto;
+    }
+
+
+    /* =================================================
+       MOBILE POPUP SIDEBAR
+    ================================================= */
+
+    app-sidebar {
+
+        position: fixed !important;
+
+        top: 75px !important;
+
+        left: 10px !important;
+
+        right: auto !important;
+
+        bottom: auto !important;
+
+        width: 220px !important;
+
+        height: auto !important;
+
+        z-index: 3000;
+
+        display: block;
+
+        opacity: 1;
+
+        visibility: visible;
+
+        transform: translateX(0) scale(1);
+
+        transform-origin: top left;
+
+        pointer-events: auto;
+
+        transition:
+            transform .28s cubic-bezier(.4, 0, .2, 1),
+            opacity .2s ease;
+    }
+
+
+    /* =================================================
+       CLOSED
+
+       Card slides left + slightly shrinks.
+    ================================================= */
+
+    .layout.sidebar-closed app-sidebar {
+
+        top: 75px !important;
+
+        left: 10px !important;
+
+        width: 220px !important;
+
+        height: auto !important;
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transform:
+            translateX(-120%)
+            scale(.96);
+    }
+
+
+    /* =================================================
+       MAIN ALWAYS FULL WIDTH
+    ================================================= */
+
+    .layout.sidebar-closed .main {
+
+        width: 100% !important;
+
+        margin-left: 0 !important;
+    }
+
+
+    /* =================================================
+       HEADER ALWAYS FULL WIDTH
+    ================================================= */
+
+    .layout.sidebar-closed app-header {
+
+        left: 0 !important;
+
+        right: 0 !important;
+    }
+
+}

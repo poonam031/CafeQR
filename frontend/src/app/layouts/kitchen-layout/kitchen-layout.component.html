@@ -1,0 +1,21 @@
+<div class="layout" [class.sidebar-closed]="!sidebarOpen">
+
+   <app-sidebar
+    [isOpen]="sidebarOpen"
+    (closeMenu)="closeSidebarOnMobile()">
+  </app-sidebar>
+
+  <div class="main">
+
+    <app-header
+            title="🍽 Kitchen Orders"
+            (menuClick)="toggleSidebar()">
+        </app-header>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+
+</div>

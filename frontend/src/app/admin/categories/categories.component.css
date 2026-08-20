@@ -1,0 +1,1059 @@
+/* =========================================================
+   QR CAFE - CATEGORIES PAGE
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CATEGORIES PAGE
+========================================================= */
+
+.categories-page {
+  width: 100%;
+  min-height: 100%;
+
+  padding: 20px;
+
+  background: #f5f7fb;
+
+  font-family: "Segoe UI", sans-serif;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.page-header h2 {
+  margin: 0;
+
+  font-size: 30px;
+  font-weight: 700;
+
+  color: #222;
+}
+
+.page-header p {
+  margin-top: 5px;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   ADD CATEGORY BUTTON
+========================================================= */
+
+.add-btn {
+  border: none;
+
+  background: #ff6333;
+  color: #ffffff;
+
+  padding: 11px 18px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.add-btn i {
+  margin-right: 6px;
+}
+
+.add-btn:hover {
+  background: #e85b2d;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 5px 12px rgba(255, 99, 51, 0.25);
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar {
+  width: 100%;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   SEARCH BOX
+========================================================= */
+
+.search-box {
+  width: 100%;
+  max-width: 410px;
+
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  padding: 0 14px;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 2px 7px rgba(0, 0, 0, 0.03);
+
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: #d9a300;
+
+  box-shadow:
+    0 0 0 3px rgba(217, 163, 0, 0.10);
+}
+
+.search-box i {
+  flex-shrink: 0;
+
+  color: #777;
+
+  font-size: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 14px;
+
+  color: #333;
+}
+
+.search-box input::placeholder {
+  color: #999;
+}
+
+
+/* =========================================================
+   CATEGORY GRID
+========================================================= */
+
+.category-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(250px, 1fr));
+
+  gap: 16px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   CATEGORY CARD
+========================================================= */
+
+.category-card {
+  min-width: 0;
+
+  background: #ffffff;
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.07);
+
+  display: flex;
+
+  flex-direction: column;
+
+  transition: all 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.10);
+}
+
+
+/* =========================================================
+   CATEGORY IMAGE - FULL CARD WIDTH
+========================================================= */
+
+.category-image {
+  width: 100%;
+
+  height: 160px;
+
+  background: #fff1eb;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  margin-bottom: 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* =========================================================
+   UPLOADED CATEGORY IMAGE
+========================================================= */
+
+.category-image img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+
+/* =========================================================
+   DEFAULT CATEGORY IMAGE
+========================================================= */
+
+.default-category-image {
+  width: 100%;
+
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #fff1eb;
+
+  color: #ff6333;
+
+  font-size: 42px;
+}
+
+
+/* =========================================================
+   CATEGORY INFORMATION
+========================================================= */
+
+.category-info {
+  flex: 1;
+}
+
+.category-info h3 {
+  margin: 0 0 5px;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  color: #222;
+}
+
+.category-info p {
+  margin: 0;
+
+  font-size: 13px;
+
+  color: #777;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+  display: inline-block;
+
+  width: fit-content;
+
+  margin-top: 12px;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* ACTIVE */
+
+.status.active {
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+
+/* INACTIVE */
+
+.status.inactive {
+  background: #fee2e2;
+
+  color: #b91c1c;
+}
+
+
+/* =========================================================
+   CATEGORY ACTIONS
+========================================================= */
+
+.category-actions {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.category-actions button {
+  flex: 1;
+
+  border: none;
+
+  padding: 9px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.edit-btn {
+  background: #eff6ff;
+
+  color: #2563eb;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.delete-btn {
+  background: #fef2f2;
+
+  color: #dc2626;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   NO SEARCH RESULTS
+========================================================= */
+
+.no-results {
+  width: 100%;
+
+  text-align: center;
+
+  padding: 60px 20px;
+
+  color: #777;
+}
+
+.no-results i {
+  font-size: 35px;
+}
+
+.no-results h3 {
+  margin: 12px 0 5px;
+
+  color: #333;
+}
+
+.no-results p {
+  margin: 0;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   MODAL OVERLAY
+========================================================= */
+
+.modal-overlay {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.50);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.category-modal {
+  width: 100%;
+
+  max-width: 480px;
+
+  max-height: 90vh;
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.25);
+
+  overflow-y: auto;
+
+  animation: modalOpen 0.2s ease;
+}
+
+
+/* =========================================================
+   MODAL ANIMATION
+========================================================= */
+
+@keyframes modalOpen {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-15px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.modal-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 18px 22px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  position: sticky;
+
+  top: 0;
+
+  background: #ffffff;
+
+  z-index: 2;
+}
+
+.modal-header h2 {
+  margin: 0;
+
+  font-size: 21px;
+
+  font-weight: 700;
+
+  color: #222;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.close-btn {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #f5f5f5;
+
+  color: #555;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #eeeeee;
+
+  color: #222;
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.modal-body {
+  padding: 22px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.form-group {
+  margin-bottom: 17px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #333;
+}
+
+
+/* =========================================================
+   FORM INPUTS
+========================================================= */
+
+.form-group input,
+.form-group select {
+  width: 100%;
+
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dcdcdc;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #333;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #d9a300;
+
+  box-shadow:
+    0 0 0 3px rgba(217, 163, 0, 0.10);
+}
+
+
+/* =========================================================
+   UPLOAD BOX
+========================================================= */
+
+.upload-box {
+  width: 100%;
+
+  min-height: 130px;
+
+  border: 2px dashed #d9d9d9;
+
+  border-radius: 12px;
+
+  background: #fafafa;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.upload-box:hover {
+  border-color: #ff6333;
+
+  background: #fff8f5;
+}
+
+.upload-box i {
+  font-size: 30px;
+
+  color: #ff6333;
+}
+
+.upload-box span {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #333;
+}
+
+.upload-box small {
+  font-size: 11px;
+
+  color: #888;
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+.image-preview {
+  width: 100%;
+
+  position: relative;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  background: #f5f5f5;
+}
+
+.image-preview img {
+  width: 100%;
+
+  height: 150px;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+
+/* =========================================================
+   REMOVE IMAGE BUTTON
+========================================================= */
+
+.remove-image-btn {
+  position: absolute;
+
+  right: 10px;
+
+  bottom: 10px;
+
+  border: none;
+
+  background: rgba(220, 38, 38, 0.90);
+
+  color: #ffffff;
+
+  padding: 7px 10px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.remove-image-btn:hover {
+  background: #dc2626;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
+
+.modal-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 16px 22px;
+
+  border-top: 1px solid #eeeeee;
+
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+========================================================= */
+
+.cancel-btn {
+  border: none;
+
+  padding: 10px 17px;
+
+  border-radius: 8px;
+
+  background: #f1f1f1;
+
+  color: #444;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #e5e5e5;
+}
+
+
+/* =========================================================
+   SAVE / UPDATE BUTTON
+========================================================= */
+
+.save-btn {
+  border: none;
+
+  padding: 10px 17px;
+
+  border-radius: 8px;
+
+  background: #ff6333;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+  background: #e85b2d;
+
+  box-shadow:
+    0 4px 10px rgba(255, 99, 51, 0.20);
+}
+
+
+/* =========================================================
+   MAIN APPLICATION LAYOUT
+========================================================= */
+
+.layout {
+  display: flex;
+
+  width: 100%;
+
+  height: 100vh;
+
+  overflow: hidden;
+
+  background: #f5f7fb;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+  width: 260px;
+
+  min-width: 260px;
+
+  height: 100vh;
+
+  background: #342500;
+
+  color: #ffffff;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   MAIN AREA
+========================================================= */
+
+.main {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  width: 100%;
+
+  height: 82px;
+
+  min-height: 82px;
+
+  background: #e5d8b4;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+  flex: 1;
+
+  min-width: 0;
+
+  min-height: 0;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  background: #f5f7fb;
+
+  padding: 0;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.content::-webkit-scrollbar {
+  width: 7px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: #f5f7fb;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+
+  border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .category-grid {
+    grid-template-columns:
+      repeat(3, minmax(220px, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - SMALL TABLET
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .category-grid {
+    grid-template-columns:
+      repeat(2, minmax(220px, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .categories-page {
+    padding: 15px;
+  }
+
+  .page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-actions {
+    gap: 6px;
+  }
+
+  .category-actions button {
+    padding: 9px 5px;
+  }
+
+  .category-modal {
+    max-width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .categories-page {
+    padding: 12px;
+  }
+
+  .category-card {
+    padding: 15px;
+  }
+
+  .page-header h2 {
+    font-size: 25px;
+  }
+
+}

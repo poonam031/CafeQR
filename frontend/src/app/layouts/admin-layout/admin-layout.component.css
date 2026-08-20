@@ -1,0 +1,260 @@
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+
+.layout {
+    width: 100%;
+    min-height: 100vh;
+
+    background: #f5f7fb;
+
+    position: relative;
+}
+
+
+/* =====================================================
+   MAIN AREA
+===================================================== */
+
+.main {
+    min-height: 100vh;
+
+    margin-left: 250px;
+
+    background: #f5f7fb;
+
+    transition: margin-left 0.3s ease;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+app-sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    z-index: 1000;
+
+    display: block;
+
+    transition:
+        width 0.3s ease,
+        left 0.3s ease;
+}
+
+
+/* =====================================================
+   FIXED HEADER
+===================================================== */
+
+app-header {
+    position: fixed;
+
+    top: 0;
+    left: 250px;
+    right: 0;
+
+    height: 82px;
+
+    z-index: 900;
+
+    display: block;
+
+    transition: left 0.3s ease;
+}
+
+
+/* =====================================================
+   PAGE CONTENT
+===================================================== */
+
+.content {
+    width: 100%;
+
+    min-height: 100vh;
+
+    padding-top: 82px;
+
+    background: #f5f7fb;
+
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   SIDEBAR CLOSED - DESKTOP
+===================================================== */
+
+.layout.sidebar-closed .main {
+    margin-left: 0;
+}
+
+
+.layout.sidebar-closed app-sidebar {
+    left: -250px;
+}
+
+
+.layout.sidebar-closed app-header {
+    left: 0;
+}
+
+
+/* =====================================================
+   MOBILE
+   HEADER + TOP NAVIGATION
+===================================================== */
+
+@media (max-width: 768px) {
+
+    /* =================================================
+       MAIN AREA
+    ================================================= */
+
+    .main {
+        width: 100% !important;
+
+        min-height: 100vh;
+
+        margin-left: 0 !important;
+
+        padding-bottom: 0;
+
+        box-sizing: border-box;
+
+        transition: none;
+    }
+
+
+    /* =================================================
+       HEADER
+    ================================================= */
+
+    app-header {
+        position: fixed;
+
+        top: 0;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        width: 100% !important;
+
+        height: 65px;
+
+        z-index: 1000;
+
+        transition: none;
+    }
+
+
+    /* =================================================
+       SIDEBAR
+       MOBILE = TOP NAVIGATION
+    ================================================= */
+
+    app-sidebar {
+        position: fixed !important;
+
+        top: 65px !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        bottom: auto !important;
+
+        width: 100% !important;
+
+        height: 60px !important;
+
+        z-index: 999;
+
+        display: block;
+
+        transition: none !important;
+    }
+
+
+    /* =================================================
+       CONTENT
+    ================================================= */
+
+    .content {
+        width: 100% !important;
+
+        min-height: 100vh;
+
+        margin-left: 0 !important;
+
+        /*
+           Header = 65px
+           Navigation = 60px
+           Total = 125px
+        */
+
+        padding-top: 125px;
+
+        padding-bottom: 20px;
+
+        box-sizing: border-box;
+
+        overflow-x: hidden;
+
+        overflow-y: auto;
+    }
+
+
+    /* =================================================
+       SIDEBAR CLOSED
+       KEEP TOP NAVIGATION VISIBLE
+    ================================================= */
+
+    .layout.sidebar-closed app-sidebar {
+        position: fixed !important;
+
+        top: 65px !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        bottom: auto !important;
+
+        width: 100% !important;
+
+        height: 60px !important;
+
+        transform: none !important;
+    }
+
+
+    /* =================================================
+       CLOSED MAIN
+    ================================================= */
+
+    .layout.sidebar-closed .main {
+        width: 100% !important;
+
+        margin-left: 0 !important;
+    }
+
+
+    /* =================================================
+       CLOSED HEADER
+    ================================================= */
+
+    .layout.sidebar-closed app-header {
+        left: 0 !important;
+
+        right: 0 !important;
+    }
+
+}

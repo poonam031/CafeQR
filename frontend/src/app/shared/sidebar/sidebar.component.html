@@ -1,0 +1,46 @@
+<div class="sidebar" [class.closed]="!isOpen">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <span>QR Cafe</span>
+    </div>
+
+
+    <!-- NAVIGATION -->
+    <nav>
+
+        <a
+    *ngFor="let item of menuItems"
+    [routerLink]="item.route"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    [attr.data-tooltip]="item.label"
+    (click)="menuItemClick()"
+>
+
+    <i [class]="item.icon"></i>
+
+    <span class="menu-label">
+        {{ item.label }}
+    </span>
+
+</a>
+    </nav>
+
+
+    <!-- LOGOUT -->
+    <a
+        class="logout"
+        data-tooltip="Logout"
+        (click)="logout()"
+    >
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        <span class="menu-label">
+            Logout
+        </span>
+
+    </a>
+
+</div>

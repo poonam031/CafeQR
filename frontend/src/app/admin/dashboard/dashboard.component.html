@@ -1,1 +1,413 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+
+  <!-- ================= HEADER ================= -->
+
+  <div class="dashboard-header">
+
+    <div class="admin-profile">
+    </div>
+
+  </div>
+
+
+  <!-- ================= STATISTICS ================= -->
+
+  <div class="stats-grid">
+
+    <!-- TODAY'S SALE -->
+
+    <div class="stat-card">
+
+      <div class="icon">
+        💰
+      </div>
+
+      <h4>Today's Sale</h4>
+
+      <h2>₹0</h2>
+
+    </div>
+
+
+    <!-- TOTAL ORDERS -->
+
+    <div class="stat-card">
+
+      <div class="icon">
+        📦
+      </div>
+
+      <h4>Total Orders</h4>
+
+      <h2>0</h2>
+
+    </div>
+
+
+    <!-- TABLES -->
+
+    <div
+      class="stat-card clickable"
+      (click)="manageTables()"
+    >
+
+      <div class="icon">
+        🪑
+      </div>
+
+      <h4>Tables</h4>
+
+      <h2>
+        {{ bookedTables }} / {{ totalTables }}
+      </h2>
+
+      <small class="stat-link">
+        Manage Tables →
+      </small>
+
+    </div>
+
+
+    <!-- AVERAGE ORDER -->
+
+    <div class="stat-card">
+
+      <div class="icon">
+        📈
+      </div>
+
+      <h4>Average Order</h4>
+
+      <h2>₹0</h2>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================= RECEIVED ORDERS ================= -->
+
+  <div class="card">
+
+    <h3>Received Orders</h3>
+
+
+    <div class="order-grid">
+
+      <!-- PENDING -->
+
+      <div class="order-card pending">
+
+        <h4>Pending</h4>
+
+        <h2>0</h2>
+
+      </div>
+
+
+      <!-- ACCEPTED -->
+
+      <div class="order-card accepted">
+
+        <h4>Accepted</h4>
+
+        <h2>0</h2>
+
+      </div>
+
+
+      <!-- PREPARING -->
+
+      <div class="order-card preparing">
+
+        <h4>Preparing</h4>
+
+        <h2>0</h2>
+
+      </div>
+
+
+      <!-- SERVED -->
+
+      <div class="order-card served">
+
+        <h4>Served</h4>
+
+        <h2>0</h2>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================= TABLES + TOP SELLING ================= -->
+
+  <div class="middle-section">
+
+
+    <!-- ================= TABLES ================= -->
+
+    <div class="card tables-card">
+
+      <div class="section-heading">
+
+        <div>
+
+          <h3>Tables</h3>
+
+          <p>
+            Monitor your cafe tables
+          </p>
+
+        </div>
+
+
+        <button
+          class="manage-tables-btn"
+          (click)="manageTables()"
+        >
+
+          <i class="bi bi-grid-3x3-gap-fill"></i>
+
+          Manage Tables
+
+        </button>
+
+      </div>
+
+
+      <!-- TABLE SUMMARY -->
+
+      <div class="table-summary">
+
+
+        <!-- TOTAL TABLES -->
+
+        <div
+          class="table-summary-card total-table"
+          (click)="manageTables()"
+        >
+
+          <div class="table-summary-icon">
+
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+
+          </div>
+
+
+          <div class="table-summary-content">
+
+            <span>
+              Total Tables
+            </span>
+
+            <h2>
+              {{ totalTables }}
+            </h2>
+
+          </div>
+
+
+          <i class="bi bi-chevron-right table-arrow"></i>
+
+        </div>
+
+
+
+        <!-- BOOKED TABLES -->
+
+        <div
+          class="table-summary-card booked-table"
+          (click)="manageTables()"
+        >
+
+          <div class="table-summary-icon">
+
+            <i class="bi bi-person-fill"></i>
+
+          </div>
+
+
+          <div class="table-summary-content">
+
+            <span>
+              Booked Tables
+            </span>
+
+            <h2>
+              {{ bookedTables }}
+            </h2>
+
+          </div>
+
+
+          <i class="bi bi-chevron-right table-arrow"></i>
+
+        </div>
+
+
+
+        <!-- FREE TABLES -->
+
+        <div
+          class="table-summary-card free-table"
+          (click)="manageTables()"
+        >
+
+          <div class="table-summary-icon">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+          </div>
+
+
+          <div class="table-summary-content">
+
+            <span>
+              Free Tables
+            </span>
+
+            <h2>
+              {{ freeTables }}
+            </h2>
+
+          </div>
+
+
+          <i class="bi bi-chevron-right table-arrow"></i>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ================= TOP SELLING ITEMS ================= -->
+
+    <div class="card">
+
+      <h3>Top Selling Items</h3>
+
+
+      <ul class="top-items">
+
+        <li>
+
+          🍕 Pizza
+
+          <span>
+            0 Sold
+          </span>
+
+        </li>
+
+
+        <li>
+
+          🍔 Burger
+
+          <span>
+            0 Sold
+          </span>
+
+        </li>
+
+
+        <li>
+
+          ☕ Coffee
+
+          <span>
+            0 Sold
+          </span>
+
+        </li>
+
+
+        <li>
+
+          🥤 Mojito
+
+          <span>
+            0 Sold
+          </span>
+
+        </li>
+
+
+        <li>
+
+          🍝 Pasta
+
+          <span>
+            0 Sold
+          </span>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================= RECENT ACTIVITY ================= -->
+
+  <!--
+
+  <div class="card">
+
+    <h3>Recent Activity</h3>
+
+    <div class="activity">
+      No recent activity.
+    </div>
+
+  </div>
+
+  -->
+
+
+
+  <!-- ================= FLOATING ACTION BUTTON ================= -->
+
+  <div class="fab">
+
+    <button class="main-btn">
+      +
+    </button>
+
+
+    <div class="fab-menu">
+
+      <button>
+        Add Item
+      </button>
+
+      <button>
+        Categories
+      </button>
+
+      <button>
+        Payments
+      </button>
+
+      <button>
+        Settings
+      </button>
+
+    </div>
+
+  </div>
+
+
+</div>

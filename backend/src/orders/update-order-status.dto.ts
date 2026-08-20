@@ -1,4 +1,12 @@
 /* eslint-disable prettier/prettier */
+
 export class UpdateOrderStatusDto {
-  status: string;
+
+  status:
+    | 'Pending'
+    | 'Accepted'
+    | 'Preparing'
+    | 'Served'
+    | 'Completed';
+
 }

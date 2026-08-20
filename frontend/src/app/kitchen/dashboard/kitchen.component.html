@@ -1,38 +1,45 @@
-<div class="container mt-4">
+<div class="container">
 
-    <h2 class="text-center mb-4">
-        🍽 Kitchen Orders
-    </h2>
-
-    <div class="order-card mb-4"
-         *ngFor="let order of orders; let i = index">
+    <div class="order-card" *ngFor="let order of orders; let i = index">
 
         <!-- Highest Priority -->
         <div
-            class="alert alert-danger text-center mb-3"
-            *ngIf="i == 0 && order.status == 'Pending'">
-             Highest Priority Order
+            class="priority"
+            *ngIf="i === 0 && order.status === 'Pending'">
+
+            🔥 Highest Priority Order
+
         </div>
 
         <!-- Header -->
-        <div class="top d-flex justify-content-between align-items-center">
+        <div class="top">
 
             <div>
-                <h4>Table {{ order.tableId }}</h4>
 
-                <small class="text-muted">
+                <div class="table-name">
+                    Table {{ order.tableId }}
+                </div>
+
+                <div class="order-id">
+                  Order #{{ order.id }}
+              </div>
+
+                <div class="order-time">
                     {{ order.createdAt | date:'dd/MM/yyyy hh:mm a' }}
-                </small>
+                </div>
+
             </div>
 
-            <span class="badge"
-                  [ngClass]="{
-                    'bg-warning': order.status=='Pending',
-                    'bg-primary': order.status=='Accepted',
-                    'bg-info': order.status=='Preparing',
-                    'bg-success': order.status=='Ready',
-                    'bg-danger': order.status=='Cancelled'
-                  }">
+            <span
+                class="status"
+                [ngClass]="{
+                    'pending': order.status=='Pending',
+                    'accepted': order.status=='Accepted',
+                    'preparing': order.status=='Preparing',
+                    'ready': order.status=='Ready',
+                    'completed': order.status=='Completed',
+                    'cancelled': order.status=='Cancelled'
+                }">
 
                 {{ order.status }}
 
@@ -42,25 +49,21 @@
 
         <hr>
 
-        <!-- Ordered Items -->
+        <!-- Items -->
 
         <div
-            class="d-flex justify-content-between align-items-center py-2"
+            class="order-item"
             *ngFor="let item of order.items">
 
-            <div>
+            <div class="item-info">
 
-                <strong>{{ item.name }}</strong>
+                <h5>{{ item.name }}</h5>
 
-                <br>
-
-                <small>
-                    Qty : {{ item.quantity }}
-                </small>
+                <p>Qty : {{ item.quantity }}</p>
 
             </div>
 
-            <div>
+            <div class="price">
 
                 ₹{{ item.price * item.quantity }}
 
@@ -70,16 +73,24 @@
 
         <hr>
 
-        <h5>Total : ₹{{ order.total }}</h5>
+        <!-- Total -->
 
-        <!-- Pending Buttons -->
+        <div class="total">
+
+            <span>Total</span>
+
+            <span>₹{{ order.total }}</span>
+
+        </div>
+
+        <!-- Buttons -->
 
         <div
-            class="d-flex gap-2 mt-3"
+            class="action-buttons"
             *ngIf="order.status=='Pending'">
 
             <button
-                class="btn btn-success flex-fill"
+                class="btn btn-success"
                 (click)="acceptOrder(order)">
 
                 Accept Order
@@ -87,7 +98,7 @@
             </button>
 
             <button
-                class="btn btn-danger flex-fill"
+                class="btn btn-danger"
                 (click)="cancelOrder(order)">
 
                 Cancel Order
@@ -96,10 +107,8 @@
 
         </div>
 
-        <!-- Accepted -->
-
         <button
-            class="btn btn-primary w-100 mt-3"
+            class="btn btn-primary"
             *ngIf="order.status=='Accepted'"
             (click)="updateStatus(order)">
 
@@ -107,10 +116,8 @@
 
         </button>
 
-        <!-- Preparing -->
-
         <button
-            class="btn btn-warning w-100 mt-3"
+            class="btn btn-warning"
             *ngIf="order.status=='Preparing'"
             (click)="updateStatus(order)">
 
@@ -118,10 +125,8 @@
 
         </button>
 
-        <!-- Ready -->
-
         <button
-            class="btn btn-success w-100 mt-3"
+            class="btn btn-success"
             *ngIf="order.status=='Ready'"
             (click)="updateStatus(order)">
 

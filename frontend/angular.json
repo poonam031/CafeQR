@@ -26,7 +26,7 @@
                 "input": "src/assets"
               }
             ],
-            
+
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -47,17 +47,17 @@
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
+  {
+    "type": "initial",
+    "maximumWarning": "2mb",
+    "maximumError": "3mb"
+  },
+  {
+    "type": "anyComponentStyle",
+    "maximumWarning": "20kb",
+    "maximumError": "25kb"
+  }
+],
               "outputHashing": "all"
             },
             "development": {

@@ -1,17 +1,66 @@
 /* eslint-disable prettier/prettier */
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { OrdersController } from './orders.controller';
-import { OrdersService } from './orders.service';
-import { Order } from './order.entity';
+import {
+  Module
+} from '@nestjs/common';
+
+import {
+  TypeOrmModule
+} from '@nestjs/typeorm';
+
+import {
+  OrdersController
+} from './orders.controller';
+
+import {
+  OrdersService
+} from './orders.service';
+
+import {
+  OrdersGateway
+} from './orders.gateway';
+
+import {
+  OrderEntity
+} from './order.entity';
+
 
 @Module({
+
   imports: [
-    TypeOrmModule.forFeature([Order]),
+
+    TypeOrmModule.forFeature([
+
+      OrderEntity
+
+    ])
+
   ],
-  controllers: [OrdersController],
-  providers: [OrdersService],
-  exports: [OrdersService],
+
+
+  controllers: [
+
+    OrdersController
+
+  ],
+
+
+  providers: [
+
+    OrdersService,
+
+    OrdersGateway
+
+  ],
+
+
+  exports: [
+
+    OrdersService,
+
+    OrdersGateway
+
+  ]
+
 })
 export class OrdersModule {}

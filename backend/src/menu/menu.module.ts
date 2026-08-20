@@ -1,9 +1,46 @@
-import { Module } from '@nestjs/common';
-import { MenuController } from './menu.controller';
-import { MenuService } from './menu.service';
+/* eslint-disable prettier/prettier */
+import {
+  Module
+} from '@nestjs/common';
+
+import {
+  TypeOrmModule
+} from '@nestjs/typeorm';
+
+import {
+  MenuController
+} from './menu.controller';
+
+import {
+  MenuService
+} from './menu.service';
+
+import {
+  Menu
+} from './menu.entity';
+
 
 @Module({
-  controllers: [MenuController],
-  providers: [MenuService]
+
+  imports: [
+
+    TypeOrmModule.forFeature([
+      Menu
+    ])
+
+  ],
+
+  controllers: [
+    MenuController
+  ],
+
+  providers: [
+    MenuService
+  ],
+
+  exports: [
+    MenuService
+  ]
+
 })
 export class MenuModule {}

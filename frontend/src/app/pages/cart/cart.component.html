@@ -1,98 +1,192 @@
 <div class="container py-4">
 
+    <!-- TITLE -->
+
     <h2 class="cart-title mb-4">
+
         <i class="bi bi-cart3 me-2"></i>
+
         My Cart
+
     </h2>
+
 
     @if(cartService.getCartItems().length === 0){
 
-    <div class="empty-cart text-center">
+        <!-- EMPTY CART -->
 
-        <i class="bi bi-cart-x empty-icon"></i>
+        <div class="empty-cart text-center">
 
-        <h4>Your cart is empty</h4>
+            <i class="bi bi-cart-x empty-icon"></i>
 
-        <p>Add some delicious food to your cart.</p>
+            <h4>
+                Your cart is empty
+            </h4>
 
-    </div>
-
-    } @else {
-
-    @for(item of cartService.getCartItems(); track item.id){
-
-    <div class="cart-card">
-
-        <img
-            [src]="item.image"
-            [alt]="item.name"
-            class="cart-image">
-
-        <div class="cart-info">
-
-            <h5>{{item.name}}</h5>
-
-            <p class="price">
-                ₹{{item.price}}
+            <p>
+                Add some delicious food to your cart.
             </p>
-
-            <small>
-                Subtotal :
-                ₹{{item.price * item.quantity}}
-            </small>
 
         </div>
 
-        <div class="cart-actions">
 
-            <div class="qty-box">
+    } @else {
 
-                <button
-                    class="qty-btn"
-                    (click)="cartService.decrease(item)">
-                    <i class="bi bi-dash"></i>
-                </button>
 
-                <span>{{item.quantity}}</span>
+        <!-- CART ITEMS -->
 
-                <button
-                    class="qty-btn"
-                    (click)="cartService.increase(item)">
-                    <i class="bi bi-plus"></i>
-                </button>
+        @for(
+            item of cartService.getCartItems();
+            track item.id
+        ){
+
+            <div class="cart-card">
+
+
+                <!-- IMAGE -->
+
+                <img
+                    [src]="item.image"
+                    [alt]="item.name"
+                    class="cart-image">
+
+
+                <!-- DETAILS -->
+
+                <div class="cart-info">
+
+                    <h5>
+                        {{item.name}}
+                    </h5>
+
+                    <p class="price">
+
+                        ₹{{item.price}}
+
+                    </p>
+
+                    <small>
+
+                        Subtotal :
+
+                        ₹{{item.price * item.quantity}}
+
+                    </small>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="cart-actions">
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="qty-box">
+
+                        <button
+                            class="qty-btn"
+                            type="button"
+                            (click)="cartService.decrease(item)">
+
+                            <i class="bi bi-dash"></i>
+
+                        </button>
+
+
+                        <span>
+                            {{item.quantity}}
+                        </span>
+
+
+                        <button
+                            class="qty-btn"
+                            type="button"
+                            (click)="cartService.increase(item)">
+
+                            <i class="bi bi-plus"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- REMOVE -->
+
+                    <button
+                        class="remove-btn"
+                        type="button"
+                        (click)="cartService.remove(item)">
+
+                        <i class="bi bi-trash"></i>
+
+                        Remove
+
+                    </button>
+
+                </div>
 
             </div>
 
+        }
+
+
+        <!-- CHECKOUT -->
+
+        <div class="checkout-card">
+
+            <div>
+
+                <h5>
+                    Total
+                </h5>
+
+                <h3>
+                    ₹{{cartService.getTotal()}}
+                </h3>
+
+            </div>
+
+
             <button
-                class="remove-btn"
-                (click)="cartService.remove(item)">
-                <i class="bi bi-trash"></i>
-                Remove
+                class="checkout-btn"
+                type="button"
+                [disabled]="placingOrder"
+                (click)="placeOrder()">
+
+                @if(placingOrder){
+
+                    <span>
+                        Processing...
+                    </span>
+
+                } @else {
+
+                    <i class="bi bi-credit-card me-2"></i>
+
+                    Place Order
+
+                }
+
             </button>
 
         </div>
 
-    </div>
-
     }
 
-    <div class="checkout-card">
 
-        <div>
+    <!-- PAYMENT POPUP -->
 
-            <h5>Total</h5>
+    @if(showPaymentPopup){
 
-            <h3>₹{{cartService.getTotal()}}</h3>
-
-        </div>
-
-        <button class="checkout-btn" (click)="placeOrder()">
-            <i class="bi bi-credit-card me-2"></i>
-            Place Order
-        </button>
-
-    </div>
+        <app-payment
+            (paymentSelected)="onPaymentSelected($event)"
+            (closed)="closePaymentPopup()">
+        </app-payment>
 
     }
 
 </div>
+
+

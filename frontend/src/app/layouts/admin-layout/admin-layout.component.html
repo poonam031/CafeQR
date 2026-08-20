@@ -1,0 +1,31 @@
+<div
+  class="layout"
+  [class.sidebar-closed]="!sidebarOpen"
+>
+
+  <!-- SIDEBAR -->
+  <app-sidebar
+    [isOpen]="sidebarOpen"
+    (closeMenu)="closeSidebarOnMobile()">
+  </app-sidebar>
+
+
+  <!-- MAIN AREA -->
+  <div class="main">
+
+    <!-- FIXED HEADER -->
+    <app-header
+      (menuClick)="toggleSidebar()">
+    </app-header>
+
+
+    <!-- PAGE CONTENT -->
+    <main class="content">
+
+      <router-outlet></router-outlet>
+
+    </main>
+
+  </div>
+
+</div>

@@ -1,0 +1,272 @@
+<div class="history-container">
+
+  <!-- HEADER -->
+  <div class="history-header">
+
+    <h2>Kitchen History</h2>
+
+    <p>
+      View completed and cancelled orders
+    </p>
+
+  </div>
+
+
+  <!-- FILTERS -->
+  <div class="filter-section">
+
+    <!-- Search -->
+    <input
+      type="text"
+      placeholder="Search Order ID"
+      [(ngModel)]="searchOrderId"
+      (input)="applyFilters()"
+    />
+
+
+    <!-- Date -->
+    <input
+      type="date"
+      [(ngModel)]="selectedDate"
+      (change)="applyFilters()"
+    />
+
+
+    <!-- Payment -->
+    <select
+      [(ngModel)]="selectedPayment"
+      (change)="applyFilters()"
+    >
+
+      <option value="All Payments">
+        All Payments
+      </option>
+
+      <option value="Cash">
+        Cash
+      </option>
+
+      <option value="Online">
+        Online
+      </option>
+
+    </select>
+
+
+    <!-- Status -->
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="applyFilters()"
+    >
+
+      <option value="All Status">
+        All Status
+      </option>
+
+      <option value="Completed">
+        Completed
+      </option>
+
+      <option value="Cancelled">
+        Cancelled
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- ERROR -->
+  <div
+    class="error-message"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- LOADING -->
+  <div
+    class="loading"
+    *ngIf="loading"
+  >
+    Loading order history...
+  </div>
+
+
+  <!-- SUMMARY -->
+  <div class="summary">
+
+    <div class="summary-card">
+
+      <h3>Total Orders</h3>
+
+      <h2>
+        {{ totalOrders }}
+      </h2>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <h3>Completed</h3>
+
+      <h2>
+        {{ completedOrders }}
+      </h2>
+
+    </div>
+
+
+    <div class="summary-card">
+
+      <h3>Cancelled</h3>
+
+      <h2>
+        {{ cancelledOrders }}
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <!-- TABLE -->
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Order ID</th>
+
+          <th>Table</th>
+
+          <th>Amount</th>
+
+          <th>Payment</th>
+
+          <th>Status</th>
+
+          <th>Date</th>
+
+          <th>Time</th>
+
+          <!-- <th>Action</th> -->
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <!-- REAL DATABASE ORDERS -->
+        <tr
+          *ngFor="let order of filteredOrders"
+        >
+
+          <!-- ORDER ID -->
+          <td>
+            #{{ order.id }}
+          </td>
+
+
+          <!-- TABLE -->
+          <td>
+            {{ getTableName(order) }}
+          </td>
+
+
+          <!-- AMOUNT -->
+          <td>
+            ₹{{ order.total }}
+          </td>
+
+
+          <!-- PAYMENT -->
+          <td>
+
+            <span
+              class="payment-badge"
+              [ngClass]="
+                getPaymentClass(
+                  order.paymentMethod || 'N/A'
+                )
+              "
+            >
+              {{ order.paymentMethod || 'N/A' }}
+            </span>
+
+          </td>
+
+
+          <!-- STATUS -->
+          <td>
+
+            <span
+              [ngClass]="
+                getStatusClass(order.status)
+              "
+            >
+              {{ order.status }}
+            </span>
+
+          </td>
+
+
+          <!-- DATE -->
+          <td>
+            {{ getDate(order) }}
+          </td>
+
+
+          <!-- TIME -->
+          <td>
+            {{ getTime(order) }}
+          </td>
+
+
+          <!-- ACTION
+          <td>
+
+            <button
+              (click)="viewOrder(order)"
+            >
+              View
+            </button>
+
+          </td> -->
+
+        </tr>
+
+
+        <!-- NO DATA -->
+        <tr
+          *ngIf="
+            !loading &&
+            filteredOrders.length === 0
+          "
+        >
+
+          <td
+            colspan="8"
+            class="no-data"
+          >
+
+            No order history found.
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

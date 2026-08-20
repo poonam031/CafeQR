@@ -1,0 +1,572 @@
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+
+    width: 250px;
+
+    height: 100vh;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    background: linear-gradient(
+        180deg,
+        #322504,
+        #241b02
+    );
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    box-shadow:
+        4px 0 20px rgba(0, 0, 0, .12);
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.2s ease;
+
+    z-index: 1000;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   SIDEBAR CLOSED - DESKTOP
+===================================================== */
+
+.sidebar.closed {
+
+    transform: translateX(-250px);
+
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo {
+
+    height: 80px;
+
+    min-height: 80px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 25px;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .08);
+
+    flex-shrink: 0;
+}
+
+
+.logo span {
+
+    font-family: 'Great Vibes', cursive;
+
+    font-size: 42px;
+
+    color: #FFC107;
+
+    font-weight: 400;
+
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+nav {
+
+    padding: 20px 15px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    flex: 1;
+
+    overflow-y: auto;
+}
+
+
+/* =====================================================
+   NAVIGATION LINKS
+===================================================== */
+
+nav a {
+
+    position: relative;
+
+    color: #E5E7EB;
+
+    text-decoration: none;
+
+    padding: 15px 18px;
+
+    border-radius: 14px;
+
+    transition: .3s;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   ICONS
+===================================================== */
+
+nav a i {
+
+    font-size: 18px;
+
+    min-width: 20px;
+
+    width: 20px;
+
+    text-align: center;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   LABEL
+===================================================== */
+
+.menu-label {
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+nav a:hover {
+
+    background: #D4A017;
+
+    color: white;
+}
+
+
+/* =====================================================
+   ACTIVE
+===================================================== */
+
+nav a.active {
+
+    background: #D4A017;
+
+    color: white;
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+.logout {
+
+    position: relative;
+
+    margin-top: auto;
+
+    margin-left: 15px;
+
+    margin-right: 15px;
+
+    margin-bottom: 20px;
+
+    color: #E5E7EB;
+
+    text-decoration: none;
+
+    padding: 15px 18px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    transition: .3s;
+}
+
+
+.logout:hover {
+
+    background: #D4A017;
+
+    color: white;
+}
+
+
+.logout i {
+
+    font-size: 18px;
+
+    min-width: 20px;
+
+    width: 20px;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+.sidebar::-webkit-scrollbar {
+
+    width: 4px;
+}
+
+
+.sidebar::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+.sidebar::-webkit-scrollbar-thumb {
+
+    background: rgba(255,255,255,.15);
+
+    border-radius: 10px;
+}
+
+
+nav::-webkit-scrollbar {
+
+    width: 3px;
+}
+
+
+nav::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+nav::-webkit-scrollbar-thumb {
+
+    background: rgba(255,255,255,.15);
+
+    border-radius: 10px;
+}
+
+
+/* =====================================================
+   MOBILE
+   HORIZONTAL ICON NAVIGATION
+===================================================== */
+
+/* =====================================================
+   MOBILE
+   VERTICAL POPUP MENU
+===================================================== */
+
+@media (max-width: 768px) {
+
+    /* =================================================
+       SIDEBAR CARD
+    ================================================= */
+
+    .sidebar {
+
+        position: relative;
+
+        width: 220px;
+
+        height: auto;
+
+        min-height: 0;
+
+        background: #322504;
+
+        color: white;
+
+        display: flex;
+
+        flex-direction: column;
+
+        border-radius: 14px;
+
+        box-shadow:
+            0 12px 30px rgba(0, 0, 0, .28);
+
+        overflow: visible;
+
+        transform: none;
+
+        opacity: 1;
+
+        transition: none;
+
+        z-index: 3000;
+    }
+
+
+    /* =================================================
+       LOGO
+    ================================================= */
+
+    .logo {
+
+        display: none;
+    }
+
+
+    /* =================================================
+       NAVIGATION
+    ================================================= */
+
+    nav {
+
+        width: 100%;
+
+        padding: 10px;
+
+        margin: 0;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 3px;
+
+        overflow: visible;
+
+        flex: none;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =================================================
+       MENU ITEM
+    ================================================= */
+
+    nav a {
+
+        position: relative;
+
+        width: 100%;
+
+        height: 44px;
+
+        padding: 11px 15px;
+
+        margin: 0;
+
+        display: flex;
+
+        flex-direction: row;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        gap: 13px;
+
+        border-radius: 9px;
+
+        color: #E5E7EB;
+
+        font-size: 14px;
+
+        font-weight: 500;
+
+        text-decoration: none;
+
+        transition:
+            background .2s ease,
+            transform .2s ease,
+            padding-left .2s ease;
+    }
+
+
+    /* =================================================
+       ICON
+    ================================================= */
+
+    nav a i {
+
+        width: 24px;
+
+        min-width: 24px;
+
+        font-size: 19px;
+
+        text-align: center;
+    }
+
+
+    /* =================================================
+       TEXT
+    ================================================= */
+
+    nav a .menu-label {
+
+        display: block;
+
+        white-space: nowrap;
+    }
+
+
+    /* =================================================
+       HOVER ANIMATION
+    ================================================= */
+
+    nav a:hover {
+
+        background: #D4A017;
+
+        color: white;
+
+        transform: translateX(4px);
+
+        padding-left: 16px;
+    }
+
+
+    /* =================================================
+       ACTIVE
+    ================================================= */
+
+    nav a.active {
+
+        background: #D4A017;
+
+        color: white;
+    }
+
+
+    /* =================================================
+       LOGOUT
+    ================================================= */
+
+    .logout {
+
+        position: relative;
+
+        width: calc(100% - 20px);
+
+        height: 44px;
+
+        min-width: 0;
+
+        margin: 0 10px 10px;
+
+        padding: 0 12px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        gap: 13px;
+
+        border-radius: 9px;
+
+        color: #E5E7EB;
+
+        box-sizing: border-box;
+
+        transition:
+            background .2s ease,
+            transform .2s ease;
+    }
+
+
+    .logout i {
+
+        width: 24px;
+
+        min-width: 24px;
+
+        font-size: 19px;
+
+        text-align: center;
+    }
+
+
+    .logout .menu-label {
+
+        display: block;
+
+        white-space: nowrap;
+    }
+
+
+    .logout:hover {
+
+        background: #D4A017;
+
+        color: white;
+
+        transform: translateX(4px);
+    }
+
+
+    /* =================================================
+       REMOVE OLD TOOLTIP
+       We show text directly now.
+    ================================================= */
+
+    nav a::after,
+    .logout::after {
+
+        display: none;
+    }
+
+}

@@ -1,0 +1,1106 @@
+/* =====================================================
+   HEADER
+===================================================== */
+
+.top-header {
+
+    height: 80px;
+
+    background: #ded2b3;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    box-shadow:
+        0 3px 20px rgba(0, 0, 0, .06);
+
+    position: relative;
+
+    z-index: 2000;
+
+}
+
+
+/* =====================================================
+   HEADER TITLE
+===================================================== */
+
+.header-title {
+
+    font-size: 34px;
+
+    color: #0a0a08;
+
+    font-weight: 700;
+
+    margin: 0;
+
+    text-align: center;
+
+    flex: 1;
+}
+
+
+/* =====================================================
+   MENU BUTTON
+===================================================== */
+
+.menu-btn {
+
+    width: 46px;
+
+    height: 46px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #D4A017;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.menu-btn i {
+
+    font-size: 20px;
+
+    color: #111;
+}
+
+
+/* =====================================================
+   NOTIFICATION BUTTON
+===================================================== */
+
+.notification {
+
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background: #F3F4F6;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    transition: .2s;
+}
+
+.notification:hover {
+
+    transform: scale(1.05);
+}
+
+.notification i {
+
+    font-size: 20px;
+
+    color: #222;
+}
+
+
+/* =====================================================
+   NOTIFICATION COUNT
+===================================================== */
+
+.notification-count {
+
+    position: absolute;
+
+    top: -2px;
+
+    right: -2px;
+
+    width: 20px;
+
+    height: 20px;
+
+    background: #EF4444;
+
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   NOTIFICATION PANEL
+===================================================== */
+
+.notification-panel {
+
+    position: absolute;
+
+    top: 70px;
+
+    right: 20px;
+
+    width: 320px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, .18);
+
+    overflow: hidden;
+
+    animation: notificationSlide .2s ease;
+
+    z-index: 5000;
+}
+
+
+/* =====================================================
+   PANEL ANIMATION
+===================================================== */
+
+@keyframes notificationSlide {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-8px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* =====================================================
+   NOTIFICATION HEADER
+===================================================== */
+
+.notification-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 15px 18px;
+
+    border-bottom: 1px solid #eee;
+}
+
+.notification-header strong {
+
+    font-size: 17px;
+
+    color: #222;
+}
+
+
+/* =====================================================
+   CLEAR BUTTON
+===================================================== */
+
+.clear-btn {
+
+    border: none;
+
+    background: transparent;
+
+    color: #ff6b35;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    padding: 4px 8px;
+}
+
+
+
+
+/* =====================================================
+   ADD REMINDER BUTTON
+===================================================== */
+
+.add-reminder-btn {
+
+    width: calc(100% - 24px);
+
+    margin: 12px;
+
+    padding: 12px 14px;
+
+    border: 1px solid #eadfca;
+
+    border-radius: 10px;
+
+    background: #fffaf0;
+
+    color: #3b3528;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    transition: all .25s ease;
+
+    text-align: left;
+
+}
+
+
+.add-reminder-btn > i:first-child {
+
+    width: 34px;
+
+    height: 34px;
+
+    border-radius: 9px;
+
+    background: #D4A017;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 16px;
+
+    flex-shrink: 0;
+
+}
+
+
+.add-reminder-btn span {
+
+    flex: 1;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+.add-reminder-btn > i:last-child {
+
+    font-size: 12px;
+
+    color: #888;
+
+    transition: transform .25s ease;
+
+}
+
+
+.add-reminder-btn:hover {
+
+    background: #fff3d6;
+
+    border-color: #D4A017;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, .08);
+
+}
+
+
+.add-reminder-btn:hover > i:last-child {
+
+    transform: translateX(4px);
+
+}
+
+
+/* =====================================================
+   REMINDER OVERLAY
+===================================================== */
+
+.reminder-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, .45);
+
+    backdrop-filter: blur(3px);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 10000;
+
+    animation: reminderFadeIn .2s ease;
+
+}
+
+
+/* =====================================================
+   REMINDER MODAL
+===================================================== */
+
+.reminder-modal {
+
+    width: 100%;
+
+    max-width: 520px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #fff;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, .25);
+
+    animation:
+        reminderSlideUp .25s ease;
+
+}
+
+
+/* =====================================================
+   MODAL HEADER
+===================================================== */
+
+.reminder-modal-header {
+
+    padding: 20px 22px;
+
+    background: #eadfbd;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-radius: 18px 18px 0 0;
+
+}
+
+
+.reminder-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.reminder-heading i {
+
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #D4A017;
+
+    color: white;
+
+    font-size: 19px;
+
+}
+
+
+.reminder-heading h3 {
+
+    margin: 0;
+
+    font-size: 21px;
+
+    color: #2d250e;
+
+}
+
+
+.reminder-modal-header p {
+
+    margin: 5px 0 0 50px;
+
+    color: #756d5b;
+
+    font-size: 13px;
+
+}
+
+
+/* =====================================================
+   CLOSE BUTTON
+===================================================== */
+
+.reminder-close {
+
+    width: 36px;
+
+    height: 36px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.7);
+
+    color: #3b3528;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.reminder-close:hover {
+
+    background: #fff;
+
+    transform: rotate(90deg);
+
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.reminder-modal form {
+
+    padding: 22px;
+
+}
+
+
+.form-group {
+
+    margin-bottom: 16px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #333;
+
+}
+
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 11px 13px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    color: #222;
+
+    font-size: 14px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s;
+
+}
+
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+
+    border-color: #D4A017;
+
+    box-shadow:
+        0 0 0 3px rgba(212,160,23,.12);
+
+}
+
+
+.form-group textarea {
+
+    resize: vertical;
+
+    min-height: 75px;
+
+}
+
+
+/* =====================================================
+   TWO COLUMN FORM
+===================================================== */
+
+.form-row {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+
+}
+
+
+.form-row .form-group {
+
+    min-width: 0;
+
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.reminder-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 5px;
+
+}
+
+
+.cancel-reminder,
+.save-reminder {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 11px 18px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.cancel-reminder {
+
+    background: #f1f1f1;
+
+    color: #555;
+
+}
+
+
+.cancel-reminder:hover {
+
+    background: #e5e5e5;
+
+}
+
+
+.save-reminder {
+
+    background: #D4A017;
+
+    color: white;
+
+}
+
+
+.save-reminder:hover {
+
+    background: #b8860b;
+
+    transform: translateY(-1px);
+
+}
+
+
+.cancel-reminder:disabled,
+.save-reminder:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+/* =====================================================
+   SUCCESS
+===================================================== */
+
+.reminder-success {
+
+    margin: 22px;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #ecfdf3;
+
+    color: #16803c;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    font-weight: 600;
+
+}
+
+
+.reminder-success i {
+
+    font-size: 20px;
+
+}
+
+
+/* =====================================================
+   SPINNER
+===================================================== */
+
+.spin {
+
+    animation:
+        reminderSpin .8s linear infinite;
+
+}
+
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes reminderFadeIn {
+
+    from {
+
+        opacity: 0;
+
+    }
+
+    to {
+
+        opacity: 1;
+
+    }
+
+}
+
+
+@keyframes reminderSlideUp {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(.97);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+@keyframes reminderSpin {
+
+    from {
+
+        transform: rotate(0deg);
+
+    }
+
+    to {
+
+        transform: rotate(360deg);
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .reminder-overlay {
+
+        padding: 12px;
+
+        align-items: center;
+
+    }
+
+
+    .reminder-modal {
+
+        max-height: 92vh;
+
+        border-radius: 15px;
+
+    }
+
+
+    .reminder-modal-header {
+
+        padding: 16px;
+
+    }
+
+
+    .reminder-heading h3 {
+
+        font-size: 18px;
+
+    }
+
+
+    .reminder-modal-header p {
+
+        margin-left: 50px;
+
+        font-size: 12px;
+
+    }
+
+
+    .reminder-modal form {
+
+        padding: 17px;
+
+    }
+
+
+    .form-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+
+    }
+
+
+    .reminder-actions {
+
+        flex-direction: column-reverse;
+
+    }
+
+
+    .cancel-reminder,
+    .save-reminder {
+
+        width: 100%;
+
+    }
+
+}
+
+
+
+
+/* =====================================================
+   NOTIFICATION ITEM
+===================================================== */
+
+.notification-item {
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 16px 18px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.notification-item:hover {
+
+    background: #f9fafb;
+}
+
+
+/* =====================================================
+   NOTIFICATION ICON
+===================================================== */
+
+.notification-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 50%;
+
+    background: #fff1e8;
+
+    color: #ff6b35;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.notification-icon i {
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   NOTIFICATION TEXT
+===================================================== */
+
+.notification-text strong {
+
+    display: block;
+
+    color: #222;
+
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+.notification-text p {
+
+    margin: 0;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   EMPTY NOTIFICATIONS
+===================================================== */
+
+.no-notification {
+
+    min-height: 100px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+.no-notification i {
+
+    font-size: 24px;
+
+    color: #aaa;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .top-header {
+
+        height: 65px;
+
+        padding: 0 12px;
+    }
+
+
+    .header-title {
+
+        font-size: 24px;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        margin: 0 10px;
+    }
+
+
+    .menu-btn {
+
+        width: 46px;
+
+        height: 46px;
+    }
+
+
+    .notification {
+
+        width: 46px;
+
+        height: 46px;
+    }
+
+
+    .notification-panel {
+
+        top: 60px;
+
+        right: 10px;
+
+        left: 10px;
+
+        width: auto;
+
+        max-width: none;
+    }
+
+
+
+     .add-reminder-btn {
+
+        width: calc(100% - 20px);
+
+        margin: 10px;
+
+        padding: 11px 12px;
+
+    }
+
+}

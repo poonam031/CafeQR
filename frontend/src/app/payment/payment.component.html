@@ -1,0 +1,102 @@
+<div class="payment-overlay">
+
+  <div class="payment-modal">
+
+    <!-- CLOSE -->
+    <button
+      type="button"
+      class="close-button"
+      (click)="close()">
+      ×
+    </button>
+
+
+    <!-- HEADER -->
+    <div class="payment-header">
+
+      <div class="payment-icon">
+        💳
+      </div>
+
+      <h2>
+        Choose Payment Method
+      </h2>
+
+      <p>
+        Select how you want to pay
+      </p>
+
+    </div>
+
+
+    <!-- ONLINE UPI -->
+    <button
+      type="button"
+      class="payment-option online-option"
+      (click)="selectOnline()">
+
+      <div class="option-icon">
+        ⚡
+      </div>
+
+      <div class="option-content">
+
+        <strong>
+          Pay Online
+        </strong>
+
+        <span>
+          Google Pay • PhonePe • Paytm • BHIM
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </button>
+
+
+    <!-- CASH -->
+    <button
+      type="button"
+      class="payment-option cash-option"
+      (click)="selectCash()">
+
+      <div class="option-icon">
+        💵
+      </div>
+
+      <div class="option-content">
+
+        <strong>
+          Cash
+        </strong>
+
+        <span>
+          Pay at the cafe counter
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </button>
+
+
+    <!-- CANCEL -->
+    <button
+      type="button"
+      class="cancel-button"
+      (click)="close()">
+
+      Cancel
+
+    </button>
+
+  </div>
+
+</div>

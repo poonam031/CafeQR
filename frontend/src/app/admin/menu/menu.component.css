@@ -1,0 +1,1037 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   MAIN CONTAINER
+===================================== */
+
+.admin-menu-container {
+    min-height: 100vh;
+    padding: 25px;
+    background: #f5f7fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0;
+
+    font-size: 32px;
+    font-weight: 700;
+
+    color: #111;
+}
+
+.page-header p {
+    margin-top: 6px;
+
+    color: #777;
+    font-size: 15px;
+}
+
+
+/* =====================================
+   ADD ITEM BUTTON
+===================================== */
+
+.add-item-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 13px 20px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #ff6b35;
+    color: white;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all .3s ease;
+}
+
+.add-item-btn:hover {
+    background: #e95d2b;
+
+    transform: translateY(-2px);
+}
+
+
+/* =====================================
+   ALERT
+===================================== */
+
+.alert {
+    padding: 13px 16px;
+
+    margin-bottom: 15px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.alert.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.alert.error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+/* =====================================
+   FILTER AREA
+===================================== */
+
+.filter-area {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.3fr)
+        minmax(250px, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =====================================
+   SEARCH
+===================================== */
+
+.search-box {
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    border-radius: 11px;
+
+    padding: 0 15px;
+
+    transition: .3s;
+}
+
+.search-box:focus-within {
+    border-color: #ff6b35;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 107, 53, .08);
+}
+
+.search-box i {
+    color: #888;
+
+    font-size: 18px;
+}
+
+.search-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    padding-left: 12px;
+
+    font-size: 14px;
+
+    color: #333;
+
+    background: transparent;
+}
+
+
+/* =====================================
+   CATEGORY
+===================================== */
+
+.category-select {
+    width: 100%;
+    height: 52px;
+
+    padding: 0 15px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 11px;
+
+    background: white;
+
+    outline: none;
+
+    font-size: 14px;
+
+    color: #333;
+
+    cursor: pointer;
+}
+
+.category-select:focus {
+    border-color: #ff6b35;
+}
+
+
+/* =====================================
+   LOADING
+===================================== */
+
+.loading {
+    width: 100%;
+
+    padding: 50px;
+
+    text-align: center;
+
+    color: #777;
+
+    background: white;
+
+    border-radius: 15px;
+}
+
+
+/* =====================================
+   MENU GRID
+===================================== */
+
+.menu-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+/* =====================================
+   MENU CARD
+===================================== */
+
+.menu-card {
+    background: white;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, .08);
+
+    transition: all .3s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, .12);
+}
+
+
+/* =====================================
+   IMAGE
+===================================== */
+
+.image-container {
+    position: relative;
+
+    width: 100%;
+    height: 180px;
+
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform .4s ease;
+}
+
+.menu-card:hover
+.image-container img {
+    transform: scale(1.05);
+}
+
+
+/* =====================================
+   VEG BADGE
+===================================== */
+
+.veg-badge,
+.nonveg-badge {
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.veg-badge {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.nonveg-badge {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+/* =====================================
+   CARD CONTENT
+===================================== */
+
+.card-content {
+    padding: 18px;
+}
+
+
+/* =====================================
+   TITLE
+===================================== */
+
+.title-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+}
+
+.title-row h3 {
+    margin: 0;
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    color: #222;
+}
+
+
+/* =====================================
+   DESCRIPTION
+===================================== */
+
+.description {
+    color: #777;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    margin-bottom: 12px;
+
+    min-height: 42px;
+}
+
+
+/* =====================================
+   PRICE
+===================================== */
+
+.price {
+    color: #ff6b35;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}
+
+
+/* =====================================
+   AVAILABILITY
+===================================== */
+
+.availability {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 13px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-bottom: 16px;
+
+    transition: .2s;
+}
+
+.availability:hover {
+    transform: translateY(-1px);
+}
+
+.availability.available {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+.availability.out-of-stock {
+    background: #fee2e2;
+
+    color: #b91c1c;
+}
+
+
+/* =====================================
+   STATUS DOT
+===================================== */
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.actions button {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    border: none;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+
+/* Edit */
+
+.edit-btn {
+    background: #3b82f6;
+}
+
+.edit-btn:hover {
+    background: #2563eb;
+
+    transform: translateY(-1px);
+}
+
+
+/* Delete */
+
+.delete-btn {
+    background: #ef4444;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+
+    transform: translateY(-1px);
+}
+
+
+/* =====================================
+   EMPTY STATE
+===================================== */
+
+.empty-state {
+    grid-column: 1 / -1;
+
+    text-align: center;
+
+    padding: 70px 20px;
+
+    background: white;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, .05);
+}
+
+.empty-state i {
+    display: block;
+
+    font-size: 45px;
+
+    color: #bbb;
+
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    color: #333;
+
+    margin-bottom: 7px;
+}
+
+.empty-state p {
+    color: #777;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================
+   MODAL OVERLAY
+===================================== */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, .45);
+}
+
+
+/* =====================================
+   MODAL
+===================================== */
+
+.menu-modal {
+    width: 100%;
+
+    max-width: 620px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, .2);
+
+    animation: modalIn .2s ease;
+}
+
+@keyframes modalIn {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =====================================
+   MODAL HEADER
+===================================== */
+
+.modal-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 22px;
+}
+
+.modal-header h2 {
+    margin: 0;
+
+    font-size: 24px;
+
+    color: #222;
+}
+
+.modal-header p {
+    margin-top: 5px;
+
+    color: #777;
+
+    font-size: 13px;
+}
+
+
+/* =====================================
+   CLOSE BUTTON
+===================================== */
+
+.close-btn {
+    width: 35px;
+    height: 35px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f3f4f6;
+
+    color: #555;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: #e5e7eb;
+}
+
+
+/* =====================================
+   IMAGE UPLOAD
+===================================== */
+
+.image-upload {
+    display: flex;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.image-preview {
+    width: 120px;
+    height: 100px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.upload-label {
+    flex: 1;
+
+    min-height: 100px;
+
+    border: 2px dashed #ddd;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    color: #777;
+
+    transition: .2s;
+}
+
+.upload-label:hover {
+    border-color: #ff6b35;
+
+    background: #fffaf7;
+}
+
+.upload-label i {
+    font-size: 26px;
+
+    color: #ff6b35;
+
+    margin-bottom: 5px;
+}
+
+.upload-label span {
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.upload-label small {
+    margin-top: 4px;
+
+    font-size: 11px;
+}
+
+.upload-label input {
+    display: none;
+}
+
+
+/* =====================================
+   FORM
+===================================== */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    padding: 11px 13px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: white;
+
+    color: #333;
+
+    font-size: 14px;
+
+    font-family: inherit;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #ff6b35;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 107, 53, .08);
+}
+
+
+/* =====================================
+   FORM ROW
+===================================== */
+
+.form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+}
+
+
+/* =====================================
+   OPTIONS
+===================================== */
+
+.options-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    margin-bottom: 20px;
+}
+
+.checkbox-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    color: #444;
+}
+
+.checkbox-label input {
+    width: 17px;
+    height: 17px;
+
+    accent-color: #ff6b35;
+
+    cursor: pointer;
+}
+
+
+/* =====================================
+   MODAL BUTTONS
+===================================== */
+
+.modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 10px;
+}
+
+.cancel-btn,
+.save-btn {
+    padding: 11px 20px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #f3f4f6;
+
+    color: #555;
+}
+
+.cancel-btn:hover {
+    background: #e5e7eb;
+}
+
+.save-btn {
+    background: #ff6b35;
+
+    color: white;
+}
+
+.save-btn:hover {
+    background: #e95d2b;
+}
+
+.save-btn:disabled {
+    opacity: .6;
+
+    cursor: not-allowed;
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 1200px) {
+
+    .menu-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .menu-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .admin-menu-container {
+        padding: 15px;
+    }
+
+    .page-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 26px;
+    }
+
+    .add-item-btn {
+        width: 100%;
+    }
+
+    .filter-area {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .image-upload {
+        flex-direction: column;
+    }
+
+    .image-preview {
+        width: 100%;
+        height: 160px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .admin-menu-container {
+        padding: 12px;
+    }
+
+    .image-container {
+        height: 200px;
+    }
+
+    .actions {
+        grid-template-columns: 1fr;
+    }
+
+    .options-row {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .menu-modal {
+        padding: 18px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .cancel-btn,
+    .save-btn {
+        width: 100%;
+    }
+
+}
