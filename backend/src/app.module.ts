@@ -23,15 +23,17 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '123456789',
-      database: 'QRSCAN',
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRoot({
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
+
+  autoLoadEntities: true,
+
+  synchronize: true,
+
+  // ssl: {
+  //   rejectUnauthorized: false,
+  // },
 
     
     }),
