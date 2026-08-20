@@ -37,10 +37,10 @@ interface Category {
 export class ProductsComponent implements OnInit {
 
   private productApi =
-    'http://localhost:3000/products';
+    'https://cafeqr-wds8.onrender.com/products';
 
   private categoryApi =
-    'http://localhost:3000/category';
+    'https://cafeqr-wds8.onrender.com/category';
 
   products: Product[] = [];
 
@@ -659,7 +659,7 @@ export class ProductsComponent implements OnInit {
 
     }
 
-    return `http://localhost:3000${image}`;
+    return `https://cafeqr-wds8.onrender.com${image}`;
 
   }
 

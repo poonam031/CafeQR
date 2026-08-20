@@ -34,7 +34,7 @@ export class MenuComponent implements OnInit {
   // API
   // =========================================
 
-  private apiUrl = 'http://localhost:3000/menu';
+  private apiUrl = 'https://cafeqr-wds8.onrender.com/menu';
 
 
   // =========================================
@@ -785,7 +785,7 @@ export class MenuComponent implements OnInit {
   }
 
   // Backend image
-  return `http://localhost:3000${image}`;
+  return `https://cafeqr-wds8.onrender.com${image}`;
 }
 
 }

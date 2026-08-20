@@ -33,7 +33,7 @@ export class CategoriesComponent implements OnInit {
   // =====================================
 
   private apiUrl =
-    'http://localhost:3000/category';
+    'https://cafeqr-wds8.onrender.com/category';
 
 
   // =====================================
@@ -207,7 +207,7 @@ export class CategoriesComponent implements OnInit {
     }
 
 
-    return `http://localhost:3000${image}`;
+    return `https://cafeqr-wds8.onrender.com${image}`;
 
   }
 

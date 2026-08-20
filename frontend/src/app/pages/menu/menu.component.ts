@@ -64,10 +64,10 @@ export class MenuComponent implements OnInit {
   // =====================================================
 
   private apiUrl =
-    'http://localhost:3000/menu';
+    'https://cafeqr-wds8.onrender.com/menu';
 
   private tablesApi =
-    'http://localhost:3000/tables';
+    'https://cafeqr-wds8.onrender.com/tables';
 
 
   // =====================================================
@@ -651,7 +651,7 @@ export class MenuComponent implements OnInit {
     ) {
 
       return (
-        'http://localhost:3000' +
+        'https://cafeqr-wds8.onrender.com' +
         image
       );
 
@@ -659,7 +659,7 @@ export class MenuComponent implements OnInit {
 
 
     return (
-      'http://localhost:3000/' +
+      'https://cafeqr-wds8.onrender.com/' +
       image
     );
 

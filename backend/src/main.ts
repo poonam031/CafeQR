@@ -86,7 +86,7 @@ async function bootstrap() {
   );
 
   console.log(
-    'http://localhost:3000'
+    'https://cafeqr-wds8.onrender.com'
   );
 
   console.log(

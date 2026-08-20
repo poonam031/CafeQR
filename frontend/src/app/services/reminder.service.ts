@@ -21,7 +21,7 @@ export interface Reminder {
 })
 export class ReminderService {
 
-    private apiUrl = 'http://localhost:3000/reminders';
+    private apiUrl = 'https://cafeqr-wds8.onrender.com/reminders';
 
     constructor(
         private http: HttpClient

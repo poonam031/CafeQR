@@ -163,7 +163,7 @@ export class HeaderComponent
         ===================================== */
 
         this.socket = io(
-            'http://localhost:3000'
+            'https://cafeqr-wds8.onrender.com'
         );
 
 

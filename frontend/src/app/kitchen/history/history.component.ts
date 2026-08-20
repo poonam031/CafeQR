@@ -108,10 +108,10 @@ export class HistoryComponent
   // =========================================
 
   private apiUrl =
-    'http://localhost:3000/orders';
+    'https://cafeqr-wds8.onrender.com/orders';
 
   private socketUrl =
-    'http://localhost:3000';
+    'https://cafeqr-wds8.onrender.com';
 
 
 

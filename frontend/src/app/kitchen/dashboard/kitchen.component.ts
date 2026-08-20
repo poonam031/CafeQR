@@ -85,7 +85,7 @@ export class KitchenComponent
     connectToOrderSocket(): void {
 
         this.socket = io(
-            'http://localhost:3000'
+            'https://cafeqr-wds8.onrender.com'
         );
 
 

@@ -71,7 +71,7 @@ export interface UpiPaymentStatusResponse {
 export class PaymentService {
 
   private readonly baseUrl =
-    'http://localhost:3000';
+    'https://cafeqr-wds8.onrender.com';
 
 
   constructor(

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class OrderService {
 
-  private apiUrl = 'http://localhost:3000/orders';
+  private apiUrl = 'https://cafeqr-wds8.onrender.com/orders';
 
   constructor(private http: HttpClient) {}
 

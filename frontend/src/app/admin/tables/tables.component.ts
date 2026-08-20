@@ -116,11 +116,11 @@ export class TablesComponent
   // =====================================================
 
   private tablesApi =
-    'http://localhost:3000/tables';
+    'https://cafeqr-wds8.onrender.com/tables';
 
 
   private ordersApi =
-    'http://localhost:3000/orders';
+    'https://cafeqr-wds8.onrender.com/orders';
 
 
   // =====================================================
