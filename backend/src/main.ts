@@ -75,23 +75,19 @@ async function bootstrap() {
   // START SERVER
   // =========================================
 
-  await app.listen(3000);
+ // =========================================
+// START SERVER
+// =========================================
 
-  console.log(
-    '===================================='
-  );
+const port = process.env.PORT || 3000;
 
-  console.log(
-    'CafeQR Backend Started'
-  );
+await app.listen(port, '0.0.0.0');
 
-  console.log(
-    'https://cafeqr-wds8.onrender.com'
-  );
-
-  console.log(
-    '===================================='
-  );
+console.log('====================================');
+console.log('CafeQR Backend Started');
+console.log(`Port: ${port}`);
+console.log('https://cafeqr-wds8.onrender.com');
+console.log('====================================');
 
 }
 
