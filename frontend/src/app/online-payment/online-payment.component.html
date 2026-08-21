@@ -1,6 +1,5 @@
 <div class="online-payment-page">
 
-
   <!-- ========================================= -->
   <!-- LOADING -->
   <!-- ========================================= -->
@@ -82,8 +81,9 @@
     "
   >
 
-
+    <!-- ======================================= -->
     <!-- HEADER -->
+    <!-- ======================================= -->
 
     <div class="payment-header">
 
@@ -96,13 +96,15 @@
       </h1>
 
       <p>
-        Pay securely using any UPI app
+        Pay securely using your preferred UPI app
       </p>
 
     </div>
 
 
+    <!-- ======================================= -->
     <!-- ORDER -->
+    <!-- ======================================= -->
 
     <div class="order-info">
 
@@ -117,7 +119,9 @@
     </div>
 
 
+    <!-- ======================================= -->
     <!-- AMOUNT -->
+    <!-- ======================================= -->
 
     <div class="amount-box">
 
@@ -132,89 +136,198 @@
     </div>
 
 
-    <!-- UPI APPS -->
+    <!-- ======================================= -->
+    <!-- UPI PAYMENT APPS -->
+    <!-- ======================================= -->
 
-    <div class="upi-apps">
+    <div class="upi-apps-section">
 
-      <div class="upi-app">
-        <div class="app-icon">
+      <h3>
+        Choose UPI App
+      </h3>
+
+
+      <!-- ===================================== -->
+      <!-- GOOGLE PAY -->
+      <!-- ===================================== -->
+
+      <button
+        type="button"
+        class="upi-payment-button gpay-button"
+        [disabled]="paymentProcessing"
+        (click)="payWithGooglePay()"
+      >
+
+        <div class="upi-app-icon gpay-icon">
           G
         </div>
-        <span>
-          Google Pay
-        </span>
-      </div>
 
-      <div class="upi-app">
-        <div class="app-icon">
+        <div class="upi-app-details">
+
+          <strong>
+            Google Pay
+          </strong>
+
+          <small>
+            Pay using Google Pay
+          </small>
+
+        </div>
+
+        <div class="upi-arrow">
+          →
+        </div>
+
+      </button>
+
+
+      <!-- ===================================== -->
+      <!-- PHONEPE -->
+      <!-- ===================================== -->
+
+      <button
+        type="button"
+        class="upi-payment-button phonepe-button"
+        [disabled]="paymentProcessing"
+        (click)="payWithPhonePe()"
+      >
+
+        <div class="upi-app-icon phonepe-icon">
           P
         </div>
-        <span>
-          PhonePe
-        </span>
-      </div>
 
-      <div class="upi-app">
-        <div class="app-icon">
+        <div class="upi-app-details">
+
+          <strong>
+            PhonePe
+          </strong>
+
+          <small>
+            Pay using PhonePe
+          </small>
+
+        </div>
+
+        <div class="upi-arrow">
+          →
+        </div>
+
+      </button>
+
+
+      <!-- ===================================== -->
+      <!-- PAYTM -->
+      <!-- ===================================== -->
+
+      <button
+        type="button"
+        class="upi-payment-button paytm-button"
+        [disabled]="paymentProcessing"
+        (click)="payWithPaytm()"
+      >
+
+        <div class="upi-app-icon paytm-icon">
           ₹
         </div>
-        <span>
-          Paytm
-        </span>
-      </div>
 
-      <div class="upi-app">
-        <div class="app-icon">
+        <div class="upi-app-details">
+
+          <strong>
+            Paytm
+          </strong>
+
+          <small>
+            Pay using Paytm
+          </small>
+
+        </div>
+
+        <div class="upi-arrow">
+          →
+        </div>
+
+      </button>
+
+
+      <!-- ===================================== -->
+      <!-- OTHER UPI -->
+      <!-- ===================================== -->
+
+      <button
+        type="button"
+        class="upi-payment-button other-upi-button"
+        [disabled]="paymentProcessing"
+        (click)="payWithUpi()"
+      >
+
+        <div class="upi-app-icon other-upi-icon">
           U
         </div>
-        <span>
-          BHIM
-        </span>
+
+        <div class="upi-app-details">
+
+          <strong>
+            Other UPI Apps
+          </strong>
+
+          <small>
+            BHIM and other supported UPI apps
+          </small>
+
+        </div>
+
+        <div class="upi-arrow">
+          →
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <!-- ======================================= -->
+    <!-- PROCESSING -->
+    <!-- ======================================= -->
+
+    <div
+      class="processing-box"
+      *ngIf="paymentProcessing"
+    >
+
+      <div class="button-spinner"></div>
+
+      <div>
+
+        <strong>
+          Opening UPI App...
+        </strong>
+
+        <small>
+          Complete the payment in your selected UPI app.
+        </small>
+
       </div>
 
     </div>
 
 
-    <!-- PAY BUTTON -->
-
-    <button
-      type="button"
-      class="pay-button"
-      [disabled]="paymentProcessing"
-      (click)="payWithUpi()"
-    >
-
-      <span
-        *ngIf="!paymentProcessing"
-      >
-        ⚡ Pay ₹{{ amount | number:'1.2-2' }} with UPI
-      </span>
-
-      <span
-        *ngIf="paymentProcessing"
-        class="processing-content"
-      >
-
-        <span class="button-spinner"></span>
-
-        Opening UPI App...
-
-      </span>
-
-    </button>
-
-
+    <!-- ======================================= -->
     <!-- UPI ID -->
+    <!-- ======================================= -->
 
     <div class="upi-id-box">
 
-      <span>
-        Cafe UPI ID
-      </span>
+      <div>
 
-      <strong>
-        {{ upiId }}
-      </strong>
+        <span>
+          Cafe UPI ID
+        </span>
+
+        <strong>
+          {{ upiId }}
+        </strong>
+
+      </div>
 
       <button
         type="button"
@@ -227,7 +340,9 @@
     </div>
 
 
+    <!-- ======================================= -->
     <!-- STATUS -->
+    <!-- ======================================= -->
 
     <div class="waiting-box">
 
@@ -248,7 +363,9 @@
     </div>
 
 
+    <!-- ======================================= -->
     <!-- TRANSACTION REFERENCE -->
+    <!-- ======================================= -->
 
     <div class="reference-box">
 
@@ -263,7 +380,9 @@
     </div>
 
 
+    <!-- ======================================= -->
     <!-- SECURITY -->
+    <!-- ======================================= -->
 
     <div class="secure-box">
 
@@ -286,7 +405,9 @@
     </div>
 
 
-    <!-- CANCEL -->
+    <!-- ======================================= -->
+    <!-- BACK TO CART -->
+    <!-- ======================================= -->
 
     <button
       type="button"
@@ -412,6 +533,5 @@
     </button>
 
   </div>
-
 
 </div>

@@ -949,3 +949,1010 @@
   }
 
 }
+
+
+.online-payment-page {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px 15px;
+
+  background: #f5f7fb;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PAYMENT CARD
+   ========================================== */
+
+.payment-card {
+  width: 100%;
+  max-width: 450px;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.10);
+}
+
+
+/* ==========================================
+   HEADER
+   ========================================== */
+
+.payment-header {
+  text-align: center;
+}
+
+.payment-icon {
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 12px;
+
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff0e8;
+
+  font-size: 28px;
+}
+
+.payment-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+
+  font-weight: 700;
+
+  color: #1f2937;
+}
+
+.payment-header p {
+  margin: 8px 0 20px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   ORDER
+   ========================================== */
+
+.order-info {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px;
+
+  margin-bottom: 18px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  text-align: left;
+}
+
+.order-info span {
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.order-info strong {
+  color: #111827;
+
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   AMOUNT
+   ========================================== */
+
+.amount-box {
+  background: #fff8f4;
+
+  border: 1px solid #ffe1d3;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  margin-bottom: 24px;
+}
+
+.amount-box span {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  margin-bottom: 6px;
+}
+
+.amount-box strong {
+  display: block;
+
+  font-size: 34px;
+
+  font-weight: 800;
+
+  color: #111827;
+}
+
+
+/* ==========================================
+   UPI APP SECTION
+   ========================================== */
+
+.upi-apps-section {
+  width: 100%;
+
+  margin-top: 10px;
+
+  text-align: left;
+}
+
+.upi-apps-section h3 {
+  margin: 0 0 14px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  color: #1f2937;
+}
+
+
+/* ==========================================
+   UPI PAYMENT BUTTON
+   ========================================== */
+
+.upi-payment-button {
+  width: 100%;
+
+  min-height: 70px;
+
+  margin-bottom: 12px;
+
+  padding: 11px 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.upi-payment-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.10);
+}
+
+.upi-payment-button:active {
+  transform: scale(0.98);
+}
+
+.upi-payment-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* ==========================================
+   APP ICON
+   ========================================== */
+
+.upi-app-icon {
+  width: 46px;
+  height: 46px;
+
+  min-width: 46px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+  font-weight: 800;
+}
+
+
+/* ==========================================
+   GOOGLE PAY
+   ========================================== */
+
+.gpay-icon {
+  background: #eef3ff;
+
+  color: #4285f4;
+}
+
+.gpay-button:hover {
+  border-color: #4285f4;
+}
+
+
+/* ==========================================
+   PHONEPE
+   ========================================== */
+
+.phonepe-icon {
+  background: #eee5ff;
+
+  color: #6739b7;
+}
+
+.phonepe-button:hover {
+  border-color: #6739b7;
+}
+
+
+/* ==========================================
+   PAYTM
+   ========================================== */
+
+.paytm-icon {
+  background: #e4f8ff;
+
+  color: #009fe3;
+}
+
+.paytm-button:hover {
+  border-color: #009fe3;
+}
+
+
+/* ==========================================
+   OTHER UPI
+   ========================================== */
+
+.other-upi-icon {
+  background: #f3f4f6;
+
+  color: #374151;
+}
+
+.other-upi-button:hover {
+  border-color: #6b7280;
+}
+
+
+/* ==========================================
+   APP TEXT
+   ========================================== */
+
+.upi-app-details {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.upi-app-details strong {
+  display: block;
+
+  color: #111827;
+
+  font-size: 16px;
+
+  font-weight: 700;
+}
+
+.upi-app-details small {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #6b7280;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   ARROW
+   ========================================== */
+
+.upi-arrow {
+  font-size: 22px;
+
+  color: #6b7280;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================
+   PROCESSING
+   ========================================== */
+
+.processing-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px;
+
+  margin: 5px 0 15px;
+
+  background: #fff7ed;
+
+  border-radius: 12px;
+
+  text-align: left;
+}
+
+.processing-box strong {
+  display: block;
+
+  color: #9a3412;
+
+  font-size: 14px;
+}
+
+.processing-box small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #78716c;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   SPINNER
+   ========================================== */
+
+.button-spinner,
+.status-spinner {
+  width: 22px;
+  height: 22px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  border: 3px solid #fed7aa;
+
+  border-top-color: #ea580c;
+
+  animation: spin 0.8s linear infinite;
+}
+
+
+/* ==========================================
+   UPI ID
+   ========================================== */
+
+.upi-id-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 13px;
+
+  margin-top: 8px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  text-align: left;
+}
+
+.upi-id-box > div {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.upi-id-box span {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 12px;
+}
+
+.upi-id-box strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #111827;
+
+  font-size: 13px;
+
+  word-break: break-all;
+}
+
+.copy-btn {
+  border: none;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  padding: 7px 11px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  opacity: 0.85;
+}
+
+
+/* ==========================================
+   WAITING
+   ========================================== */
+
+.waiting-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 15px;
+
+  margin-top: 15px;
+
+  background: #fff7ed;
+
+  border-radius: 14px;
+
+  text-align: left;
+}
+
+.waiting-box strong {
+  display: block;
+
+  color: #9a3412;
+
+  font-size: 14px;
+}
+
+.waiting-box small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #78716c;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   REFERENCE
+   ========================================== */
+
+.reference-box {
+  margin-top: 15px;
+
+  padding: 13px;
+
+  background: #f3f4f6;
+
+  border-radius: 10px;
+
+  text-align: left;
+}
+
+.reference-box span {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 12px;
+}
+
+.reference-box strong {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #111827;
+
+  font-size: 13px;
+
+  word-break: break-all;
+}
+
+
+/* ==========================================
+   SECURITY
+   ========================================== */
+
+.secure-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 15px;
+
+  padding: 14px;
+
+  background: #f0fdf4;
+
+  border: 1px solid #dcfce7;
+
+  border-radius: 14px;
+
+  text-align: left;
+}
+
+.secure-icon {
+  width: 40px;
+  height: 40px;
+
+  min-width: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #dcfce7;
+
+  font-size: 20px;
+}
+
+.secure-box strong {
+  display: block;
+
+  color: #166534;
+
+  font-size: 13px;
+}
+
+.secure-box small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #6b7280;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   BACK TO CART
+   ========================================== */
+
+.cancel-btn {
+  width: 100%;
+
+  height: 48px;
+
+  margin-top: 20px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #f3f4f6;
+
+  color: #374151;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+
+/* ==========================================
+   LOADING
+   ========================================== */
+
+.loading-card {
+  padding: 45px 30px;
+}
+
+.loader {
+  width: 42px;
+  height: 42px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  border: 4px solid #e5e7eb;
+
+  border-top-color: #111827;
+
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-card h2 {
+  margin: 0;
+
+  color: #1f2937;
+}
+
+.loading-card p {
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   ERROR
+   ========================================== */
+
+.failed-icon {
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fee2e2;
+
+  color: #dc2626;
+
+  font-size: 36px;
+
+  font-weight: 700;
+}
+
+.error-card h2 {
+  color: #991b1b;
+}
+
+.error-card p {
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   ERROR / RETRY BUTTONS
+   ========================================== */
+
+.retry-btn,
+.back-btn {
+  width: 100%;
+
+  height: 48px;
+
+  margin-top: 12px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.retry-btn {
+  background: #111827;
+
+  color: #ffffff;
+}
+
+.back-btn {
+  background: #f3f4f6;
+
+  color: #374151;
+}
+
+
+/* ==========================================
+   SUCCESS
+   ========================================== */
+
+.success-card {
+  padding-top: 45px;
+
+  padding-bottom: 45px;
+}
+
+.success-icon {
+  width: 75px;
+  height: 75px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background: #dcfce7;
+
+  color: #16a34a;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 42px;
+
+  font-weight: 700;
+}
+
+.success-card h1 {
+  margin: 0;
+
+  font-size: 28px;
+
+  color: #166534;
+}
+
+.success-card p {
+  color: #6b7280;
+}
+
+.success-amount {
+  margin: 20px 0;
+
+  font-size: 34px;
+
+  font-weight: 800;
+
+  color: #111827;
+}
+
+.paid-status {
+  padding: 12px;
+
+  background: #f0fdf4;
+
+  border-radius: 10px;
+}
+
+.paid-status strong {
+  margin-left: 5px;
+
+  color: #16a34a;
+}
+
+.transaction-display {
+  margin-top: 15px;
+
+  padding: 12px;
+
+  background: #f3f4f6;
+
+  border-radius: 10px;
+
+  font-size: 12px;
+
+  word-break: break-all;
+}
+
+.transaction-display strong {
+  display: block;
+
+  margin-top: 5px;
+}
+
+.success-order {
+  margin-top: 15px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.success-btn {
+  width: 100%;
+
+  height: 48px;
+
+  margin-top: 20px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* ==========================================
+   EXPIRED
+   ========================================== */
+
+.expired-card {
+  padding-top: 45px;
+
+  padding-bottom: 45px;
+}
+
+.expired-icon {
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background: #fee2e2;
+
+  color: #dc2626;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 36px;
+
+  font-weight: 700;
+}
+
+.expired-card h1 {
+  color: #991b1b;
+}
+
+
+/* ==========================================
+   ANIMATION
+   ========================================== */
+
+@keyframes spin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 500px) {
+
+  .online-payment-page {
+    padding: 15px;
+  }
+
+  .payment-card {
+    padding: 22px 18px;
+
+    border-radius: 18px;
+  }
+
+  .payment-header h1 {
+    font-size: 24px;
+  }
+
+  .amount-box strong {
+    font-size: 28px;
+  }
+
+  .upi-payment-button {
+    min-height: 64px;
+
+    padding: 9px 11px;
+
+    gap: 11px;
+  }
+
+  .upi-app-icon {
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    font-size: 20px;
+  }
+
+  .upi-app-details strong {
+    font-size: 15px;
+  }
+
+  .upi-app-details small {
+    font-size: 11px;
+  }
+
+  .upi-arrow {
+    font-size: 20px;
+  }
+
+  .upi-id-box {
+    align-items: center;
+  }
+
+}

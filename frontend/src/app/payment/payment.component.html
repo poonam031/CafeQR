@@ -1,229 +1,58 @@
-<div class="payment-overlay">
+<div class="upi-apps">
 
-  <div class="payment-modal">
+  <h3>Pay using UPI</h3>
 
-    <!-- CLOSE -->
+  <!-- GOOGLE PAY -->
+  <button
+    type="button"
+    class="upi-button gpay-button"
+    (click)="payWithGooglePay()">
 
-    <button
-      type="button"
-      class="close-button"
-      (click)="close()">
+    <span class="upi-logo">G</span>
 
-      ×
+    <span>
+      <strong>Google Pay</strong>
+      <small>Pay with Google Pay</small>
+    </span>
 
-    </button>
+    <span>→</span>
 
+  </button>
 
-    <!-- HEADER -->
 
-    <div class="payment-header">
+  <!-- PHONEPE -->
+  <button
+    type="button"
+    class="upi-button phonepe-button"
+    (click)="payWithPhonePe()">
 
-      <div class="payment-icon">
-        💳
-      </div>
+    <span class="upi-logo">P</span>
 
-      <h2>
-        Choose Payment Method
-      </h2>
+    <span>
+      <strong>PhonePe</strong>
+      <small>Pay with PhonePe</small>
+    </span>
 
-      <p>
-        Select your UPI app
-      </p>
+    <span>→</span>
 
-    </div>
+  </button>
 
 
-    <!-- AMOUNT -->
+  <!-- PAYTM -->
+  <button
+    type="button"
+    class="upi-button paytm-button"
+    (click)="payWithPaytm()">
 
-    <div class="payment-amount">
+    <span class="upi-logo">₹</span>
 
-      <span>
-        Total Amount
-      </span>
+    <span>
+      <strong>Paytm</strong>
+      <small>Pay with Paytm</small>
+    </span>
 
-      <strong>
-        ₹{{ amount | number:'1.2-2' }}
-      </strong>
+    <span>→</span>
 
-    </div>
-
-
-    <!-- GOOGLE PAY -->
-
-    <button
-      type="button"
-      class="payment-option gpay-option"
-      (click)="payWithGooglePay()">
-
-      <div class="option-icon">
-        G
-      </div>
-
-      <div class="option-content">
-
-        <strong>
-          Google Pay
-        </strong>
-
-        <span>
-          Pay securely with Google Pay
-        </span>
-
-      </div>
-
-      <div class="arrow">
-        →
-      </div>
-
-    </button>
-
-
-    <!-- PHONEPE -->
-
-    <button
-      type="button"
-      class="payment-option phonepe-option"
-      (click)="payWithPhonePe()">
-
-      <div class="option-icon">
-        P
-      </div>
-
-      <div class="option-content">
-
-        <strong>
-          PhonePe
-        </strong>
-
-        <span>
-          Pay securely with PhonePe
-        </span>
-
-      </div>
-
-      <div class="arrow">
-        →
-      </div>
-
-    </button>
-
-
-    <!-- PAYTM -->
-
-    <button
-      type="button"
-      class="payment-option paytm-option"
-      (click)="payWithPaytm()">
-
-      <div class="option-icon">
-        ₹
-      </div>
-
-      <div class="option-content">
-
-        <strong>
-          Paytm
-        </strong>
-
-        <span>
-          Pay securely with Paytm
-        </span>
-
-      </div>
-
-      <div class="arrow">
-        →
-      </div>
-
-    </button>
-
-
-    <!-- BHIM / OTHER UPI -->
-
-    <button
-      type="button"
-      class="payment-option upi-option"
-      (click)="payWithUPI()">
-
-      <div class="option-icon">
-        U
-      </div>
-
-      <div class="option-content">
-
-        <strong>
-          Other UPI Apps
-        </strong>
-
-        <span>
-          BHIM and other supported UPI apps
-        </span>
-
-      </div>
-
-      <div class="arrow">
-        →
-      </div>
-
-    </button>
-
-
-    <!-- UPI ID -->
-
-    <div class="upi-info">
-
-      <span>
-        Cafe UPI ID
-      </span>
-
-      <strong>
-        {{ upiId }}
-      </strong>
-
-    </div>
-
-
-    <!-- CASH -->
-
-    <button
-      type="button"
-      class="payment-option cash-option"
-      (click)="selectCash()">
-
-      <div class="option-icon">
-        💵
-      </div>
-
-      <div class="option-content">
-
-        <strong>
-          Cash
-        </strong>
-
-        <span>
-          Pay at the cafe counter
-        </span>
-
-      </div>
-
-      <div class="arrow">
-        →
-      </div>
-
-    </button>
-
-
-    <!-- CANCEL -->
-
-    <button
-      type="button"
-      class="cancel-button"
-      (click)="close()">
-
-      Cancel
-
-    </button>
-
-  </div>
+  </button>
 
 </div>

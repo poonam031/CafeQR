@@ -339,6 +339,152 @@ export class OnlinePaymentComponent
 
 
   // ==========================================
+// GOOGLE PAY
+// ==========================================
+
+payWithGooglePay(): void {
+
+  if (!this.upiUrl) {
+
+    this.errorMessage =
+      'UPI payment link is not available.';
+
+    return;
+  }
+
+  this.paymentProcessing = true;
+
+  this.errorMessage = '';
+
+  const query =
+    this.upiUrl.substring(
+      this.upiUrl.indexOf('?') + 1
+    );
+
+  const googlePayUrl =
+    `tez://upi/pay?${query}`;
+
+  console.log(
+    'Opening Google Pay:',
+    googlePayUrl
+  );
+
+  this.openUpiApp(
+    googlePayUrl
+  );
+}
+
+
+// ==========================================
+// PHONEPE
+// ==========================================
+
+payWithPhonePe(): void {
+
+  if (!this.upiUrl) {
+
+    this.errorMessage =
+      'UPI payment link is not available.';
+
+    return;
+  }
+
+  this.paymentProcessing = true;
+
+  this.errorMessage = '';
+
+  const query =
+    this.upiUrl.substring(
+      this.upiUrl.indexOf('?') + 1
+    );
+
+  const phonePeUrl =
+    `phonepe://pay?${query}`;
+
+  console.log(
+    'Opening PhonePe:',
+    phonePeUrl
+  );
+
+  this.openUpiApp(
+    phonePeUrl
+  );
+}
+
+
+// ==========================================
+// PAYTM
+// ==========================================
+
+payWithPaytm(): void {
+
+  if (!this.upiUrl) {
+
+    this.errorMessage =
+      'UPI payment link is not available.';
+
+    return;
+  }
+
+  this.paymentProcessing = true;
+
+  this.errorMessage = '';
+
+  const query =
+    this.upiUrl.substring(
+      this.upiUrl.indexOf('?') + 1
+    );
+
+  const paytmUrl =
+    `paytmmp://pay?${query}`;
+
+  console.log(
+    'Opening Paytm:',
+    paytmUrl
+  );
+
+  this.openUpiApp(
+    paytmUrl
+  );
+}
+
+
+// ==========================================
+// OPEN SELECTED UPI APP
+// ==========================================
+
+private openUpiApp(
+  appUrl: string
+): void {
+
+  const startTime =
+    Date.now();
+
+  window.location.href =
+    appUrl;
+
+  setTimeout(() => {
+
+    const elapsed =
+      Date.now() - startTime;
+
+    if (elapsed < 2000) {
+
+      this.paymentProcessing = false;
+
+      if (this.upiUrl) {
+
+        window.location.href =
+          this.upiUrl;
+
+      }
+
+    }
+
+  }, 1500);
+}
+
+  // ==========================================
   // SHOW UPI APPS
   // ==========================================
 
