@@ -3,15 +3,19 @@
   <div class="payment-modal">
 
     <!-- CLOSE -->
+
     <button
       type="button"
       class="close-button"
       (click)="close()">
+
       ×
+
     </button>
 
 
     <!-- HEADER -->
+
     <div class="payment-header">
 
       <div class="payment-icon">
@@ -23,30 +27,46 @@
       </h2>
 
       <p>
-        Select how you want to pay
+        Select your UPI app
       </p>
 
     </div>
 
 
-    <!-- ONLINE UPI -->
+    <!-- AMOUNT -->
+
+    <div class="payment-amount">
+
+      <span>
+        Total Amount
+      </span>
+
+      <strong>
+        ₹{{ amount | number:'1.2-2' }}
+      </strong>
+
+    </div>
+
+
+    <!-- GOOGLE PAY -->
+
     <button
       type="button"
-      class="payment-option online-option"
-      (click)="selectOnline()">
+      class="payment-option gpay-option"
+      (click)="payWithGooglePay()">
 
       <div class="option-icon">
-        ⚡
+        G
       </div>
 
       <div class="option-content">
 
         <strong>
-          Pay Online
+          Google Pay
         </strong>
 
         <span>
-          Google Pay • PhonePe • Paytm • BHIM
+          Pay securely with Google Pay
         </span>
 
       </div>
@@ -58,7 +78,113 @@
     </button>
 
 
+    <!-- PHONEPE -->
+
+    <button
+      type="button"
+      class="payment-option phonepe-option"
+      (click)="payWithPhonePe()">
+
+      <div class="option-icon">
+        P
+      </div>
+
+      <div class="option-content">
+
+        <strong>
+          PhonePe
+        </strong>
+
+        <span>
+          Pay securely with PhonePe
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </button>
+
+
+    <!-- PAYTM -->
+
+    <button
+      type="button"
+      class="payment-option paytm-option"
+      (click)="payWithPaytm()">
+
+      <div class="option-icon">
+        ₹
+      </div>
+
+      <div class="option-content">
+
+        <strong>
+          Paytm
+        </strong>
+
+        <span>
+          Pay securely with Paytm
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </button>
+
+
+    <!-- BHIM / OTHER UPI -->
+
+    <button
+      type="button"
+      class="payment-option upi-option"
+      (click)="payWithUPI()">
+
+      <div class="option-icon">
+        U
+      </div>
+
+      <div class="option-content">
+
+        <strong>
+          Other UPI Apps
+        </strong>
+
+        <span>
+          BHIM and other supported UPI apps
+        </span>
+
+      </div>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </button>
+
+
+    <!-- UPI ID -->
+
+    <div class="upi-info">
+
+      <span>
+        Cafe UPI ID
+      </span>
+
+      <strong>
+        {{ upiId }}
+      </strong>
+
+    </div>
+
+
     <!-- CASH -->
+
     <button
       type="button"
       class="payment-option cash-option"
@@ -88,6 +214,7 @@
 
 
     <!-- CANCEL -->
+
     <button
       type="button"
       class="cancel-button"
