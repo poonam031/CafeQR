@@ -392,23 +392,12 @@ payWithPhonePe(): void {
   params.set('pn', 'CafeQR');
   params.set('am', Number(this.amount).toFixed(2));
   params.set('cu', 'INR');
-
-  if (this.merchantOrderId) {
-    params.set('tr', this.merchantOrderId);
-  }
-
-  params.set(
-    'tn',
-    `CafeQR Order ${this.orderId}`
-  );
+  params.set('tn', `CafeQR Order ${this.orderId}`);
 
   const phonePeUrl =
     `phonepe://pay?${params.toString()}`;
 
-  console.log(
-    'PHONEPE PAYMENT URL:',
-    phonePeUrl
-  );
+  console.log('PHONEPE URL:', phonePeUrl);
 
   this.paymentProcessing = true;
 
