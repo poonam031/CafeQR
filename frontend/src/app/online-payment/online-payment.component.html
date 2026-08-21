@@ -137,6 +137,59 @@
 
 
     <!-- ======================================= -->
+    <!-- QR CODE PAYMENT -->
+    <!-- ======================================= -->
+
+    <div class="qr-payment-section">
+
+      <h3>
+        Scan QR to Pay
+      </h3>
+
+      <p class="qr-subtitle">
+        Scan this QR code using any UPI app
+      </p>
+
+
+      <!-- QR IMAGE -->
+
+     <div class="qr-code-box">
+
+  <img
+    *ngIf="qrCodeDataUrl"
+    [src]="qrCodeDataUrl"
+    alt="Cafe UPI QR Code"
+    class="upi-qr-image"
+  />
+
+  <div
+    *ngIf="!qrCodeDataUrl"
+    class="qr-loading"
+  >
+    Generating QR...
+  </div>
+
+</div>
+
+
+      <!-- QR AMOUNT -->
+
+      <div class="qr-payment-info">
+
+        <span>
+          Amount to Pay
+        </span>
+
+        <strong>
+          ₹{{ amount | number:'1.2-2' }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================= -->
     <!-- UPI PAYMENT APPS -->
     <!-- ======================================= -->
 
@@ -148,7 +201,7 @@
 
 
       <!-- ===================================== -->
-      <!-- GOOGLE PAY -->
+      <!-- GOOGLE PAY - FIRST OPTION -->
       <!-- ===================================== -->
 
       <button
@@ -181,108 +234,43 @@
       </button>
 
 
-      <!-- ===================================== -->
-      <!-- PHONEPE -->
-      <!-- ===================================== -->
+<!-- ===================================== -->
+<!-- OTHER UPI APPS DROPDOWN -->
+<!-- ===================================== -->
 
- <button
-  type="button"
-  class="upi-payment-button phonepe-button"
-  [disabled]="paymentProcessing"
-  (click)="payWithPhonePe()"
->
+<div class="other-upi-dropdown">
 
-  <div class="upi-app-icon phonepe-icon">
-    P
-  </div>
+  <label for="upiApp">
+    Other UPI Apps
+  </label>
 
-  <div class="upi-app-details">
+  <select
+    #upiApp
+    id="upiApp"
+    class="upi-select"
+    [disabled]="paymentProcessing"
+    (change)="onUpiAppChange(upiApp.value)"
+  >
 
-    <strong>
+    <option value="">
+      Select another UPI app
+    </option>
+
+    <option value="phonepe">
       PhonePe
-    </strong>
+    </option>
 
-    <small>
-      Pay using PhonePe
-    </small>
+    <option value="paytm">
+      Paytm
+    </option>
 
-  </div>
+    <option value="upi">
+      Other UPI App
+    </option>
 
-  <div class="upi-arrow">
-    →
-  </div>
+  </select>
 
-</button>
-
-
-      <!-- ===================================== -->
-      <!-- PAYTM -->
-      <!-- ===================================== -->
-
-      <button
-        type="button"
-        class="upi-payment-button paytm-button"
-        [disabled]="paymentProcessing"
-        (click)="payWithPaytm()"
-      >
-
-        <div class="upi-app-icon paytm-icon">
-          ₹
-        </div>
-
-        <div class="upi-app-details">
-
-          <strong>
-            Paytm
-          </strong>
-
-          <small>
-            Pay using Paytm
-          </small>
-
-        </div>
-
-        <div class="upi-arrow">
-          →
-        </div>
-
-      </button>
-
-
-      <!-- ===================================== -->
-      <!-- OTHER UPI -->
-      <!-- ===================================== -->
-
-      <button
-        type="button"
-        class="upi-payment-button other-upi-button"
-        [disabled]="paymentProcessing"
-        (click)="payWithUpi()"
-      >
-
-        <div class="upi-app-icon other-upi-icon">
-          U
-        </div>
-
-        <div class="upi-app-details">
-
-          <strong>
-            Other UPI Apps
-          </strong>
-
-          <small>
-            BHIM and other supported UPI apps
-          </small>
-
-        </div>
-
-        <div class="upi-arrow">
-          →
-        </div>
-
-      </button>
-
-    </div>
+</div>
 
 
     <!-- ======================================= -->
@@ -441,12 +429,17 @@
       Your payment has been successfully verified.
     </p>
 
+
+    <!-- SUCCESS AMOUNT -->
+
     <div class="success-amount">
 
       ₹{{ amount | number:'1.2-2' }}
 
     </div>
 
+
+    <!-- PAYMENT STATUS -->
 
     <div class="paid-status">
 
@@ -460,6 +453,8 @@
 
     </div>
 
+
+    <!-- TRANSACTION ID -->
 
     <div
       class="transaction-display"
@@ -477,12 +472,16 @@
     </div>
 
 
+    <!-- SUCCESS ORDER -->
+
     <div class="success-order">
 
       Order #{{ orderId }}
 
     </div>
 
+
+    <!-- CONTINUE -->
 
     <button
       type="button"
@@ -516,6 +515,9 @@
       This UPI payment request has expired.
     </p>
 
+
+    <!-- RETRY -->
+
     <button
       type="button"
       class="retry-btn"
@@ -523,6 +525,9 @@
     >
       Try Again
     </button>
+
+
+    <!-- BACK -->
 
     <button
       type="button"

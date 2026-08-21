@@ -28,6 +28,8 @@ import {
   UpiPaymentStatusResponse
 } from '../services/payment.service';
 
+import QRCode from 'qrcode';
+
 
 @Component({
 
@@ -51,6 +53,13 @@ import {
 
 export class OnlinePaymentComponent
   implements OnInit, OnDestroy {
+
+
+  // ==========================================
+  // QR CODE
+  // ==========================================
+
+  qrCodeDataUrl = '';
 
 
   // ==========================================
@@ -108,6 +117,10 @@ export class OnlinePaymentComponent
     Subscription | null = null;
 
 
+  // ==========================================
+  // CONSTRUCTOR
+  // ==========================================
+
   constructor(
 
     private route:
@@ -147,6 +160,8 @@ export class OnlinePaymentComponent
           this.errorMessage =
             'Invalid order ID.';
 
+          this.paymentFailed = true;
+
           return;
 
         }
@@ -178,6 +193,8 @@ export class OnlinePaymentComponent
 
     this.errorMessage = '';
 
+    this.qrCodeDataUrl = '';
+
 
     this.paymentService
       .createUpiPayment(
@@ -186,14 +203,20 @@ export class OnlinePaymentComponent
       .subscribe({
 
         next:
-          (response:
-            UpiPaymentResponse) => {
+          async (
+            response:
+              UpiPaymentResponse
+          ) => {
 
             console.log(
               'UPI PAYMENT CREATED:',
               response
             );
 
+
+            // ==================================
+            // VALIDATE RESPONSE
+            // ==================================
 
             if (
               !response ||
@@ -251,13 +274,40 @@ export class OnlinePaymentComponent
               'PENDING';
 
 
-            this.loading = false;
+            console.log(
+              'PAYMENT AMOUNT:',
+              this.amount
+            );
 
+            console.log(
+              'CAFE UPI ID:',
+              this.upiId
+            );
 
             console.log(
               'UPI URL:',
               this.upiUrl
             );
+
+
+            // ==================================
+            // GENERATE DYNAMIC QR
+            //
+            // QR contains:
+            // - UPI ID
+            // - Amount
+            // - Currency
+            // - Order number
+            // ==================================
+
+            await this.generateUpiQr();
+
+
+            // ==================================
+            // STOP LOADING
+            // ==================================
+
+            this.loading = false;
 
 
             // ==================================
@@ -268,6 +318,10 @@ export class OnlinePaymentComponent
 
           },
 
+
+        // ======================================
+        // CREATE PAYMENT ERROR
+        // ======================================
 
         error:
           (error) => {
@@ -294,7 +348,148 @@ export class OnlinePaymentComponent
 
 
   // ==========================================
-  // OPEN UPI APP
+  // GENERATE DYNAMIC UPI QR
+  // ==========================================
+
+  async generateUpiQr(): Promise<void> {
+
+    // ------------------------------------------
+    // CHECK REQUIRED DATA
+    // ------------------------------------------
+
+    if (
+      !this.upiId ||
+      !this.amount
+    ) {
+
+      console.error(
+        'UPI ID or amount is missing.',
+        {
+          upiId: this.upiId,
+          amount: this.amount
+        }
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      // ----------------------------------------
+      // CREATE UPI PARAMETERS
+      // ----------------------------------------
+
+      const params =
+        new URLSearchParams();
+
+
+      // Cafe UPI ID
+
+      params.set(
+        'pa',
+        this.upiId
+      );
+
+
+      // Payee / Cafe name
+
+      params.set(
+        'pn',
+        'CafeQR'
+      );
+
+
+      // DYNAMIC AMOUNT
+
+      params.set(
+        'am',
+        Number(
+          this.amount
+        ).toFixed(2)
+      );
+
+
+      // Currency
+
+      params.set(
+        'cu',
+        'INR'
+      );
+
+
+      // Order reference
+
+      params.set(
+        'tn',
+        `CafeQR Order ${this.orderId}`
+      );
+
+
+      // ----------------------------------------
+      // COMPLETE UPI PAYMENT STRING
+      // ----------------------------------------
+
+      const upiString =
+        `upi://pay?${params.toString()}`;
+
+
+      console.log(
+        'DYNAMIC UPI STRING:',
+        upiString
+      );
+
+
+      // ----------------------------------------
+      // GENERATE QR IMAGE
+      // ----------------------------------------
+
+      this.qrCodeDataUrl =
+        await QRCode.toDataURL(
+
+          upiString,
+
+          {
+
+            width: 300,
+
+            margin: 2,
+
+            errorCorrectionLevel: 'M'
+
+          }
+
+        );
+
+
+      console.log(
+        'DYNAMIC QR GENERATED SUCCESSFULLY'
+      );
+
+    }
+
+
+    catch (error) {
+
+      console.error(
+        'QR GENERATION ERROR:',
+        error
+      );
+
+
+      this.qrCodeDataUrl = '';
+
+      this.errorMessage =
+        'Unable to generate payment QR code.';
+
+    }
+
+  }
+
+
+  // ==========================================
+  // OPEN GENERIC UPI APP
   // ==========================================
 
   payWithUpi(): void {
@@ -320,179 +515,251 @@ export class OnlinePaymentComponent
     );
 
 
-    // ========================================
+    // ----------------------------------------
     // OPEN UPI INTENT
-    // ========================================
+    // ----------------------------------------
 
     window.location.href =
       this.upiUrl;
 
 
-    // ========================================
-    // DO NOT MARK PAYMENT SUCCESS HERE
+    // ----------------------------------------
+    // DO NOT MARK SUCCESS HERE
     //
-    // Backend status remains PENDING until
+    // Backend remains PENDING until the
     // trusted payment verification changes it.
-    // ========================================
+    // ----------------------------------------
 
   }
 
 
   // ==========================================
-// GOOGLE PAY
-// ==========================================
+  // GOOGLE PAY
+  // ==========================================
 
-payWithGooglePay(): void {
+  payWithGooglePay(): void {
 
-  if (!this.upiUrl) {
+    if (!this.upiUrl) {
 
-    this.errorMessage =
-      'UPI payment link is not available.';
+      this.errorMessage =
+        'UPI payment link is not available.';
 
-    return;
-  }
-
-  this.paymentProcessing = true;
-
-  this.errorMessage = '';
-
-  const query =
-    this.upiUrl.substring(
-      this.upiUrl.indexOf('?') + 1
-    );
-
-  const googlePayUrl =
-    `tez://upi/pay?${query}`;
-
-  console.log(
-    'Opening Google Pay:',
-    googlePayUrl
-  );
-
-  this.openUpiApp(
-    googlePayUrl
-  );
-}
-
-
-// ==========================================
-// PHONEPE
-// ==========================================
-
-payWithPhonePe(): void {
-
-  if (!this.upiId || !this.amount) {
-    this.errorMessage = 'Invalid payment details.';
-    return;
-  }
-
-  this.paymentProcessing = true;
-  this.errorMessage = '';
-
-  const params = new URLSearchParams();
-
-  params.set('pa', this.upiId);
-  params.set('pn', 'CafeQR');
-  params.set('am', Number(this.amount).toFixed(2));
-  params.set('cu', 'INR');
-  params.set('tn', `CafeQR Order ${this.orderId}`);
-
-  const paymentData = params.toString();
-
-  /*
-   * Android PhonePe intent
-   *
-   * PhonePe Android package:
-   * com.phonepe.app
-   */
-  const phonePeIntent =
-    `intent://pay?${paymentData}` +
-    `#Intent;scheme=upi;package=com.phonepe.app;end`;
-
-  console.log(
-    'PHONEPE ANDROID INTENT:',
-    phonePeIntent
-  );
-
-  window.location.href = phonePeIntent;
-
-  setTimeout(() => {
-    this.paymentProcessing = false;
-  }, 3000);
-}
-
-
-// ==========================================
-// PAYTM
-// ==========================================
-
-payWithPaytm(): void {
-
-  if (!this.upiUrl) {
-
-    this.errorMessage =
-      'UPI payment link is not available.';
-
-    return;
-  }
-
-  this.paymentProcessing = true;
-
-  this.errorMessage = '';
-
-  const query =
-    this.upiUrl.substring(
-      this.upiUrl.indexOf('?') + 1
-    );
-
-  const paytmUrl =
-    `paytmmp://pay?${query}`;
-
-  console.log(
-    'Opening Paytm:',
-    paytmUrl
-  );
-
-  this.openUpiApp(
-    paytmUrl
-  );
-}
-
-
-// ==========================================
-// OPEN SELECTED UPI APP
-// ==========================================
-
-private openUpiApp(
-  appUrl: string
-): void {
-
-  const startTime =
-    Date.now();
-
-  window.location.href =
-    appUrl;
-
-  setTimeout(() => {
-
-    const elapsed =
-      Date.now() - startTime;
-
-    if (elapsed < 2000) {
-
-      this.paymentProcessing = false;
-
-      if (this.upiUrl) {
-
-        window.location.href =
-          this.upiUrl;
-
-      }
+      return;
 
     }
 
-  }, 1500);
-}
+
+    this.paymentProcessing = true;
+
+    this.errorMessage = '';
+
+
+    const query =
+      this.upiUrl.substring(
+        this.upiUrl.indexOf('?') + 1
+      );
+
+
+    const googlePayUrl =
+      `tez://upi/pay?${query}`;
+
+
+    console.log(
+      'Opening Google Pay:',
+      googlePayUrl
+    );
+
+
+    this.openUpiApp(
+      googlePayUrl
+    );
+
+  }
+
+
+  // ==========================================
+  // PHONEPE
+  // ==========================================
+
+  payWithPhonePe(): void {
+
+    if (
+      !this.upiId ||
+      !this.amount
+    ) {
+
+      this.errorMessage =
+        'Invalid payment details.';
+
+      return;
+
+    }
+
+
+    this.paymentProcessing = true;
+
+    this.errorMessage = '';
+
+
+    const params =
+      new URLSearchParams();
+
+
+    params.set(
+      'pa',
+      this.upiId
+    );
+
+
+    params.set(
+      'pn',
+      'CafeQR'
+    );
+
+
+    params.set(
+      'am',
+      Number(
+        this.amount
+      ).toFixed(2)
+    );
+
+
+    params.set(
+      'cu',
+      'INR'
+    );
+
+
+    params.set(
+      'tn',
+      `CafeQR Order ${this.orderId}`
+    );
+
+
+    const paymentData =
+      params.toString();
+
+
+    // ----------------------------------------
+    // PHONEPE ANDROID INTENT
+    // ----------------------------------------
+
+    const phonePeIntent =
+      `intent://pay?${paymentData}` +
+      `#Intent;scheme=upi;package=com.phonepe.app;end`;
+
+
+    console.log(
+      'PHONEPE ANDROID INTENT:',
+      phonePeIntent
+    );
+
+
+    window.location.href =
+      phonePeIntent;
+
+
+    setTimeout(() => {
+
+      this.paymentProcessing =
+        false;
+
+    }, 3000);
+
+  }
+
+
+  // ==========================================
+  // PAYTM
+  // ==========================================
+
+  payWithPaytm(): void {
+
+    if (!this.upiUrl) {
+
+      this.errorMessage =
+        'UPI payment link is not available.';
+
+      return;
+
+    }
+
+
+    this.paymentProcessing = true;
+
+    this.errorMessage = '';
+
+
+    const query =
+      this.upiUrl.substring(
+        this.upiUrl.indexOf('?') + 1
+      );
+
+
+    const paytmUrl =
+      `paytmmp://pay?${query}`;
+
+
+    console.log(
+      'Opening Paytm:',
+      paytmUrl
+    );
+
+
+    this.openUpiApp(
+      paytmUrl
+    );
+
+  }
+
+
+  // ==========================================
+  // OPEN SELECTED UPI APP
+  // ==========================================
+
+  private openUpiApp(
+    appUrl: string
+  ): void {
+
+    const startTime =
+      Date.now();
+
+
+    window.location.href =
+      appUrl;
+
+
+    setTimeout(() => {
+
+      const elapsed =
+        Date.now() -
+        startTime;
+
+
+      if (elapsed < 2000) {
+
+        this.paymentProcessing =
+          false;
+
+
+        // ------------------------------------
+        // FALLBACK TO GENERIC UPI
+        // ------------------------------------
+
+        if (this.upiUrl) {
+
+          window.location.href =
+            this.upiUrl;
+
+        }
+
+      }
+
+    }, 1500);
+
+  }
+
 
   // ==========================================
   // SHOW UPI APPS
@@ -500,7 +767,8 @@ private openUpiApp(
 
   showPaymentApps(): void {
 
-    this.showUpiApps = true;
+    this.showUpiApps =
+      true;
 
   }
 
@@ -511,7 +779,52 @@ private openUpiApp(
 
   hidePaymentApps(): void {
 
-    this.showUpiApps = false;
+    this.showUpiApps =
+      false;
+
+  }
+
+
+  // ==========================================
+  // OTHER UPI APP DROPDOWN
+  // ==========================================
+
+  onUpiAppChange(
+    app: string
+  ): void {
+
+    if (!app) {
+
+      return;
+
+    }
+
+
+    if (
+      app === 'phonepe'
+    ) {
+
+      this.payWithPhonePe();
+
+    }
+
+
+    else if (
+      app === 'paytm'
+    ) {
+
+      this.payWithPaytm();
+
+    }
+
+
+    else if (
+      app === 'upi'
+    ) {
+
+      this.payWithUpi();
+
+    }
 
   }
 
@@ -576,11 +889,14 @@ private openUpiApp(
                 this.paymentSuccess =
                   true;
 
+
                 this.paymentProcessing =
                   false;
 
+
                 this.paymentFailed =
                   false;
+
 
                 this.paymentExpired =
                   false;
@@ -589,13 +905,14 @@ private openUpiApp(
                 this.stopPolling();
 
 
-                // =================================
+                // --------------------------------
                 // CLEAR CART ONLY AFTER PAID
-                // =================================
+                // --------------------------------
 
                 localStorage.removeItem(
                   'cart'
                 );
+
 
                 localStorage.removeItem(
                   'pendingPaymentOrderId'
@@ -619,8 +936,10 @@ private openUpiApp(
                 this.paymentExpired =
                   true;
 
+
                 this.paymentProcessing =
                   false;
+
 
                 this.stopPolling();
 
@@ -642,12 +961,15 @@ private openUpiApp(
                 this.paymentFailed =
                   true;
 
+
                 this.paymentProcessing =
                   false;
+
 
                 this.errorMessage =
                   response.responseMessage ||
                   'UPI payment failed.';
+
 
                 this.stopPolling();
 
@@ -655,6 +977,10 @@ private openUpiApp(
 
             },
 
+
+          // ====================================
+          // POLLING ERROR
+          // ====================================
 
           error:
             (error) => {
@@ -684,7 +1010,9 @@ private openUpiApp(
       this.pollingSubscription
     ) {
 
-      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription
+        .unsubscribe();
+
 
       this.pollingSubscription =
         null;
@@ -695,27 +1023,37 @@ private openUpiApp(
 
 
   // ==========================================
-  // RETRY
+  // RETRY PAYMENT
   // ==========================================
 
   retryPayment(): void {
 
     this.stopPolling();
 
+
     this.paymentFailed =
       false;
+
 
     this.paymentExpired =
       false;
 
+
     this.paymentSuccess =
       false;
+
 
     this.paymentProcessing =
       false;
 
+
     this.errorMessage =
       '';
+
+
+    this.qrCodeDataUrl =
+      '';
+
 
     this.createUpiPayment();
 
@@ -727,16 +1065,6 @@ private openUpiApp(
   // ==========================================
 
   cancelPayment(): void {
-
-    if (
-      this.paymentProcessing
-    ) {
-
-      // Allow customer to leave even if
-      // UPI app was opened.
-
-    }
-
 
     this.stopPolling();
 
@@ -771,7 +1099,9 @@ private openUpiApp(
   copyUpiId(): void {
 
     if (!this.upiId) {
+
       return;
+
     }
 
 
@@ -779,6 +1109,7 @@ private openUpiApp(
       .writeText(
         this.upiId
       )
+
       .then(() => {
 
         alert(
