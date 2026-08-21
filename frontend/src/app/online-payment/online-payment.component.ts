@@ -381,40 +381,42 @@ payWithGooglePay(): void {
 
 payWithPhonePe(): void {
 
-  if (!this.upiUrl) {
-    this.errorMessage = 'UPI payment link is not available.';
+  if (!this.upiId || !this.amount) {
+    this.errorMessage = 'Invalid payment details.';
     return;
   }
 
+  const params = new URLSearchParams();
+
+  params.set('pa', this.upiId);
+  params.set('pn', 'CafeQR');
+  params.set('am', Number(this.amount).toFixed(2));
+  params.set('cu', 'INR');
+
+  if (this.merchantOrderId) {
+    params.set('tr', this.merchantOrderId);
+  }
+
+  params.set(
+    'tn',
+    `CafeQR Order ${this.orderId}`
+  );
+
+  const phonePeUrl =
+    `phonepe://pay?${params.toString()}`;
+
+  console.log(
+    'PHONEPE PAYMENT URL:',
+    phonePeUrl
+  );
+
   this.paymentProcessing = true;
-  this.errorMessage = '';
 
-  const query = this.upiUrl.includes('?')
-    ? this.upiUrl.split('?')[1]
-    : '';
-
-  const phonePeUrl = `phonepe://pay?${query}`;
-
-  console.log('PHONEPE URL:', phonePeUrl);
-
-  // Use an anchor click instead of directly changing location.
-  const link = document.createElement('a');
-
-  link.href = phonePeUrl;
-
-  link.style.display = 'none';
-
-  document.body.appendChild(link);
-
-  link.click();
+  window.location.href = phonePeUrl;
 
   setTimeout(() => {
-
-    document.body.removeChild(link);
-
     this.paymentProcessing = false;
-
-  }, 2000);
+  }, 3000);
 }
 
 
