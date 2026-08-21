@@ -382,33 +382,39 @@ payWithGooglePay(): void {
 payWithPhonePe(): void {
 
   if (!this.upiUrl) {
-
-    this.errorMessage =
-      'UPI payment link is not available.';
-
+    this.errorMessage = 'UPI payment link is not available.';
     return;
   }
 
   this.paymentProcessing = true;
-
   this.errorMessage = '';
 
-  const query =
-    this.upiUrl.substring(
-      this.upiUrl.indexOf('?') + 1
-    );
+  const query = this.upiUrl.includes('?')
+    ? this.upiUrl.split('?')[1]
+    : '';
 
-  const phonePeUrl =
-    `phonepe://pay?${query}`;
+  const phonePeUrl = `phonepe://pay?${query}`;
 
-  console.log(
-    'Opening PhonePe:',
-    phonePeUrl
-  );
+  console.log('PHONEPE URL:', phonePeUrl);
 
-  this.openUpiApp(
-    phonePeUrl
-  );
+  // Use an anchor click instead of directly changing location.
+  const link = document.createElement('a');
+
+  link.href = phonePeUrl;
+
+  link.style.display = 'none';
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  setTimeout(() => {
+
+    document.body.removeChild(link);
+
+    this.paymentProcessing = false;
+
+  }, 2000);
 }
 
 

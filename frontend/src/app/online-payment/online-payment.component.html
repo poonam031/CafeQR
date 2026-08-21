@@ -186,33 +186,31 @@
       <!-- ===================================== -->
 
       <button
-        type="button"
-        class="upi-payment-button phonepe-button"
-        [disabled]="paymentProcessing"
-        (click)="payWithPhonePe()"
-      >
+  type="button"
+  class="upi-payment-button phonepe-button"
+  [disabled]="paymentProcessing"
+  (click)="payWithPhonePe()"
+>
+  <div class="upi-app-icon phonepe-icon">
+    P
+  </div>
 
-        <div class="upi-app-icon phonepe-icon">
-          P
-        </div>
+  <div class="upi-app-details">
 
-        <div class="upi-app-details">
+    <strong>
+      PhonePe
+    </strong>
 
-          <strong>
-            PhonePe
-          </strong>
+    <small>
+      Pay using PhonePe
+    </small>
 
-          <small>
-            Pay using PhonePe
-          </small>
+  </div>
 
-        </div>
-
-        <div class="upi-arrow">
-          →
-        </div>
-
-      </button>
+  <div class="upi-arrow">
+    →
+  </div>
+</button>
 
 
       <!-- ===================================== -->
