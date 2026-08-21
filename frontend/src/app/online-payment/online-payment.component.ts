@@ -386,6 +386,9 @@ payWithPhonePe(): void {
     return;
   }
 
+  this.paymentProcessing = true;
+  this.errorMessage = '';
+
   const params = new URLSearchParams();
 
   params.set('pa', this.upiId);
@@ -394,14 +397,24 @@ payWithPhonePe(): void {
   params.set('cu', 'INR');
   params.set('tn', `CafeQR Order ${this.orderId}`);
 
-  const phonePeUrl =
-    `phonepe://pay?${params.toString()}`;
+  const paymentData = params.toString();
 
-  console.log('PHONEPE URL:', phonePeUrl);
+  /*
+   * Android PhonePe intent
+   *
+   * PhonePe Android package:
+   * com.phonepe.app
+   */
+  const phonePeIntent =
+    `intent://pay?${paymentData}` +
+    `#Intent;scheme=upi;package=com.phonepe.app;end`;
 
-  this.paymentProcessing = true;
+  console.log(
+    'PHONEPE ANDROID INTENT:',
+    phonePeIntent
+  );
 
-  window.location.href = phonePeUrl;
+  window.location.href = phonePeIntent;
 
   setTimeout(() => {
     this.paymentProcessing = false;
