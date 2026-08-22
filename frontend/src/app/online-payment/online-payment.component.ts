@@ -23,9 +23,7 @@ import {
   interval
 } from 'rxjs';
 
-
 declare const Cashfree: any;
-
 
 interface CashfreeCreateResponse {
   success: boolean;
@@ -34,22 +32,26 @@ interface CashfreeCreateResponse {
   currency: string;
   paymentId?: number;
   cashfreeOrderId?: string;
-  paymentSessionId: string;
+  paymentSessionId?: string;
   status?: string;
   message?: string;
 }
 
-
 interface CashfreeVerifyResponse {
   success: boolean;
   orderId: number;
+
   paymentStatus?: string;
   orderPaymentStatus?: string;
+
   transactionId?: string;
+  bankTxnId?: string;
+
+  responseCode?: string;
   responseMessage?: string;
+
   message?: string;
 }
-
 
 @Component({
   selector: 'app-online-payment',
@@ -61,18 +63,19 @@ interface CashfreeVerifyResponse {
   templateUrl: './online-payment.component.html',
   styleUrl: './online-payment.component.css'
 })
-export class OnlinePaymentComponent implements OnInit, OnDestroy {
+export class OnlinePaymentComponent
+  implements OnInit, OnDestroy {
 
-  // ==========================================
+  // =====================================================
   // ORDER
-  // ==========================================
+  // =====================================================
 
   orderId = 0;
 
 
-  // ==========================================
+  // =====================================================
   // PAYMENT DATA
-  // ==========================================
+  // =====================================================
 
   amount = 0;
 
@@ -86,12 +89,14 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
 
   transactionId = '';
 
+  bankTxnId = '';
+
   paymentStatus = 'PENDING';
 
 
-  // ==========================================
-  // UI
-  // ==========================================
+  // =====================================================
+  // UI STATES
+  // =====================================================
 
   loading = true;
 
@@ -105,30 +110,29 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
 
   errorMessage = '';
 
-  paymentMessage = 'Complete the payment to continue.';
+  paymentMessage =
+    'Complete the payment to continue.';
 
 
-  // ==========================================
+  // =====================================================
   // POLLING
-  // ==========================================
+  // =====================================================
 
-  private pollingSubscription: Subscription | null = null;
-
-
-  // ==========================================
-  // BACKEND URL
-  // ==========================================
-
-  // LOCAL DEVELOPMENT
-  private readonly apiUrl = 'https://cafeqr-wds8.onrender.com';
-
-  // When frontend is deployed, replace the above with:
-  // private readonly apiUrl = 'https://YOUR-BACKEND.onrender.com';
+  private pollingSubscription:
+    Subscription | null = null;
 
 
-  // ==========================================
+  // =====================================================
+  // BACKEND
+  // =====================================================
+
+  private readonly apiUrl =
+    'https://cafeqr-wds8.onrender.com';
+
+
+  // =====================================================
   // CONSTRUCTOR
-  // ==========================================
+  // =====================================================
 
   constructor(
     private route: ActivatedRoute,
@@ -137,43 +141,69 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
   ) {}
 
 
-  // ==========================================
+  // =====================================================
   // INIT
-  // ==========================================
+  // =====================================================
 
   ngOnInit(): void {
 
     this.route.params.subscribe(params => {
 
-      this.orderId = Number(params['orderId']);
+      this.orderId =
+        Number(params['orderId']);
 
-      if (!this.orderId || this.orderId <= 0) {
+      console.log(
+        'ONLINE PAYMENT ORDER ID:',
+        this.orderId
+      );
+
+      if (
+        !this.orderId ||
+        this.orderId <= 0
+      ) {
 
         this.loading = false;
+
         this.paymentFailed = true;
-        this.errorMessage = 'Invalid order ID.';
+
+        this.errorMessage =
+          'Invalid order ID.';
 
         return;
       }
 
       this.createCashfreePayment();
+
     });
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // CREATE CASHFREE PAYMENT
-  // ==========================================
+  // =====================================================
 
   createCashfreePayment(): void {
 
     this.loading = true;
+
     this.paymentProcessing = false;
+
     this.paymentSuccess = false;
+
     this.paymentFailed = false;
+
     this.paymentExpired = false;
+
     this.errorMessage = '';
-    this.paymentMessage = 'Creating secure Cashfree payment...';
+
+    this.transactionId = '';
+
+    this.bankTxnId = '';
+
+    this.paymentMessage =
+      'Creating secure Cashfree payment...';
+
 
     this.http
       .post<CashfreeCreateResponse>(
@@ -184,12 +214,21 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
 
         next: (response) => {
 
-          console.log('CASHFREE CREATE RESPONSE:', response);
+          console.log(
+            'CASHFREE CREATE RESPONSE:',
+            response
+          );
 
-          if (!response || !response.success) {
+
+          if (
+            !response ||
+            !response.success
+          ) {
 
             this.loading = false;
+
             this.paymentFailed = true;
+
             this.errorMessage =
               response?.message ||
               'Unable to create Cashfree payment.';
@@ -197,49 +236,86 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.amount = Number(response.amount || 0);
-          this.currency = response.currency || 'INR';
-          this.paymentId = Number(response.paymentId || 0);
-          this.cashfreeOrderId = response.cashfreeOrderId || '';
-          this.paymentSessionId = response.paymentSessionId || '';
+
+          // ---------------------------------------------
+          // SAVE PAYMENT INFORMATION
+          // ---------------------------------------------
+
+          this.amount =
+            Number(response.amount || 0);
+
+          this.currency =
+            response.currency || 'INR';
+
+          this.paymentId =
+            Number(response.paymentId || 0);
+
+          this.cashfreeOrderId =
+            response.cashfreeOrderId || '';
+
+          this.paymentSessionId =
+            response.paymentSessionId || '';
+
           this.paymentStatus =
-            this.normalizeStatus(response.status || 'PENDING');
+            this.normalizeStatus(
+              response.status || 'PENDING'
+            );
+
+
+          // ---------------------------------------------
+          // CHECK SESSION
+          // ---------------------------------------------
 
           if (!this.paymentSessionId) {
 
             this.loading = false;
+
             this.paymentFailed = true;
+
             this.errorMessage =
               'Cashfree payment session was not received.';
 
             return;
           }
 
+
           this.loading = false;
+
           this.paymentMessage =
             'Click Proceed to Pay to open Cashfree checkout.';
 
-          // Check current status once.
+
+          // Check backend status once.
           this.verifyPayment(false);
+
         },
 
         error: (error) => {
 
-          console.error('CASHFREE CREATE ERROR:', error);
+          console.error(
+            'CASHFREE CREATE ERROR:',
+            error
+          );
 
           this.loading = false;
+
           this.paymentFailed = true;
+
           this.errorMessage =
             error?.error?.message ||
+            error?.message ||
             'Unable to create Cashfree payment.';
+
         }
+
       });
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // OPEN CASHFREE CHECKOUT
-  // ==========================================
+  // =====================================================
 
   openCashfreeCheckout(): void {
 
@@ -251,332 +327,600 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (typeof Cashfree === 'undefined') {
+
+    if (
+      typeof Cashfree === 'undefined'
+    ) {
 
       this.paymentFailed = true;
+
       this.errorMessage =
         'Cashfree SDK is not loaded. Add the Cashfree script in index.html.';
 
       return;
     }
 
+
     this.paymentProcessing = true;
+
     this.paymentFailed = false;
+
     this.paymentExpired = false;
+
     this.errorMessage = '';
+
     this.paymentMessage =
       'Complete the payment in Cashfree checkout.';
 
+
     try {
 
-      const cashfree = Cashfree({
-        mode: 'sandbox'
-      });
+      // IMPORTANT:
+      // Your Cashfree dashboard is currently
+      // using Test/Sandbox environment.
+
+      const cashfree =
+        Cashfree({
+          mode: 'sandbox'
+        });
+
 
       const checkoutOptions = {
-        paymentSessionId: this.paymentSessionId,
-        redirectTarget: '_modal'
+
+        paymentSessionId:
+          this.paymentSessionId,
+
+        redirectTarget:
+          '_modal'
+
       };
+
+
+      console.log(
+        'OPENING CASHFREE CHECKOUT'
+      );
+
 
       cashfree
         .checkout(checkoutOptions)
+
         .then((result: any) => {
 
-          console.log('CASHFREE CHECKOUT RESULT:', result);
+          console.log(
+            'CASHFREE CHECKOUT RESULT:',
+            result
+          );
 
-          // Do not mark payment as PAID here.
-          // Always verify through the backend.
-          this.paymentProcessing = false;
+
+          this.paymentProcessing =
+            false;
+
+
+          /*
+           * IMPORTANT
+           *
+           * Do NOT trust the checkout callback
+           * as the final payment status.
+           *
+           * Always ask our backend.
+           */
 
           this.verifyPayment(true);
+
           this.startPolling();
+
         })
+
         .catch((error: any) => {
 
-          console.error('CASHFREE CHECKOUT ERROR:', error);
+          console.error(
+            'CASHFREE CHECKOUT ERROR:',
+            error
+          );
 
-          this.paymentProcessing = false;
+
+          this.paymentProcessing =
+            false;
+
+
           this.paymentMessage =
             'Checkout closed. Checking payment status...';
 
-          // The customer may have paid before closing checkout.
+
+          /*
+           * Customer may have completed
+           * payment before closing checkout.
+           */
+
           this.verifyPayment(true);
+
           this.startPolling();
+
         });
 
-      // Start checking while checkout is open as well.
+
+      /*
+       * Keep checking while checkout
+       * is open.
+       */
+
       this.startPolling();
 
-    } catch (error) {
+    }
 
-      console.error('CASHFREE SDK ERROR:', error);
+    catch (error) {
 
-      this.paymentProcessing = false;
-      this.paymentFailed = true;
+      console.error(
+        'CASHFREE SDK ERROR:',
+        error
+      );
+
+      this.paymentProcessing =
+        false;
+
+      this.paymentFailed =
+        true;
+
       this.errorMessage =
         'Unable to open Cashfree checkout.';
+
     }
+
   }
 
 
-  // ==========================================
-  // VERIFY PAYMENT THROUGH BACKEND
-  // ==========================================
+  // =====================================================
+  // VERIFY CASHFREE PAYMENT
+  // =====================================================
 
-  verifyPayment(showPendingMessage = true): void {
+  verifyPayment(
+    showPendingMessage = true
+  ): void {
 
-    if (!this.orderId) {
+    if (
+      !this.orderId
+    ) {
+
       return;
     }
+
 
     this.http
       .get<CashfreeVerifyResponse>(
         `${this.apiUrl}/payments/cashfree/verify/${this.orderId}`
       )
+
       .subscribe({
 
         next: (response) => {
 
-          console.log('CASHFREE VERIFY RESPONSE:', response);
+          console.log(
+            'CASHFREE VERIFY RESPONSE:',
+            response
+          );
 
-          const status = this.getPaymentStatus(response);
 
-          this.paymentStatus = status;
+          const status =
+            this.getPaymentStatus(response);
 
-          if (response?.transactionId) {
-            this.transactionId = response.transactionId;
+
+          this.paymentStatus =
+            status;
+
+
+          if (
+            response?.transactionId
+          ) {
+
+            this.transactionId =
+              response.transactionId;
+
           }
 
-          // ======================================
+
+          if (
+            response?.bankTxnId
+          ) {
+
+            this.bankTxnId =
+              response.bankTxnId;
+
+          }
+
+
+          // =================================================
           // PAID
-          // ======================================
+          // =================================================
 
-          if (status === 'PAID') {
+          if (
+            status === 'PAID'
+          ) {
 
-            this.paymentSuccess = true;
-            this.paymentFailed = false;
-            this.paymentExpired = false;
-            this.paymentProcessing = false;
-            this.paymentMessage = 'Payment verified successfully.';
+            console.log(
+              'PAYMENT SUCCESSFULLY VERIFIED'
+            );
+
+
+            this.paymentSuccess =
+              true;
+
+            this.paymentFailed =
+              false;
+
+            this.paymentExpired =
+              false;
+
+            this.paymentProcessing =
+              false;
+
+
+            this.paymentMessage =
+              'Payment verified successfully.';
+
 
             this.stopPolling();
 
-            // Clear cart only after trusted backend verification.
-            localStorage.removeItem('cart');
-            localStorage.removeItem('pendingPaymentOrderId');
+
+            /*
+             * Clear cart ONLY after backend
+             * verification.
+             */
+
+            localStorage.removeItem(
+              'cart'
+            );
+
+            localStorage.removeItem(
+              'pendingPaymentOrderId'
+            );
+
 
             return;
           }
 
-          // ======================================
+
+          // =================================================
           // FAILED
-          // ======================================
+          // =================================================
 
-          if (status === 'FAILED') {
+          if (
+            status === 'FAILED'
+          ) {
 
-            this.paymentFailed = true;
-            this.paymentSuccess = false;
-            this.paymentExpired = false;
-            this.paymentProcessing = false;
+            console.log(
+              'PAYMENT FAILED'
+            );
+
+
+            this.paymentFailed =
+              true;
+
+            this.paymentSuccess =
+              false;
+
+            this.paymentExpired =
+              false;
+
+            this.paymentProcessing =
+              false;
+
 
             this.errorMessage =
               response?.responseMessage ||
               response?.message ||
-              'Cashfree payment failed.';
+              'Payment failed or was not completed.';
 
-            this.paymentMessage = 'Payment failed.';
+
+            this.paymentMessage =
+              'Payment failed or was not completed.';
+
 
             this.stopPolling();
+
 
             return;
           }
 
-          // ======================================
+
+          // =================================================
           // EXPIRED
-          // ======================================
+          // =================================================
 
-          if (status === 'EXPIRED') {
+          if (
+            status === 'EXPIRED'
+          ) {
 
-            this.paymentExpired = true;
-            this.paymentSuccess = false;
-            this.paymentFailed = false;
-            this.paymentProcessing = false;
-            this.paymentMessage = 'Payment request expired.';
+            this.paymentExpired =
+              true;
+
+            this.paymentSuccess =
+              false;
+
+            this.paymentFailed =
+              false;
+
+            this.paymentProcessing =
+              false;
+
+
+            this.paymentMessage =
+              'Payment request expired.';
+
 
             this.stopPolling();
+
 
             return;
           }
 
-          // ======================================
+
+          // =================================================
           // PENDING
-          // ======================================
+          // =================================================
 
-          this.paymentStatus = 'PENDING';
-          this.paymentSuccess = false;
-          this.paymentFailed = false;
-          this.paymentExpired = false;
+          this.paymentStatus =
+            'PENDING';
 
-          if (showPendingMessage) {
+          this.paymentSuccess =
+            false;
+
+          this.paymentFailed =
+            false;
+
+          this.paymentExpired =
+            false;
+
+
+          if (
+            showPendingMessage
+          ) {
+
             this.paymentMessage =
               'Payment is pending. We are checking the status automatically.';
+
           }
+
         },
 
         error: (error) => {
 
-          // Do not mark payment as failed just because one
-          // status request failed.
+          /*
+           * IMPORTANT:
+           *
+           * Network/backend error does NOT mean
+           * payment failed.
+           *
+           * Continue polling.
+           */
+
           console.warn(
             'CASHFREE VERIFY ERROR:',
             error
           );
+
         }
+
       });
+
   }
 
 
-  // ==========================================
-  // NORMALIZE STATUS
-  // ==========================================
+  // =====================================================
+  // GET STATUS
+  // =====================================================
 
   private getPaymentStatus(
     response: CashfreeVerifyResponse
   ): string {
 
-    const rawStatus = String(
-      response?.paymentStatus ||
-      response?.orderPaymentStatus ||
-      'PENDING'
-    ).toUpperCase();
+    const rawStatus =
+      String(
+        response?.paymentStatus ||
+        response?.orderPaymentStatus ||
+        'PENDING'
+      ).toUpperCase();
 
-    return this.normalizeStatus(rawStatus);
+
+    return this.normalizeStatus(
+      rawStatus
+    );
+
   }
 
 
-  private normalizeStatus(status: string): string {
+  // =====================================================
+  // NORMALIZE STATUS
+  // =====================================================
 
-    const value = String(status || '')
-      .trim()
-      .toUpperCase();
+  private normalizeStatus(
+    status: string
+  ): string {
+
+    const value =
+      String(status || '')
+        .trim()
+        .toUpperCase();
+
+
+    // SUCCESS
 
     if (
       value === 'PAID' ||
       value === 'SUCCESS' ||
       value === 'COMPLETED'
     ) {
+
       return 'PAID';
+
     }
+
+
+    // FAILED
 
     if (
       value === 'FAILED' ||
       value === 'FAILURE' ||
-      value === 'CANCELLED'
+      value === 'CANCELLED' ||
+      value === 'USER_DROPPED'
     ) {
+
       return 'FAILED';
+
     }
+
+
+    // EXPIRED
 
     if (
       value === 'EXPIRED' ||
       value === 'EXPIRE'
     ) {
+
       return 'EXPIRED';
+
     }
 
+
+    // Everything else remains pending.
+
     return 'PENDING';
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // START POLLING
-  // ==========================================
+  // =====================================================
 
   startPolling(): void {
 
     this.stopPolling();
 
+
     this.pollingSubscription =
-      interval(3000).subscribe(() => {
+      interval(3000)
+        .subscribe(() => {
 
-        if (
-          this.paymentSuccess ||
-          this.paymentFailed ||
-          this.paymentExpired
-        ) {
-          this.stopPolling();
-          return;
-        }
+          if (
+            this.paymentSuccess ||
+            this.paymentFailed ||
+            this.paymentExpired
+          ) {
 
-        this.verifyPayment(true);
-      });
+            this.stopPolling();
+
+            return;
+
+          }
+
+
+          this.verifyPayment(true);
+
+        });
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // STOP POLLING
-  // ==========================================
+  // =====================================================
 
   stopPolling(): void {
 
-    if (this.pollingSubscription) {
+    if (
+      this.pollingSubscription
+    ) {
 
       this.pollingSubscription.unsubscribe();
-      this.pollingSubscription = null;
+
+      this.pollingSubscription =
+        null;
+
     }
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // RETRY
-  // ==========================================
+  // =====================================================
 
   retryPayment(): void {
 
     this.stopPolling();
 
+
     this.loading = true;
-    this.paymentSuccess = false;
-    this.paymentFailed = false;
-    this.paymentExpired = false;
-    this.paymentProcessing = false;
+
+    this.paymentSuccess =
+      false;
+
+    this.paymentFailed =
+      false;
+
+    this.paymentExpired =
+      false;
+
+    this.paymentProcessing =
+      false;
+
     this.errorMessage = '';
+
     this.transactionId = '';
+
+    this.bankTxnId = '';
+
     this.paymentSessionId = '';
 
+    this.cashfreeOrderId = '';
+
+    this.paymentStatus =
+      'PENDING';
+
+
     this.createCashfreePayment();
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // BACK TO CART
-  // ==========================================
+  // =====================================================
 
   cancelPayment(): void {
 
     this.stopPolling();
 
-    this.router.navigate(['/cart']);
+    this.router.navigate([
+      '/cart'
+    ]);
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // SUCCESS
-  // ==========================================
+  // =====================================================
 
   continueToSuccess(): void {
 
     this.stopPolling();
 
-    this.router.navigate(['/order-success']);
+    this.router.navigate([
+      '/order-success'
+    ]);
+
   }
 
 
-  // ==========================================
+  // =====================================================
   // DESTROY
-  // ==========================================
+  // =====================================================
 
   ngOnDestroy(): void {
 
     this.stopPolling();
+
   }
+
 }
