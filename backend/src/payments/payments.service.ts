@@ -1670,16 +1670,17 @@ async verifyCashfreePayment(
 
   // ========================================
   // NO SUCCESS / PENDING PAYMENT
-  // ========================================
-
+  //
+  // Do not mark the payment FAILED just because
+  // the customer has not completed checkout yet.
   payment.status =
-    'FAILED';
+    'PENDING';
 
   payment.responseCode =
-    'FAILED';
+    'PENDING';
 
   payment.responseMessage =
-    'Payment failed or was not completed';
+    'Payment is pending';
 
   await this.paymentRepository.save(
     payment,
@@ -1702,15 +1703,19 @@ async verifyCashfreePayment(
       Number(order.total),
 
     paymentStatus:
-      'FAILED',
+      'PENDING',
 
     orderPaymentStatus:
       'Pending',
+
+    transactionId:
+      payment.transactionId,
 
     responseMessage:
       payment.responseMessage,
 
   };
+
 }
 
 }

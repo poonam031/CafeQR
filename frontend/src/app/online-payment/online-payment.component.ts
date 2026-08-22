@@ -285,9 +285,6 @@ export class OnlinePaymentComponent
             'Click Proceed to Pay to open Cashfree checkout.';
 
 
-          // Check backend status once.
-          this.verifyPayment(false);
-
         },
 
         error: (error) => {
@@ -438,13 +435,6 @@ export class OnlinePaymentComponent
 
         });
 
-
-      /*
-       * Keep checking while checkout
-       * is open.
-       */
-
-      this.startPolling();
 
     }
 
