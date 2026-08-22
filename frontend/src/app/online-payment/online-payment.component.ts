@@ -120,7 +120,7 @@ export class OnlinePaymentComponent implements OnInit, OnDestroy {
   // ==========================================
 
   // LOCAL DEVELOPMENT
-  private readonly apiUrl = 'http://localhost:3000';
+  private readonly apiUrl = 'https://cafeqr-wds8.onrender.com';
 
   // When frontend is deployed, replace the above with:
   // private readonly apiUrl = 'https://YOUR-BACKEND.onrender.com';

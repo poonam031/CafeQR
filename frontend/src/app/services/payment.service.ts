@@ -9,7 +9,11 @@ import {
 } from 'rxjs';
 
 
-export interface UpiPaymentResponse {
+// ==========================================
+// CASHFREE PAYMENT RESPONSE
+// ==========================================
+
+export interface CashfreePaymentResponse {
 
   success: boolean;
 
@@ -23,29 +27,28 @@ export interface UpiPaymentResponse {
 
   merchantOrderId: string;
 
+  paymentSessionId: string;
+
   status: string;
 
-  expiresAt: string;
-
-  upiId: string;
-
-  upiUrl: string;
+  expiresAt?: string;
 
   message: string;
+
 }
 
 
-export interface UpiPaymentStatusResponse {
+// ==========================================
+// CASHFREE PAYMENT STATUS
+// ==========================================
+
+export interface CashfreePaymentStatusResponse {
 
   success: boolean;
 
   orderId: number;
 
   amount: number;
-
-  paymentId: number;
-
-  merchantOrderId: string;
 
   paymentStatus: string;
 
@@ -61,7 +64,6 @@ export interface UpiPaymentStatusResponse {
 
   paidAt?: string;
 
-  expiresAt?: string;
 }
 
 
@@ -69,6 +71,11 @@ export interface UpiPaymentStatusResponse {
   providedIn: 'root'
 })
 export class PaymentService {
+
+
+  // ==========================================
+  // BACKEND URL
+  // ==========================================
 
   private readonly baseUrl =
     'https://cafeqr-wds8.onrender.com';
@@ -80,16 +87,16 @@ export class PaymentService {
 
 
   // ==========================================
-  // CREATE UPI PAYMENT
+  // CREATE CASHFREE PAYMENT
   // ==========================================
 
-  createUpiPayment(
+  createCashfreePayment(
     orderId: number
-  ): Observable<UpiPaymentResponse> {
+  ): Observable<CashfreePaymentResponse> {
 
-    return this.http.post<UpiPaymentResponse>(
+    return this.http.post<CashfreePaymentResponse>(
 
-      `${this.baseUrl}/payments/upi/create/${orderId}`,
+      `${this.baseUrl}/payments/cashfree/create/${orderId}`,
 
       {}
 
@@ -99,16 +106,16 @@ export class PaymentService {
 
 
   // ==========================================
-  // CHECK UPI PAYMENT STATUS
+  // CHECK CASHFREE PAYMENT STATUS
   // ==========================================
 
-  getUpiPaymentStatus(
+  getCashfreePaymentStatus(
     orderId: number
-  ): Observable<UpiPaymentStatusResponse> {
+  ): Observable<CashfreePaymentStatusResponse> {
 
-    return this.http.get<UpiPaymentStatusResponse>(
+    return this.http.get<CashfreePaymentStatusResponse>(
 
-      `${this.baseUrl}/payments/upi/status/${orderId}`
+      `${this.baseUrl}/payments/cashfree/verify/${orderId}`
 
     );
 
@@ -126,6 +133,42 @@ export class PaymentService {
     return this.http.get<any>(
 
       `${this.baseUrl}/payments/order/${orderId}`
+
+    );
+
+  }
+
+
+  // ==========================================
+  // OLD UPI PAYMENT
+  // ==========================================
+
+  createUpiPayment(
+    orderId: number
+  ): Observable<any> {
+
+    return this.http.post<any>(
+
+      `${this.baseUrl}/payments/upi/create/${orderId}`,
+
+      {}
+
+    );
+
+  }
+
+
+  // ==========================================
+  // OLD UPI STATUS
+  // ==========================================
+
+  getUpiPaymentStatus(
+    orderId: number
+  ): Observable<any> {
+
+    return this.http.get<any>(
+
+      `${this.baseUrl}/payments/upi/status/${orderId}`
 
     );
 
