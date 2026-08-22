@@ -12,11 +12,11 @@
     <div class="loader"></div>
 
     <h2>
-      Preparing UPI Payment
+      Preparing Payment
     </h2>
 
     <p>
-      Please wait while we create your secure payment request.
+      Please wait while we create your secure Cashfree payment.
     </p>
 
   </div>
@@ -81,14 +81,12 @@
     "
   >
 
-    <!-- ======================================= -->
     <!-- HEADER -->
-    <!-- ======================================= -->
 
     <div class="payment-header">
 
       <div class="payment-icon">
-        ⚡
+        💳
       </div>
 
       <h1>
@@ -96,15 +94,13 @@
       </h1>
 
       <p>
-        Pay securely using your preferred UPI app
+        Secure payment powered by Cashfree
       </p>
 
     </div>
 
 
-    <!-- ======================================= -->
     <!-- ORDER -->
-    <!-- ======================================= -->
 
     <div class="order-info">
 
@@ -119,9 +115,7 @@
     </div>
 
 
-    <!-- ======================================= -->
     <!-- AMOUNT -->
-    <!-- ======================================= -->
 
     <div class="amount-box">
 
@@ -136,214 +130,94 @@
     </div>
 
 
-    <!-- ======================================= -->
-    <!-- QR CODE PAYMENT -->
-    <!-- ======================================= -->
+    <!-- CASHFREE PAYMENT -->
 
-    <div class="qr-payment-section">
+    <div class="cashfree-section">
+
+      <div class="cashfree-logo-text">
+        Cashfree Payments
+      </div>
 
       <h3>
-        Scan QR to Pay
+        Complete Your Payment
       </h3>
 
-      <p class="qr-subtitle">
-        Scan this QR code using any UPI app
+      <p>
+        Click the button below to open the secure Cashfree checkout.
       </p>
 
+      <button
+        type="button"
+        class="pay-now-btn"
+        [disabled]="paymentProcessing || !paymentSessionId"
+        (click)="openCashfreeCheckout()"
+      >
 
-      <!-- QR IMAGE -->
-
-     <div class="qr-code-box">
-
-  <img
-    *ngIf="qrCodeDataUrl"
-    [src]="qrCodeDataUrl"
-    alt="Cafe UPI QR Code"
-    class="upi-qr-image"
-  />
-
-  <div
-    *ngIf="!qrCodeDataUrl"
-    class="qr-loading"
-  >
-    Generating QR...
-  </div>
-
-</div>
-
-
-      <!-- QR AMOUNT -->
-
-      <div class="qr-payment-info">
+        <span
+          class="button-spinner"
+          *ngIf="paymentProcessing"
+        ></span>
 
         <span>
-          Amount to Pay
+          {{
+            paymentProcessing
+              ? 'Payment Window Opened...'
+              : 'Proceed to Pay'
+          }}
         </span>
 
-        <strong>
-          ₹{{ amount | number:'1.2-2' }}
-        </strong>
+      </button>
 
-      </div>
+      <small>
+        Your payment will be verified by the backend before the order is marked paid.
+      </small>
 
     </div>
 
 
-    <!-- ======================================= -->
-    <!-- UPI PAYMENT APPS -->
-    <!-- ======================================= -->
-
-    <div class="upi-apps-section">
-
-      <h3>
-        Choose UPI App
-      </h3>
-
-
-      <!-- ===================================== -->
-      <!-- GOOGLE PAY - FIRST OPTION -->
-      <!-- ===================================== -->
-
-      <button
-        type="button"
-        class="upi-payment-button gpay-button"
-        [disabled]="paymentProcessing"
-        (click)="payWithGooglePay()"
-      >
-
-        <div class="upi-app-icon gpay-icon">
-          G
-        </div>
-
-        <div class="upi-app-details">
-
-          <strong>
-            Google Pay
-          </strong>
-
-          <small>
-            Pay using Google Pay
-          </small>
-
-        </div>
-
-        <div class="upi-arrow">
-          →
-        </div>
-
-      </button>
-
-
-<!-- ===================================== -->
-<!-- OTHER UPI APPS DROPDOWN -->
-<!-- ===================================== -->
-
-<div class="other-upi-dropdown">
-
-  <label for="upiApp">
-    Other UPI Apps
-  </label>
-
-  <select
-    #upiApp
-    id="upiApp"
-    class="upi-select"
-    [disabled]="paymentProcessing"
-    (change)="onUpiAppChange(upiApp.value)"
-  >
-
-    <option value="">
-      Select another UPI app
-    </option>
-
-    <option value="phonepe">
-      PhonePe
-    </option>
-
-    <option value="paytm">
-      Paytm
-    </option>
-
-    <option value="upi">
-      Other UPI App
-    </option>
-
-  </select>
-
-</div>
-
-
-    <!-- ======================================= -->
-    <!-- PROCESSING -->
-    <!-- ======================================= -->
+    <!-- STATUS -->
 
     <div
-      class="processing-box"
-      *ngIf="paymentProcessing"
+      class="waiting-box"
+      [ngClass]="{
+        'paid-box': paymentStatus === 'PAID',
+        'failed-box': paymentStatus === 'FAILED'
+      }"
     >
 
-      <div class="button-spinner"></div>
+      <div
+        class="status-spinner"
+        *ngIf="paymentStatus === 'PENDING'"
+      ></div>
 
-      <div>
-
-        <strong>
-          Opening UPI App...
-        </strong>
-
-        <small>
-          Complete the payment in your selected UPI app.
-        </small>
-
-      </div>
-
-    </div>
-
-
-    <!-- ======================================= -->
-    <!-- UPI ID -->
-    <!-- ======================================= -->
-
-    <div class="upi-id-box">
-
-      <div>
-
-        <span>
-          Cafe UPI ID
-        </span>
-
-        <strong>
-          {{ upiId }}
-        </strong>
-
-      </div>
-
-      <button
-        type="button"
-        class="copy-btn"
-        (click)="copyUpiId()"
+      <div
+        class="status-icon"
+        *ngIf="paymentStatus === 'PAID'"
       >
-        Copy
-      </button>
+        ✓
+      </div>
 
-    </div>
-
-
-    <!-- ======================================= -->
-    <!-- STATUS -->
-    <!-- ======================================= -->
-
-    <div class="waiting-box">
-
-      <div class="status-spinner"></div>
+      <div
+        class="status-icon failed-status-icon"
+        *ngIf="paymentStatus === 'FAILED'"
+      >
+        !
+      </div>
 
       <div>
 
         <strong>
-          Waiting for payment
+          {{
+            paymentStatus === 'PAID'
+              ? 'Payment Paid'
+              : paymentStatus === 'FAILED'
+              ? 'Payment Failed'
+              : 'Payment Pending'
+          }}
         </strong>
 
         <small>
-          Complete the payment in your UPI app.
+          {{ paymentMessage }}
         </small>
 
       </div>
@@ -351,26 +225,43 @@
     </div>
 
 
-    <!-- ======================================= -->
-    <!-- TRANSACTION REFERENCE -->
-    <!-- ======================================= -->
+    <!-- CASHFREE ORDER REFERENCE -->
 
-    <div class="reference-box">
+    <div
+      class="reference-box"
+      *ngIf="cashfreeOrderId"
+    >
 
       <span>
-        Payment Reference
+        Cashfree Order
       </span>
 
       <strong>
-        {{ merchantOrderId }}
+        {{ cashfreeOrderId }}
       </strong>
 
     </div>
 
 
-    <!-- ======================================= -->
+    <!-- TRANSACTION ID -->
+
+    <div
+      class="reference-box"
+      *ngIf="transactionId"
+    >
+
+      <span>
+        Transaction ID
+      </span>
+
+      <strong>
+        {{ transactionId }}
+      </strong>
+
+    </div>
+
+
     <!-- SECURITY -->
-    <!-- ======================================= -->
 
     <div class="secure-box">
 
@@ -381,11 +272,12 @@
       <div>
 
         <strong>
-          Secure UPI Payment
+          Secure Payment Verification
         </strong>
 
         <small>
-          Payment amount is generated by the cafe backend.
+          The frontend never marks the payment as paid by itself.
+          The backend verifies the Cashfree payment first.
         </small>
 
       </div>
@@ -393,9 +285,7 @@
     </div>
 
 
-    <!-- ======================================= -->
     <!-- BACK TO CART -->
-    <!-- ======================================= -->
 
     <button
       type="button"
@@ -426,20 +316,12 @@
     </h1>
 
     <p>
-      Your payment has been successfully verified.
+      Your payment has been successfully verified by Cashfree.
     </p>
 
-
-    <!-- SUCCESS AMOUNT -->
-
     <div class="success-amount">
-
       ₹{{ amount | number:'1.2-2' }}
-
     </div>
-
-
-    <!-- PAYMENT STATUS -->
 
     <div class="paid-status">
 
@@ -448,13 +330,10 @@
       </span>
 
       <strong>
-        {{ paymentStatus }}
+        PAID
       </strong>
 
     </div>
-
-
-    <!-- TRANSACTION ID -->
 
     <div
       class="transaction-display"
@@ -471,17 +350,24 @@
 
     </div>
 
+    <div
+      class="transaction-display"
+      *ngIf="cashfreeOrderId"
+    >
 
-    <!-- SUCCESS ORDER -->
+      <span>
+        Cashfree Order ID
+      </span>
 
-    <div class="success-order">
-
-      Order #{{ orderId }}
+      <strong>
+        {{ cashfreeOrderId }}
+      </strong>
 
     </div>
 
-
-    <!-- CONTINUE -->
+    <div class="success-order">
+      Order #{{ orderId }}
+    </div>
 
     <button
       type="button"
@@ -512,11 +398,8 @@
     </h1>
 
     <p>
-      This UPI payment request has expired.
+      This Cashfree payment request has expired.
     </p>
-
-
-    <!-- RETRY -->
 
     <button
       type="button"
@@ -525,9 +408,6 @@
     >
       Try Again
     </button>
-
-
-    <!-- BACK -->
 
     <button
       type="button"

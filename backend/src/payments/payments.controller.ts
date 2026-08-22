@@ -196,4 +196,49 @@ export class PaymentsController {
 
   }
 
+
+
+  // ==========================================
+// CREATE CASHFREE PAYMENT
+// ==========================================
+
+@Post('cashfree/create/:orderId')
+createCashfreePayment(
+
+  @Param(
+    'orderId',
+    ParseIntPipe,
+  )
+  orderId: number,
+
+) {
+
+  return this.paymentsService
+    .createCashfreePayment(
+      orderId,
+    );
+}
+
+
+// ==========================================
+// VERIFY CASHFREE PAYMENT
+// ==========================================
+
+@Get('cashfree/verify/:orderId')
+verifyCashfreePayment(
+
+  @Param(
+    'orderId',
+    ParseIntPipe,
+  )
+  orderId: number,
+
+) {
+
+  return this.paymentsService
+    .verifyCashfreePayment(
+      orderId,
+    );
+}
+
 }

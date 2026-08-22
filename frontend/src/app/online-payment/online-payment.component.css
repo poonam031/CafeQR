@@ -2426,3 +2426,95 @@
   }
 
 }
+
+.payment-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 16px;
+
+  margin-top: 18px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+}
+
+.payment-status strong {
+  display: block;
+  font-size: 15px;
+}
+
+.payment-status p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.status-paid {
+  background: #e9f9ef;
+  border: 1px solid #b7e8c8;
+}
+
+.status-paid strong {
+  color: #16803c;
+}
+
+.status-pending {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+}
+
+.status-pending strong {
+  color: #c2410c;
+}
+
+.status-failed {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.status-failed strong {
+  color: #dc2626;
+}
+
+.status-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #16a34a;
+  color: white;
+
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.status-icon.failed {
+  background: #dc2626;
+}
+
+.status-spinner {
+  width: 30px;
+  height: 30px;
+
+  border: 3px solid #fed7aa;
+  border-top-color: #f97316;
+
+  border-radius: 50%;
+
+  animation: paymentSpin 0.8s linear infinite;
+}
+
+@keyframes paymentSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}

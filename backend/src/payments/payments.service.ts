@@ -1085,4 +1085,632 @@ export class PaymentsService {
 
   }
 
+
+
+
+  // ==========================================
+// CREATE CASHFREE PAYMENT
+// ==========================================
+
+async createCashfreePayment(orderId: number) {
+
+  const order = await this.orderRepository.findOne({
+    where: {
+      id: orderId,
+    },
+  });
+
+  if (!order) {
+    throw new NotFoundException(
+      `Order ${orderId} not found`,
+    );
+  }
+
+  // Already paid
+  if (order.paymentStatus === 'Paid') {
+    throw new BadRequestException(
+      'This order has already been paid',
+    );
+  }
+
+  const amount = Number(order.total);
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new BadRequestException(
+      'Invalid order amount',
+    );
+  }
+
+  const clientId =
+    process.env.CASHFREE_CLIENT_ID;
+
+  const clientSecret =
+    process.env.CASHFREE_CLIENT_SECRET;
+
+  const baseUrl =
+    process.env.CASHFREE_BASE_URL ||
+    'https://sandbox.cashfree.com';
+
+  const apiVersion =
+    process.env.CASHFREE_API_VERSION ||
+    '2025-01-01';
+
+  if (!clientId || !clientSecret) {
+    throw new InternalServerErrorException(
+      'Cashfree API credentials are not configured',
+    );
+  }
+
+  // ========================================
+  // UNIQUE CASHFREE ORDER ID
+  // ========================================
+
+  const cashfreeOrderId =
+    `CAFEQR_${order.id}_${Date.now()}`;
+
+  // ========================================
+  // FIND EXISTING PAYMENT
+  // ========================================
+
+  let payment =
+    await this.paymentRepository.findOne({
+      where: {
+        order: {
+          id: orderId,
+        },
+      },
+    });
+
+  // ========================================
+  // CREATE PAYMENT RECORD
+  // ========================================
+
+  if (!payment) {
+
+    payment =
+      this.paymentRepository.create({
+        order,
+
+        method: 'UPI',
+
+        status: 'PENDING',
+
+        amount,
+
+        merchantOrderId:
+          cashfreeOrderId,
+
+        paymentMode:
+          'CASHFREE_UPI',
+
+        expiresAt:
+          new Date(
+            Date.now() +
+            15 * 60 * 1000,
+          ),
+      });
+
+  } else {
+
+    payment.status = 'PENDING';
+
+    payment.amount = amount;
+
+    payment.merchantOrderId =
+      cashfreeOrderId;
+
+    payment.paymentMode =
+      'CASHFREE_UPI';
+
+    payment.expiresAt =
+      new Date(
+        Date.now() +
+        15 * 60 * 1000,
+      );
+  }
+
+  const savedPayment =
+    await this.paymentRepository.save(
+      payment,
+    );
+
+  // ========================================
+  // CASHFREE CREATE ORDER
+  // ========================================
+
+  const phone =
+    process.env.CASHFREE_CUSTOMER_PHONE ||
+    '9999999999';
+
+  const returnUrl =
+    process.env.CASHFREE_RETURN_URL ||
+    'http://localhost:4200/online-payment';
+
+  const response =
+    await fetch(
+      `${baseUrl}/pg/orders`,
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'application/json',
+
+          Accept:
+            'application/json',
+
+          'x-client-id':
+            clientId,
+
+          'x-client-secret':
+            clientSecret,
+
+          'x-api-version':
+            apiVersion,
+        },
+
+        body: JSON.stringify({
+
+          order_id:
+            cashfreeOrderId,
+
+          order_amount:
+            amount,
+
+          order_currency:
+            'INR',
+
+          customer_details: {
+
+            customer_id:
+              `CUSTOMER_${order.id}`,
+
+            customer_phone:
+              phone,
+
+            customer_name:
+              order.customerName ||
+              'Cafe Customer',
+
+          },
+
+          order_meta: {
+
+            return_url:
+              `${returnUrl}?order_id=${cashfreeOrderId}`,
+
+          },
+
+          order_note:
+            `CafeQR Order #${order.id}`,
+
+        }),
+      },
+    );
+
+  const data =
+    await response.json();
+
+  if (!response.ok) {
+
+    console.error(
+      'Cashfree Create Order Error:',
+      data,
+    );
+
+    throw new BadRequestException(
+      data?.message ||
+      'Cashfree order creation failed',
+    );
+  }
+
+  // ========================================
+  // UPDATE LOCAL PAYMENT
+  // ========================================
+
+  payment.merchantOrderId =
+    data.order_id ||
+    cashfreeOrderId;
+
+  payment.paymentMode =
+    'CASHFREE_UPI';
+
+  payment.status =
+    'PENDING';
+
+  await this.paymentRepository.save(
+    payment,
+  );
+
+  // ========================================
+  // UPDATE LOCAL ORDER
+  // ========================================
+
+  order.paymentMethod =
+    'Online';
+
+  order.paymentStatus =
+    'Pending';
+
+  order.transactionId =
+    data.order_id ||
+    cashfreeOrderId;
+
+  await this.orderRepository.save(
+    order,
+  );
+
+  // ========================================
+  // RETURN TO ANGULAR
+  // ========================================
+
+  return {
+
+    success: true,
+
+    orderId:
+      order.id,
+
+    amount,
+
+    currency:
+      'INR',
+
+    paymentId:
+      savedPayment.id,
+
+    cashfreeOrderId:
+      data.order_id,
+
+    paymentSessionId:
+      data.payment_session_id,
+
+    status:
+      'PENDING',
+
+    message:
+      'Cashfree payment created',
+
+  };
+}
+
+
+
+
+
+// ==========================================
+// VERIFY CASHFREE PAYMENT
+// ==========================================
+
+async verifyCashfreePayment(
+  orderId: number,
+) {
+
+  const order =
+    await this.orderRepository.findOne({
+      where: {
+        id: orderId,
+      },
+    });
+
+  if (!order) {
+    throw new NotFoundException(
+      `Order ${orderId} not found`,
+    );
+  }
+
+  const payment =
+    await this.paymentRepository.findOne({
+      where: {
+        order: {
+          id: orderId,
+        },
+      },
+    });
+
+  if (!payment) {
+
+    return {
+      success: true,
+      orderId,
+      paymentStatus: 'NOT_CREATED',
+      orderPaymentStatus:
+        order.paymentStatus,
+    };
+  }
+
+  // Already paid
+  if (
+    payment.status === 'PAID'
+  ) {
+
+    return {
+      success: true,
+      orderId,
+      paymentStatus: 'PAID',
+      orderPaymentStatus: 'Paid',
+      transactionId:
+        payment.transactionId,
+      paidAt:
+        payment.paidAt,
+    };
+  }
+
+  const clientId =
+    process.env.CASHFREE_CLIENT_ID;
+
+  const clientSecret =
+    process.env.CASHFREE_CLIENT_SECRET;
+
+  const baseUrl =
+    process.env.CASHFREE_BASE_URL ||
+    'https://sandbox.cashfree.com';
+
+  const apiVersion =
+    process.env.CASHFREE_API_VERSION ||
+    '2025-01-01';
+
+  if (!clientId || !clientSecret) {
+
+    throw new InternalServerErrorException(
+      'Cashfree API credentials are not configured',
+    );
+  }
+
+  const cashfreeOrderId =
+    payment.merchantOrderId;
+
+  // ========================================
+  // GET CASHFREE PAYMENTS
+  // ========================================
+
+  const response =
+    await fetch(
+      `${baseUrl}/pg/orders/${encodeURIComponent(
+        cashfreeOrderId,
+      )}/payments`,
+      {
+        method: 'GET',
+
+        headers: {
+
+          Accept:
+            'application/json',
+
+          'x-client-id':
+            clientId,
+
+          'x-client-secret':
+            clientSecret,
+
+          'x-api-version':
+            apiVersion,
+
+        },
+      },
+    );
+
+  const data =
+    await response.json();
+
+  if (!response.ok) {
+
+    console.error(
+      'Cashfree Verify Error:',
+      data,
+    );
+
+    throw new BadRequestException(
+      data?.message ||
+      'Unable to verify Cashfree payment',
+    );
+  }
+
+  console.log(
+    'Cashfree Payments:',
+    JSON.stringify(
+      data,
+      null,
+      2,
+    ),
+  );
+
+  // ========================================
+  // FIND SUCCESS PAYMENT
+  // ========================================
+
+  const successfulPayment =
+    Array.isArray(data)
+      ? data.find(
+          (transaction: any) =>
+            transaction.payment_status ===
+            'SUCCESS',
+        )
+      : null;
+
+  // ========================================
+  // SUCCESS
+  // ========================================
+
+  if (successfulPayment) {
+
+    payment.status =
+      'PAID';
+
+    payment.transactionId =
+      successfulPayment.cf_payment_id
+        ? String(
+            successfulPayment.cf_payment_id,
+          )
+        : payment.transactionId;
+
+    payment.bankTxnId =
+      successfulPayment.bank_reference ||
+      null;
+
+    payment.responseCode =
+      successfulPayment.payment_status ||
+      'SUCCESS';
+
+    payment.responseMessage =
+      'Payment successful';
+
+    payment.paymentMode =
+      successfulPayment.payment_group ||
+      'UPI';
+
+    payment.paidAt =
+      new Date();
+
+    await this.paymentRepository.save(
+      payment,
+    );
+
+    // UPDATE ORDER
+
+    order.paymentMethod =
+      'Online';
+
+    order.paymentStatus =
+      'Paid';
+
+    order.transactionId =
+      payment.transactionId ||
+      payment.merchantOrderId;
+
+    order.paidAt =
+      new Date();
+
+    await this.orderRepository.save(
+      order,
+    );
+
+    return {
+
+      success: true,
+
+      orderId,
+
+      amount:
+        Number(order.total),
+
+      paymentStatus:
+        'PAID',
+
+      orderPaymentStatus:
+        'Paid',
+
+      transactionId:
+        payment.transactionId,
+
+      bankTxnId:
+        payment.bankTxnId,
+
+      paidAt:
+        payment.paidAt,
+
+    };
+  }
+
+  // ========================================
+  // PENDING PAYMENT
+  // ========================================
+
+  const pendingPayment =
+    Array.isArray(data)
+      ? data.find(
+          (transaction: any) =>
+            transaction.payment_status ===
+            'PENDING',
+        )
+      : null;
+
+  if (pendingPayment) {
+
+    payment.status =
+      'PENDING';
+
+    payment.responseCode =
+      'PENDING';
+
+    payment.responseMessage =
+      'Payment is pending';
+
+    await this.paymentRepository.save(
+      payment,
+    );
+
+    order.paymentStatus =
+      'Pending';
+
+    await this.orderRepository.save(
+      order,
+    );
+
+    return {
+
+      success: true,
+
+      orderId,
+
+      amount:
+        Number(order.total),
+
+      paymentStatus:
+        'PENDING',
+
+      orderPaymentStatus:
+        'Pending',
+
+      transactionId:
+        payment.transactionId,
+
+    };
+  }
+
+  // ========================================
+  // NO SUCCESS / PENDING PAYMENT
+  // ========================================
+
+  payment.status =
+    'FAILED';
+
+  payment.responseCode =
+    'FAILED';
+
+  payment.responseMessage =
+    'Payment failed or was not completed';
+
+  await this.paymentRepository.save(
+    payment,
+  );
+
+  order.paymentStatus =
+    'Pending';
+
+  await this.orderRepository.save(
+    order,
+  );
+
+  return {
+
+    success: true,
+
+    orderId,
+
+    amount:
+      Number(order.total),
+
+    paymentStatus:
+      'FAILED',
+
+    orderPaymentStatus:
+      'Pending',
+
+    responseMessage:
+      payment.responseMessage,
+
+  };
+}
+
 }

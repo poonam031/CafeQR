@@ -14,53 +14,54 @@ import {
 } from '@angular/router';
 
 import {
+  HttpClient,
+  HttpClientModule
+} from '@angular/common/http';
+
+import {
   Subscription,
   interval
 } from 'rxjs';
 
-import {
-  switchMap
-} from 'rxjs/operators';
 
-import {
-  PaymentService,
-  UpiPaymentResponse,
-  UpiPaymentStatusResponse
-} from '../services/payment.service';
+declare const Cashfree: any;
 
-import QRCode from 'qrcode';
+
+interface CashfreeCreateResponse {
+  success: boolean;
+  orderId: number;
+  amount: number;
+  currency: string;
+  paymentId?: number;
+  cashfreeOrderId?: string;
+  paymentSessionId: string;
+  status?: string;
+  message?: string;
+}
+
+
+interface CashfreeVerifyResponse {
+  success: boolean;
+  orderId: number;
+  paymentStatus?: string;
+  orderPaymentStatus?: string;
+  transactionId?: string;
+  responseMessage?: string;
+  message?: string;
+}
 
 
 @Component({
-
-  selector:
-    'app-online-payment',
-
+  selector: 'app-online-payment',
   standalone: true,
-
   imports: [
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
-
-  templateUrl:
-    './online-payment.component.html',
-
-  styleUrl:
-    './online-payment.component.css'
-
+  templateUrl: './online-payment.component.html',
+  styleUrl: './online-payment.component.css'
 })
-
-
-export class OnlinePaymentComponent
-  implements OnInit, OnDestroy {
-
-
-  // ==========================================
-  // QR CODE
-  // ==========================================
-
-  qrCodeDataUrl = '';
-
+export class OnlinePaymentComponent implements OnInit, OnDestroy {
 
   // ==========================================
   // ORDER
@@ -70,7 +71,7 @@ export class OnlinePaymentComponent
 
 
   // ==========================================
-  // PAYMENT
+  // PAYMENT DATA
   // ==========================================
 
   amount = 0;
@@ -79,15 +80,13 @@ export class OnlinePaymentComponent
 
   paymentId = 0;
 
-  merchantOrderId = '';
+  cashfreeOrderId = '';
 
-  upiId = '';
-
-  upiUrl = '';
-
-  paymentStatus = 'PENDING';
+  paymentSessionId = '';
 
   transactionId = '';
+
+  paymentStatus = 'PENDING';
 
 
   // ==========================================
@@ -106,15 +105,25 @@ export class OnlinePaymentComponent
 
   errorMessage = '';
 
-  showUpiApps = false;
+  paymentMessage = 'Complete the payment to continue.';
 
 
   // ==========================================
   // POLLING
   // ==========================================
 
-  private pollingSubscription:
-    Subscription | null = null;
+  private pollingSubscription: Subscription | null = null;
+
+
+  // ==========================================
+  // BACKEND URL
+  // ==========================================
+
+  // LOCAL DEVELOPMENT
+  private readonly apiUrl = 'http://localhost:3000';
+
+  // When frontend is deployed, replace the above with:
+  // private readonly apiUrl = 'https://YOUR-BACKEND.onrender.com';
 
 
   // ==========================================
@@ -122,16 +131,9 @@ export class OnlinePaymentComponent
   // ==========================================
 
   constructor(
-
-    private route:
-      ActivatedRoute,
-
-    private router:
-      Router,
-
-    private paymentService:
-      PaymentService
-
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: HttpClient
   ) {}
 
 
@@ -141,862 +143,372 @@ export class OnlinePaymentComponent
 
   ngOnInit(): void {
 
-    this.route.params.subscribe(
-      params => {
+    this.route.params.subscribe(params => {
 
-        this.orderId =
-          Number(
-            params['orderId']
-          );
+      this.orderId = Number(params['orderId']);
 
+      if (!this.orderId || this.orderId <= 0) {
 
-        if (
-          !this.orderId ||
-          this.orderId <= 0
-        ) {
+        this.loading = false;
+        this.paymentFailed = true;
+        this.errorMessage = 'Invalid order ID.';
 
-          this.loading = false;
-
-          this.errorMessage =
-            'Invalid order ID.';
-
-          this.paymentFailed = true;
-
-          return;
-
-        }
-
-
-        this.createUpiPayment();
-
+        return;
       }
-    );
 
+      this.createCashfreePayment();
+    });
   }
 
 
   // ==========================================
-  // CREATE UPI PAYMENT
+  // CREATE CASHFREE PAYMENT
   // ==========================================
 
-  createUpiPayment(): void {
+  createCashfreePayment(): void {
 
     this.loading = true;
-
     this.paymentProcessing = false;
-
     this.paymentSuccess = false;
-
     this.paymentFailed = false;
-
     this.paymentExpired = false;
-
     this.errorMessage = '';
+    this.paymentMessage = 'Creating secure Cashfree payment...';
 
-    this.qrCodeDataUrl = '';
-
-
-    this.paymentService
-      .createUpiPayment(
-        this.orderId
+    this.http
+      .post<CashfreeCreateResponse>(
+        `${this.apiUrl}/payments/cashfree/create/${this.orderId}`,
+        {}
       )
       .subscribe({
 
-        next:
-          async (
-            response:
-              UpiPaymentResponse
-          ) => {
+        next: (response) => {
 
-            console.log(
-              'UPI PAYMENT CREATED:',
-              response
-            );
+          console.log('CASHFREE CREATE RESPONSE:', response);
 
-
-            // ==================================
-            // VALIDATE RESPONSE
-            // ==================================
-
-            if (
-              !response ||
-              !response.success
-            ) {
-
-              this.loading = false;
-
-              this.paymentFailed = true;
-
-              this.errorMessage =
-                response?.message ||
-                'Unable to create UPI payment.';
-
-              return;
-
-            }
-
-
-            // ==================================
-            // SAVE PAYMENT DATA
-            // ==================================
-
-            this.amount =
-              Number(
-                response.amount
-              );
-
-
-            this.currency =
-              response.currency ||
-              'INR';
-
-
-            this.paymentId =
-              Number(
-                response.paymentId
-              );
-
-
-            this.merchantOrderId =
-              response.merchantOrderId;
-
-
-            this.upiId =
-              response.upiId;
-
-
-            this.upiUrl =
-              response.upiUrl;
-
-
-            this.paymentStatus =
-              response.status ||
-              'PENDING';
-
-
-            console.log(
-              'PAYMENT AMOUNT:',
-              this.amount
-            );
-
-            console.log(
-              'CAFE UPI ID:',
-              this.upiId
-            );
-
-            console.log(
-              'UPI URL:',
-              this.upiUrl
-            );
-
-
-            // ==================================
-            // GENERATE DYNAMIC QR
-            //
-            // QR contains:
-            // - UPI ID
-            // - Amount
-            // - Currency
-            // - Order number
-            // ==================================
-
-            await this.generateUpiQr();
-
-
-            // ==================================
-            // STOP LOADING
-            // ==================================
+          if (!response || !response.success) {
 
             this.loading = false;
-
-
-            // ==================================
-            // START STATUS POLLING
-            // ==================================
-
-            this.startPolling();
-
-          },
-
-
-        // ======================================
-        // CREATE PAYMENT ERROR
-        // ======================================
-
-        error:
-          (error) => {
-
-            console.error(
-              'UPI CREATE ERROR:',
-              error
-            );
-
-
-            this.loading = false;
-
             this.paymentFailed = true;
-
             this.errorMessage =
-              error?.error?.message ||
-              'Unable to create UPI payment.';
+              response?.message ||
+              'Unable to create Cashfree payment.';
 
+            return;
           }
 
-      });
+          this.amount = Number(response.amount || 0);
+          this.currency = response.currency || 'INR';
+          this.paymentId = Number(response.paymentId || 0);
+          this.cashfreeOrderId = response.cashfreeOrderId || '';
+          this.paymentSessionId = response.paymentSessionId || '';
+          this.paymentStatus =
+            this.normalizeStatus(response.status || 'PENDING');
 
+          if (!this.paymentSessionId) {
+
+            this.loading = false;
+            this.paymentFailed = true;
+            this.errorMessage =
+              'Cashfree payment session was not received.';
+
+            return;
+          }
+
+          this.loading = false;
+          this.paymentMessage =
+            'Click Proceed to Pay to open Cashfree checkout.';
+
+          // Check current status once.
+          this.verifyPayment(false);
+        },
+
+        error: (error) => {
+
+          console.error('CASHFREE CREATE ERROR:', error);
+
+          this.loading = false;
+          this.paymentFailed = true;
+          this.errorMessage =
+            error?.error?.message ||
+            'Unable to create Cashfree payment.';
+        }
+      });
   }
 
 
   // ==========================================
-  // GENERATE DYNAMIC UPI QR
+  // OPEN CASHFREE CHECKOUT
   // ==========================================
 
-  async generateUpiQr(): Promise<void> {
+  openCashfreeCheckout(): void {
 
-    // ------------------------------------------
-    // CHECK REQUIRED DATA
-    // ------------------------------------------
+    if (!this.paymentSessionId) {
 
-    if (
-      !this.upiId ||
-      !this.amount
-    ) {
-
-      console.error(
-        'UPI ID or amount is missing.',
-        {
-          upiId: this.upiId,
-          amount: this.amount
-        }
-      );
+      this.errorMessage =
+        'Cashfree payment session is missing.';
 
       return;
-
     }
 
+    if (typeof Cashfree === 'undefined') {
+
+      this.paymentFailed = true;
+      this.errorMessage =
+        'Cashfree SDK is not loaded. Add the Cashfree script in index.html.';
+
+      return;
+    }
+
+    this.paymentProcessing = true;
+    this.paymentFailed = false;
+    this.paymentExpired = false;
+    this.errorMessage = '';
+    this.paymentMessage =
+      'Complete the payment in Cashfree checkout.';
 
     try {
 
-      // ----------------------------------------
-      // CREATE UPI PARAMETERS
-      // ----------------------------------------
+      const cashfree = Cashfree({
+        mode: 'sandbox'
+      });
 
-      const params =
-        new URLSearchParams();
+      const checkoutOptions = {
+        paymentSessionId: this.paymentSessionId,
+        redirectTarget: '_modal'
+      };
 
+      cashfree
+        .checkout(checkoutOptions)
+        .then((result: any) => {
 
-      // Cafe UPI ID
+          console.log('CASHFREE CHECKOUT RESULT:', result);
 
-      params.set(
-        'pa',
-        this.upiId
-      );
+          // Do not mark payment as PAID here.
+          // Always verify through the backend.
+          this.paymentProcessing = false;
 
+          this.verifyPayment(true);
+          this.startPolling();
+        })
+        .catch((error: any) => {
 
-      // Payee / Cafe name
+          console.error('CASHFREE CHECKOUT ERROR:', error);
 
-      params.set(
-        'pn',
-        'CafeQR'
-      );
+          this.paymentProcessing = false;
+          this.paymentMessage =
+            'Checkout closed. Checking payment status...';
 
+          // The customer may have paid before closing checkout.
+          this.verifyPayment(true);
+          this.startPolling();
+        });
 
-      // DYNAMIC AMOUNT
+      // Start checking while checkout is open as well.
+      this.startPolling();
 
-      params.set(
-        'am',
-        Number(
-          this.amount
-        ).toFixed(2)
-      );
+    } catch (error) {
 
+      console.error('CASHFREE SDK ERROR:', error);
 
-      // Currency
-
-      params.set(
-        'cu',
-        'INR'
-      );
-
-
-      // Order reference
-
-      params.set(
-        'tn',
-        `CafeQR Order ${this.orderId}`
-      );
-
-
-      // ----------------------------------------
-      // COMPLETE UPI PAYMENT STRING
-      // ----------------------------------------
-
-      const upiString =
-        `upi://pay?${params.toString()}`;
+      this.paymentProcessing = false;
+      this.paymentFailed = true;
+      this.errorMessage =
+        'Unable to open Cashfree checkout.';
+    }
+  }
 
 
-      console.log(
-        'DYNAMIC UPI STRING:',
-        upiString
-      );
+  // ==========================================
+  // VERIFY PAYMENT THROUGH BACKEND
+  // ==========================================
 
+  verifyPayment(showPendingMessage = true): void {
 
-      // ----------------------------------------
-      // GENERATE QR IMAGE
-      // ----------------------------------------
+    if (!this.orderId) {
+      return;
+    }
 
-      this.qrCodeDataUrl =
-        await QRCode.toDataURL(
+    this.http
+      .get<CashfreeVerifyResponse>(
+        `${this.apiUrl}/payments/cashfree/verify/${this.orderId}`
+      )
+      .subscribe({
 
-          upiString,
+        next: (response) => {
 
-          {
+          console.log('CASHFREE VERIFY RESPONSE:', response);
 
-            width: 300,
+          const status = this.getPaymentStatus(response);
 
-            margin: 2,
+          this.paymentStatus = status;
 
-            errorCorrectionLevel: 'M'
-
+          if (response?.transactionId) {
+            this.transactionId = response.transactionId;
           }
 
-        );
+          // ======================================
+          // PAID
+          // ======================================
 
+          if (status === 'PAID') {
 
-      console.log(
-        'DYNAMIC QR GENERATED SUCCESSFULLY'
-      );
+            this.paymentSuccess = true;
+            this.paymentFailed = false;
+            this.paymentExpired = false;
+            this.paymentProcessing = false;
+            this.paymentMessage = 'Payment verified successfully.';
 
-    }
+            this.stopPolling();
 
+            // Clear cart only after trusted backend verification.
+            localStorage.removeItem('cart');
+            localStorage.removeItem('pendingPaymentOrderId');
 
-    catch (error) {
+            return;
+          }
 
-      console.error(
-        'QR GENERATION ERROR:',
-        error
-      );
+          // ======================================
+          // FAILED
+          // ======================================
 
+          if (status === 'FAILED') {
 
-      this.qrCodeDataUrl = '';
+            this.paymentFailed = true;
+            this.paymentSuccess = false;
+            this.paymentExpired = false;
+            this.paymentProcessing = false;
 
-      this.errorMessage =
-        'Unable to generate payment QR code.';
+            this.errorMessage =
+              response?.responseMessage ||
+              response?.message ||
+              'Cashfree payment failed.';
 
-    }
+            this.paymentMessage = 'Payment failed.';
 
-  }
+            this.stopPolling();
 
+            return;
+          }
 
-  // ==========================================
-  // OPEN GENERIC UPI APP
-  // ==========================================
+          // ======================================
+          // EXPIRED
+          // ======================================
 
-  payWithUpi(): void {
+          if (status === 'EXPIRED') {
 
-    if (!this.upiUrl) {
+            this.paymentExpired = true;
+            this.paymentSuccess = false;
+            this.paymentFailed = false;
+            this.paymentProcessing = false;
+            this.paymentMessage = 'Payment request expired.';
 
-      this.errorMessage =
-        'UPI payment link is not available.';
+            this.stopPolling();
 
-      return;
+            return;
+          }
 
-    }
+          // ======================================
+          // PENDING
+          // ======================================
 
+          this.paymentStatus = 'PENDING';
+          this.paymentSuccess = false;
+          this.paymentFailed = false;
+          this.paymentExpired = false;
 
-    this.paymentProcessing = true;
+          if (showPendingMessage) {
+            this.paymentMessage =
+              'Payment is pending. We are checking the status automatically.';
+          }
+        },
 
-    this.errorMessage = '';
+        error: (error) => {
 
-
-    console.log(
-      'Opening UPI:',
-      this.upiUrl
-    );
-
-
-    // ----------------------------------------
-    // OPEN UPI INTENT
-    // ----------------------------------------
-
-    window.location.href =
-      this.upiUrl;
-
-
-    // ----------------------------------------
-    // DO NOT MARK SUCCESS HERE
-    //
-    // Backend remains PENDING until the
-    // trusted payment verification changes it.
-    // ----------------------------------------
-
-  }
-
-
-  // ==========================================
-  // GOOGLE PAY
-  // ==========================================
-
-  payWithGooglePay(): void {
-
-    if (!this.upiUrl) {
-
-      this.errorMessage =
-        'UPI payment link is not available.';
-
-      return;
-
-    }
-
-
-    this.paymentProcessing = true;
-
-    this.errorMessage = '';
-
-
-    const query =
-      this.upiUrl.substring(
-        this.upiUrl.indexOf('?') + 1
-      );
-
-
-    const googlePayUrl =
-      `tez://upi/pay?${query}`;
-
-
-    console.log(
-      'Opening Google Pay:',
-      googlePayUrl
-    );
-
-
-    this.openUpiApp(
-      googlePayUrl
-    );
-
-  }
-
-
-  // ==========================================
-  // PHONEPE
-  // ==========================================
-
-  payWithPhonePe(): void {
-
-    if (
-      !this.upiId ||
-      !this.amount
-    ) {
-
-      this.errorMessage =
-        'Invalid payment details.';
-
-      return;
-
-    }
-
-
-    this.paymentProcessing = true;
-
-    this.errorMessage = '';
-
-
-    const params =
-      new URLSearchParams();
-
-
-    params.set(
-      'pa',
-      this.upiId
-    );
-
-
-    params.set(
-      'pn',
-      'CafeQR'
-    );
-
-
-    params.set(
-      'am',
-      Number(
-        this.amount
-      ).toFixed(2)
-    );
-
-
-    params.set(
-      'cu',
-      'INR'
-    );
-
-
-    params.set(
-      'tn',
-      `CafeQR Order ${this.orderId}`
-    );
-
-
-    const paymentData =
-      params.toString();
-
-
-    // ----------------------------------------
-    // PHONEPE ANDROID INTENT
-    // ----------------------------------------
-
-    const phonePeIntent =
-      `intent://pay?${paymentData}` +
-      `#Intent;scheme=upi;package=com.phonepe.app;end`;
-
-
-    console.log(
-      'PHONEPE ANDROID INTENT:',
-      phonePeIntent
-    );
-
-
-    window.location.href =
-      phonePeIntent;
-
-
-    setTimeout(() => {
-
-      this.paymentProcessing =
-        false;
-
-    }, 3000);
-
-  }
-
-
-  // ==========================================
-  // PAYTM
-  // ==========================================
-
-  payWithPaytm(): void {
-
-    if (!this.upiUrl) {
-
-      this.errorMessage =
-        'UPI payment link is not available.';
-
-      return;
-
-    }
-
-
-    this.paymentProcessing = true;
-
-    this.errorMessage = '';
-
-
-    const query =
-      this.upiUrl.substring(
-        this.upiUrl.indexOf('?') + 1
-      );
-
-
-    const paytmUrl =
-      `paytmmp://pay?${query}`;
-
-
-    console.log(
-      'Opening Paytm:',
-      paytmUrl
-    );
-
-
-    this.openUpiApp(
-      paytmUrl
-    );
-
-  }
-
-
-  // ==========================================
-  // OPEN SELECTED UPI APP
-  // ==========================================
-
-  private openUpiApp(
-    appUrl: string
-  ): void {
-
-    const startTime =
-      Date.now();
-
-
-    window.location.href =
-      appUrl;
-
-
-    setTimeout(() => {
-
-      const elapsed =
-        Date.now() -
-        startTime;
-
-
-      if (elapsed < 2000) {
-
-        this.paymentProcessing =
-          false;
-
-
-        // ------------------------------------
-        // FALLBACK TO GENERIC UPI
-        // ------------------------------------
-
-        if (this.upiUrl) {
-
-          window.location.href =
-            this.upiUrl;
-
+          // Do not mark payment as failed just because one
+          // status request failed.
+          console.warn(
+            'CASHFREE VERIFY ERROR:',
+            error
+          );
         }
-
-      }
-
-    }, 1500);
-
+      });
   }
 
 
   // ==========================================
-  // SHOW UPI APPS
+  // NORMALIZE STATUS
   // ==========================================
 
-  showPaymentApps(): void {
+  private getPaymentStatus(
+    response: CashfreeVerifyResponse
+  ): string {
 
-    this.showUpiApps =
-      true;
+    const rawStatus = String(
+      response?.paymentStatus ||
+      response?.orderPaymentStatus ||
+      'PENDING'
+    ).toUpperCase();
 
+    return this.normalizeStatus(rawStatus);
   }
 
 
-  // ==========================================
-  // HIDE UPI APPS
-  // ==========================================
+  private normalizeStatus(status: string): string {
 
-  hidePaymentApps(): void {
-
-    this.showUpiApps =
-      false;
-
-  }
-
-
-  // ==========================================
-  // OTHER UPI APP DROPDOWN
-  // ==========================================
-
-  onUpiAppChange(
-    app: string
-  ): void {
-
-    if (!app) {
-
-      return;
-
-    }
-
+    const value = String(status || '')
+      .trim()
+      .toUpperCase();
 
     if (
-      app === 'phonepe'
+      value === 'PAID' ||
+      value === 'SUCCESS' ||
+      value === 'COMPLETED'
     ) {
-
-      this.payWithPhonePe();
-
+      return 'PAID';
     }
 
-
-    else if (
-      app === 'paytm'
+    if (
+      value === 'FAILED' ||
+      value === 'FAILURE' ||
+      value === 'CANCELLED'
     ) {
-
-      this.payWithPaytm();
-
+      return 'FAILED';
     }
 
-
-    else if (
-      app === 'upi'
+    if (
+      value === 'EXPIRED' ||
+      value === 'EXPIRE'
     ) {
-
-      this.payWithUpi();
-
+      return 'EXPIRED';
     }
 
+    return 'PENDING';
   }
 
 
   // ==========================================
-  // POLL PAYMENT STATUS
+  // START POLLING
   // ==========================================
 
   startPolling(): void {
 
     this.stopPolling();
 
-
     this.pollingSubscription =
-      interval(3000)
+      interval(3000).subscribe(() => {
 
-        .pipe(
+        if (
+          this.paymentSuccess ||
+          this.paymentFailed ||
+          this.paymentExpired
+        ) {
+          this.stopPolling();
+          return;
+        }
 
-          switchMap(() =>
-
-            this.paymentService
-              .getUpiPaymentStatus(
-                this.orderId
-              )
-
-          )
-
-        )
-
-        .subscribe({
-
-          next:
-            (
-              response:
-                UpiPaymentStatusResponse
-            ) => {
-
-              console.log(
-                'UPI STATUS:',
-                response
-              );
-
-
-              this.paymentStatus =
-                response.paymentStatus;
-
-
-              this.transactionId =
-                response.transactionId ||
-                '';
-
-
-              // ==================================
-              // PAYMENT SUCCESS
-              // ==================================
-
-              if (
-                response.paymentStatus ===
-                'PAID'
-              ) {
-
-                this.paymentSuccess =
-                  true;
-
-
-                this.paymentProcessing =
-                  false;
-
-
-                this.paymentFailed =
-                  false;
-
-
-                this.paymentExpired =
-                  false;
-
-
-                this.stopPolling();
-
-
-                // --------------------------------
-                // CLEAR CART ONLY AFTER PAID
-                // --------------------------------
-
-                localStorage.removeItem(
-                  'cart'
-                );
-
-
-                localStorage.removeItem(
-                  'pendingPaymentOrderId'
-                );
-
-
-                return;
-
-              }
-
-
-              // ==================================
-              // PAYMENT EXPIRED
-              // ==================================
-
-              if (
-                response.paymentStatus ===
-                'EXPIRED'
-              ) {
-
-                this.paymentExpired =
-                  true;
-
-
-                this.paymentProcessing =
-                  false;
-
-
-                this.stopPolling();
-
-
-                return;
-
-              }
-
-
-              // ==================================
-              // PAYMENT FAILED
-              // ==================================
-
-              if (
-                response.paymentStatus ===
-                'FAILED'
-              ) {
-
-                this.paymentFailed =
-                  true;
-
-
-                this.paymentProcessing =
-                  false;
-
-
-                this.errorMessage =
-                  response.responseMessage ||
-                  'UPI payment failed.';
-
-
-                this.stopPolling();
-
-              }
-
-            },
-
-
-          // ====================================
-          // POLLING ERROR
-          // ====================================
-
-          error:
-            (error) => {
-
-              // Do NOT show failure just because
-              // one polling request failed.
-
-              console.warn(
-                'UPI STATUS CHECK ERROR:',
-                error
-              );
-
-            }
-
-        });
-
+        this.verifyPayment(true);
+      });
   }
 
 
@@ -1006,57 +518,32 @@ export class OnlinePaymentComponent
 
   stopPolling(): void {
 
-    if (
-      this.pollingSubscription
-    ) {
+    if (this.pollingSubscription) {
 
-      this.pollingSubscription
-        .unsubscribe();
-
-
-      this.pollingSubscription =
-        null;
-
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
     }
-
   }
 
 
   // ==========================================
-  // RETRY PAYMENT
+  // RETRY
   // ==========================================
 
   retryPayment(): void {
 
     this.stopPolling();
 
+    this.loading = true;
+    this.paymentSuccess = false;
+    this.paymentFailed = false;
+    this.paymentExpired = false;
+    this.paymentProcessing = false;
+    this.errorMessage = '';
+    this.transactionId = '';
+    this.paymentSessionId = '';
 
-    this.paymentFailed =
-      false;
-
-
-    this.paymentExpired =
-      false;
-
-
-    this.paymentSuccess =
-      false;
-
-
-    this.paymentProcessing =
-      false;
-
-
-    this.errorMessage =
-      '';
-
-
-    this.qrCodeDataUrl =
-      '';
-
-
-    this.createUpiPayment();
-
+    this.createCashfreePayment();
   }
 
 
@@ -1068,11 +555,7 @@ export class OnlinePaymentComponent
 
     this.stopPolling();
 
-
-    this.router.navigate([
-      '/cart'
-    ]);
-
+    this.router.navigate(['/cart']);
   }
 
 
@@ -1084,48 +567,7 @@ export class OnlinePaymentComponent
 
     this.stopPolling();
 
-
-    this.router.navigate([
-      '/order-success'
-    ]);
-
-  }
-
-
-  // ==========================================
-  // COPY UPI ID
-  // ==========================================
-
-  copyUpiId(): void {
-
-    if (!this.upiId) {
-
-      return;
-
-    }
-
-
-    navigator.clipboard
-      .writeText(
-        this.upiId
-      )
-
-      .then(() => {
-
-        alert(
-          'UPI ID copied'
-        );
-
-      })
-
-      .catch(() => {
-
-        alert(
-          'Unable to copy UPI ID'
-        );
-
-      });
-
+    this.router.navigate(['/order-success']);
   }
 
 
@@ -1136,7 +578,5 @@ export class OnlinePaymentComponent
   ngOnDestroy(): void {
 
     this.stopPolling();
-
   }
-
 }
